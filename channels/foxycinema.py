@@ -30,31 +30,61 @@ def mainlist(item):
     logger.info("streamondemand.foxycinema mainlist")
     itemlist = []
     itemlist.append( Item(channel=__channel__, title="[COLOR azure]Ultimi Film Inseriti[/COLOR]", action="peliculas", url="http://www.foxycinema.org/film.html", thumbnail="http://orig03.deviantart.net/6889/f/2014/079/7/b/movies_and_popcorn_folder_icon_by_matheusgrilo-d7ay4tw.png"))
-    #itemlist.append( Item(channel=__channel__, title="[COLOR azure]Film Per Categoria[/COLOR]", action="categorias", url="http://www.fastvideo.tv/", thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/All%20Movies%20by%20Genre.png"))
+    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Film Per Categoria[/COLOR]", action="categorias", url="http://www.foxycinema.org/film-per-genere.html", thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/All%20Movies%20by%20Genre.png"))
+    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Film Per Anno[/COLOR]", action="byyear", url="http://www.foxycinema.org/film-per-anno.html", thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/All%20Movies%20by%20Genre.png"))
     itemlist.append( Item(channel=__channel__, title="[COLOR yellow]Cerca...[/COLOR]", action="search", thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search"))
-
     
     return itemlist
 
+
 def categorias(item):
+    logger.info("streamondemand.foxycinema categorias")
     itemlist = []
-    
+
     # Descarga la pagina
     data = scrapertools.cache_page(item.url)
-    bloque = scrapertools.get_match(data,'<div class="category">(.*?)</div>')
+    bloque = scrapertools.get_match(data,'<select style="width: 100%; color: #2d252c; border-color: #dddddd;" name="generi" onchange="location.href=cerca.generi.value;">(.*?)</select>')
     
     # Extrae las entradas (carpetas)
-    patron  = '<h2 class="title">\s*<a href="(.*?)"[^>]+>(.*?)</a>\s*<span>(.*?)</span>\s*</h2>'
+    patron  = '<option value="(.*?)">(.*?)</option>'
     matches = re.compile(patron,re.DOTALL).findall(bloque)
     scrapertools.printMatches(matches)
 
-    for scrapedurl,scrapedtitle,scrapedtot in matches:
-        #scrapedplot = ""
+    for scrapedurl,scrapedtitle in matches:
+        scrapedplot = ""
         scrapedthumbnail = ""
+        scrapedurl=scrapertools.decodeHtmlentities(scrapedurl.replace("..",""))
+        scrapedurl=scrapertools.decodeHtmlentities(scrapedurl.replace("#",""))
+        scrapedtitle=scrapertools.decodeHtmlentities(scrapedtitle.replace("|- Cerca per Genere -|",""))
         if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"]")
-        itemlist.append( Item(channel=__channel__, action="peliculas", title="[COLOR azure]"+scrapedtitle+"[/COLOR][COLOR gray]" +scrapedtot+"[/COLOR]" , url=sito+scrapedurl , thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/All%20Movies%20by%20Genre.png", folder=True) )
+        itemlist.append( Item(channel=__channel__, action="peliculas", title="[COLOR azure]"+scrapedtitle+"[/COLOR]" , url=sito+scrapedurl , thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/All%20Movies%20by%20Genre.png", folder=True) )
 
     return itemlist
+
+def byyear(item):
+    logger.info("streamondemand.foxycinema byyear")
+    itemlist = []
+
+    # Descarga la pagina
+    data = scrapertools.cache_page(item.url)
+    bloque = scrapertools.get_match(data,'<select style="width: 100%; color: #2d252c; border-color: #dddddd;" name="anno" onchange="location.href=cerca02.anno.value;">(.*?)</select>')
+    
+    # Extrae las entradas (carpetas)
+    patron  = '<option value="(.*?)">(.*?)</option>'
+    matches = re.compile(patron,re.DOTALL).findall(bloque)
+    scrapertools.printMatches(matches)
+
+    for scrapedurl,scrapedtitle in matches:
+        scrapedplot = ""
+        scrapedthumbnail = ""
+        scrapedurl=scrapertools.decodeHtmlentities(scrapedurl.replace("..",""))
+        scrapedurl=scrapertools.decodeHtmlentities(scrapedurl.replace("#",""))
+        scrapedtitle=scrapertools.decodeHtmlentities(scrapedtitle.replace("|- Cerca per Anno -|",""))
+        if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"]")
+        itemlist.append( Item(channel=__channel__, action="peliculas", title="[COLOR azure]"+scrapedtitle+"[/COLOR]" , url=sito+scrapedurl , thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/All%20Movies%20by%20Genre.png", folder=True) )
+
+    return itemlist
+
 
 def search(item,texto):
     logger.info("[foxycinema.py] "+item.url+" search "+texto)
@@ -67,6 +97,7 @@ def search(item,texto):
         for line in sys.exc_info():
             logger.error( "%s" % line )
         return []
+
 
 def peliculas(item):
     logger.info("streamondemand.foxycinema peliculas")
