@@ -237,7 +237,7 @@ def menugeneros(item):
     logger.info(data)
 
     # Narrow search by selecting only the combo
-    bloque = scrapertools.get_match(data, '<select name="select2"(.*?)</select')
+    bloque = scrapertools.get_match(data, '<select name="select2"(.*?)</select>')
 
     # The categories are the options for the combo  
     patron = '<option value="([^"]+)">([^<]+)</option>'
@@ -269,7 +269,7 @@ def menuhd(item):
     logger.info(data)
 
     # Narrow search by selecting only the combo
-    bloque = scrapertools.get_match(data, '<select name="select1"(.*?)</select')
+    bloque = scrapertools.get_match(data, '<select name="select1"(.*?)</select>')
 
     # The categories are the options for the combo  
     patron = '<option value="([^"]+)">([^<]+)</option>'
@@ -302,7 +302,7 @@ def menuanyos(item):
     logger.info(data)
 
     # Narrow search by selecting only the combo
-    bloque = scrapertools.get_match(data, '<select name="select3"(.*?)</select')
+    bloque = scrapertools.get_match(data, '<select name="select3"(.*?)</select>')
 
     # The categories are the options for the combo  
     patron = '<option value="([^"]+)">([^<]+)</option>'
@@ -534,7 +534,7 @@ def animegenere(item):
     logger.info(data)
 
     # Narrow search by selecting only the combo
-    bloque = scrapertools.get_match(data, '<select name="select2"(.*?)</select')
+    bloque = scrapertools.get_match(data, '<select name="select2"(.*?)</select>')
 
     # The categories are the options for the combo  
     patron = '<option value="([^"]+)">([^<]+)</option>'
