@@ -129,7 +129,7 @@ def peliculas(item):
         itemlist.append(
             Item(channel=__channel__,
                  action="episodios" if item.extra == "serie" else "findvideos",
-                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
+                 title=scrapedtitle,
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  plot=scrapedplot,
@@ -241,6 +241,10 @@ def episodios(item):
 
         i += 1
 
+    if config.get_library_support():
+        itemlist.append( Item(channel=__channel__, title=item.title, url=item.url, action="add_serie_to_library", extra="episodios", show=item.show) )
+        itemlist.append( Item(channel=item.channel, title="Scarica tutti gli episodi della serie", url=item.url, action="download_all_episodes", extra="episodios", show=item.show) )
+
     return itemlist
 
 
@@ -256,7 +260,7 @@ def ep_list1(data, item, itemlist, lang_title):
         itemlist.append(
             Item(channel=__channel__,
                  action="findvid_serie",
-                 title="[COLOR azure]" + scrapedtitle + " (" + lang_title + ")" + "[/COLOR]",
+                 title=scrapedtitle + " (" + lang_title + ")",
                  url=item.url,
                  thumbnail=item.thumbnail,
                  extra=html,
@@ -284,7 +288,7 @@ def ep_list2(data, item, itemlist, lang_title):
         itemlist.append(
             Item(channel=__channel__,
                  action="findvid_serie",
-                 title="[COLOR azure]" + scrapedtitles[i - 1] + " (" + lang_title + ")" + "[/COLOR]",
+                 title=scrapedtitles[i - 1] + " (" + lang_title + ")",
                  url=item.url,
                  thumbnail=item.thumbnail,
                  extra=data[inizio:fine],
@@ -313,7 +317,7 @@ def ep_list3(data, item, itemlist, lang_title):
         itemlist.append(
             Item(channel=__channel__,
                  action="findvid_serie",
-                 title="[COLOR azure]" + scrapedtitles[i - 1] + " (" + lang_title + ")" + "[/COLOR]",
+                 title=scrapedtitles[i - 1] + " (" + lang_title + ")",
                  url=item.url,
                  thumbnail=item.thumbnail,
                  extra=data[inizio:fine],
@@ -342,7 +346,7 @@ def ep_list4(data, item, itemlist, lang_title):
         itemlist.append(
             Item(channel=__channel__,
                  action="findvid_serie",
-                 title="[COLOR azure]" + scrapedtitles[i - 1] + " (" + lang_title + ")" + "[/COLOR]",
+                 title=scrapedtitles[i - 1] + " (" + lang_title + ")",
                  url=item.url,
                  thumbnail=item.thumbnail,
                  extra=data[inizio:fine],
