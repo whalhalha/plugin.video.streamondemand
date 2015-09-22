@@ -20,9 +20,13 @@ def get_video_url(page_url, premium=False, user="", password="", video_password=
     data = scrapertools.cache_page(page_url)
 
     data_pack = scrapertools.find_single_match(data, "(eval.function.p,a,c,k,e,.*?)\s*</script>")
+
     if data_pack != "":
-        from core import unpackerjs3
-        data_unpack = unpackerjs3.unpackjs(data_pack)
+        try:
+            from core import unpackerjs3
+            data_unpack = unpackerjs3.unpackjs(data_pack)
+        except:
+            data_unpack = ""
         if data_unpack == "":
             from lib.jsbeautifier.unpackers import packer
             data_unpack = packer.unpack(data_pack)
@@ -58,3 +62,4 @@ def find_videos(data):
             logger.info("  url duplicada=" + url)
 
     return devuelve
+
