@@ -172,7 +172,7 @@ def episodios(item):
                 itemlist.append(
                     Item(channel=__channel__,
                          action="findvid_serie",
-                         title="[COLOR azure]" + scrapedtitle + " (" + lang_title + ")" + "[/COLOR]",
+                         title=scrapedtitle + " (" + lang_title + ")",
                          url=item.url,
                          thumbnail=item.thumbnail,
                          extra=data,
@@ -211,6 +211,10 @@ def episodios(item):
         lang_title = 'SUB ITA' if 'SUB' in (lang_title1+lang_title2).upper() else 'ITA'
         load_episodios()
 
+    if config.get_library_support():
+        itemlist.append( Item(channel=__channel__, title=item.title, url=item.url, action="add_serie_to_library", extra="episodios", show=item.show) )
+        itemlist.append( Item(channel=item.channel, title="Scarica tutti gli episodi della serie", url=item.url, action="download_all_episodes", extra="episodios", show=item.show) )
+
     return itemlist
 
 
@@ -230,3 +234,4 @@ def findvid_serie(item):
         videoitem.channel = __channel__
 
     return itemlist
+
