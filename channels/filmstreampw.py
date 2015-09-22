@@ -156,7 +156,7 @@ def peliculas(item):
         scrapedplot = html[start:end]
         scrapedplot = re.sub(r'<[^>]*>', '', scrapedplot)
         if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
-        itemlist.append( Item(channel=__channel__, action="episodios" if item.extra == "serie" else "findvideos", title="[COLOR azure]"+scrapedtitle+"[/COLOR]" , url=scrapedurl , thumbnail=scrapedthumbnail , plot=scrapedplot , folder=True, fanart=scrapedthumbnail) )
+        itemlist.append( Item(channel=__channel__, action="episodios" if item.extra == "serie" else "findvideos", title=scrapedtitle.strip(), url=scrapedurl , thumbnail=scrapedthumbnail , plot=scrapedplot , folder=True, fanart=scrapedthumbnail) )
 
     # Extrae el paginador
     patronvideos  = '<a href="([^"]+)">Avanti</a>'
@@ -189,7 +189,11 @@ def episodios(item):
         for episode_id, episode in re.compile(r'<option value=\\"(\d+)\\">([^<]+)<\\/option>').findall(json):
             title = season + ' | ' + episode.replace('Serie', 'Episodio')
             url = '%s?news_id=%s&series=%s?%s' % (post_url, serie_id, episode_id, item.url)
-            itemlist.append( Item( channel=__channel__, action="findvid_serie", title="[COLOR azure]" + title + "[/COLOR]", url=url, fulltitle=item.title, show=item.title, thumbnail=item.thumbnail ) )
+            itemlist.append( Item( channel=__channel__, action="findvid_serie", title=title.strip(), url=url, fulltitle=item.title, show=item.title, thumbnail=item.thumbnail ) )
+
+    if config.get_library_support():
+        itemlist.append( Item(channel=__channel__, title=item.title, url=item.url, action="add_serie_to_library", extra="episodios", show=item.title) )
+        itemlist.append( Item(channel=__channel__, title="Scarica tutti gli episodi della serie", url=item.url, action="download_all_episodes", extra="episodios", show=item.title) )
 
     return itemlist
 
@@ -215,3 +219,4 @@ def findvid_serie(item):
         videoitem.channel = __channel__
 
     return itemlist
+
