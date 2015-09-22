@@ -51,6 +51,7 @@ def do_search(item):
     logger.info("streamondemand.channels.buscador do_search")
 
     tecleado = item.extra
+    mostra = tecleado.replace("+"," ")
 
     itemlist = []
 
@@ -68,19 +69,7 @@ def do_search(item):
     logger.info("streamondemand.channels.buscador channels_path="+channels_path)
 
     excluir=""
-
-    # El fichero que se distribuyó en la 4.0.2 no era completo
-    '''
-    if os.path.exists(exclude_data_file):
-        fileexclude = open(exclude_data_file,"r")
-        excluir= fileexclude.read()
-        fileexclude.close()
-    else:
-        excluir = "seriesly\n"
-        fileexclude = open(exclude_data_file,"w")
-        fileexclude.write(excluir)
-        fileexclude.close()
-    '''
+    
     if os.path.exists(master_exclude_data_file):
         logger.info("streamondemand.channels.buscador Encontrado fichero exclusiones")
 
@@ -97,7 +86,7 @@ def do_search(item):
     try:
         import xbmcgui
         progreso = xbmcgui.DialogProgressBG()
-        progreso.create("Sto cercando "+ tecleado.title())
+        progreso.create("Ricerca di "+ mostra.title())
     except:
         show_dialog = False
 
@@ -113,7 +102,7 @@ def do_search(item):
         if basename_without_extension not in excluir:
 
             if show_dialog:
-                progreso.update(percentage, ' Sto cercando "' + tecleado+ '"', basename_without_extension)
+                progreso.update(percentage, ' Sto cercando "' + mostra+ '"', basename_without_extension)
 
             logger.info("streamondemand.channels.buscador Provando a cercare in " + basename_without_extension + " per "+ tecleado)
             try:
@@ -123,7 +112,7 @@ def do_search(item):
                 logger.info("streamondemand.channels.buscador cargado " + basename_without_extension + " de "+ infile)
                 channel_result_itemlist = obj.search( Item() , tecleado)
                 for item in channel_result_itemlist:
-                    item.title = item.title + " [COLOR grey][" + basename_without_extension + "][/COLOR]"
+                    item.title = item.title + " [COLOR orange]su[/COLOR] [COLOR green]" + basename_without_extension + "[/COLOR]"
                     item.viewmode = "list"
 
                 itemlist.extend( channel_result_itemlist )
