@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <version>
 	<name>Stream On Demand</name>
-	<tag>5.0.4</tag>
-	<version>5004</version>
-	<date>14/09/2015</date>
-	<changes>Unofficial pelisalacarta only for Italian localization - Stream On Demand - General update test - server update system shift</changes>
+	<tag>5.0.5</tag>
+	<version>5005</version>
+	<date>22/09/2015</date>
+	<changes>Stream On Demand - General Search mandatory update - Zanzibar82</changes>
 </version>
