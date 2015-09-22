@@ -398,71 +398,6 @@ def listserie(item):
 
     return itemlist
 
-
-def animestream(item):
-    logger.info("[cineblog01.py] mainlist")
-    itemlist = []
-
-    if item.url == "":
-        item.url = sito
-
-    # Descarga la página
-    data = scrapertools.cache_page(item.url)
-    logger.info(data)
-
-    # Extrae las entradas (carpetas)
-    patronvideos = '<div class="span4"> <a.*?<p><img.*?src="(.*?)".*?'
-    patronvideos += '<div class="span8">.*?<a href="(.*?)">.*?'
-    patronvideos += '<h1>(.*?)</h1></a>.*?<br>-->(.*?)<br>.*?'
-    matches = re.compile(patronvideos, re.DOTALL).finditer(data)
-
-    for match in matches:
-        scrapedtitle = scrapertools.unescape(match.group(3))
-        scrapedurl = urlparse.urljoin(item.url, match.group(2))
-        scrapedthumbnail = urlparse.urljoin(item.url, match.group(1))
-        scrapedthumbnail = scrapedthumbnail.replace(" ", "%20")
-        scrapedplot = scrapertools.unescape(match.group(4))
-        scrapedplot = scrapertools.htmlclean(scrapedplot).strip()
-        if (DEBUG): logger.info(
-            "title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
-        itemlist.append(
-            Item(channel=__channel__,
-                 action="findvid_anime",
-                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
-                 url=scrapedurl,
-                 thumbnail=scrapedthumbnail,
-                 plot=scrapedplot,
-                 viewmode="movie_with_plot",
-                 fanart=scrapedthumbnail))
-
-    # Next page mark
-    try:
-        bloque = scrapertools.get_match(data, "<div id='wp_page_numbers'>(.*?)</div>")
-        patronvideos = '<a href="([^"]+)">></a></li>'
-        matches = re.compile(patronvideos, re.DOTALL).findall(bloque)
-        scrapertools.printMatches(matches)
-
-        if len(matches) > 0:
-            scrapedtitle = "[COLOR orange]Successivo>>[/COLOR]"
-            scrapedurl = matches[0]
-            scrapedthumbnail = ""
-            scrapedplot = ""
-            if (DEBUG): logger.info(
-                "title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
-
-            itemlist.append(
-                Item(channel=__channel__,
-                     action="animestream",
-                     title=scrapedtitle,
-                     url=scrapedurl,
-                     thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png",
-                     plot=scrapedplot))
-    except:
-        pass
-
-    return itemlist
-
-
 def listaaz(item):
     logger.info("[cineblog01.py] listaaz")
     itemlist = []
@@ -543,17 +478,13 @@ def animegenere(item):
 
     for scrapedurl,scrapedtitle in matches:
         scrapedtitle = scrapertools.decodeHtmlentities( scrapedtitle )
-        scrapedthumbnail = ""
-        scrapedplot = ""
         if DEBUG: logger.info(
             "title=[" + scrapedtitle + "], url=[" + scrapedurl + "]")
         itemlist.append(
             Item(channel=__channel__,
-                 action="animestream",
+                 action="listanime",
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
-                 url=scrapedurl,
-                 thumbnail=scrapedthumbnail,
-                 plot=scrapedplot))
+                 url= sitoanime + scrapedurl))
 
     return itemlist
 
