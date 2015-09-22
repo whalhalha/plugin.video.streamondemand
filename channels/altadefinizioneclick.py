@@ -37,7 +37,7 @@ def mainlist( item ):
 
     itemlist = []
 
-    itemlist.append( Item( channel=__channel__, title="[COLOR azure]Al Cinema[/COLOR]", action="fichas", url=host + "/al-cinema/" ,thumbnail="http://orig03.deviantart.net/6889/f/2014/079/7/b/movies_and_popcorn_folder_icon_by_matheusgrilo-d7ay4tw.png") )
+    itemlist.append( Item( channel=__channel__, title="[COLOR azure]Novita'[/COLOR]", action="fichas", url=host + "/nuove-uscite/" ,thumbnail="http://orig03.deviantart.net/6889/f/2014/079/7/b/movies_and_popcorn_folder_icon_by_matheusgrilo-d7ay4tw.png") )
     itemlist.append( Item( channel=__channel__, title="[COLOR azure]Film per Genere[/COLOR]", action="genere", url=host , thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/All%20Movies%20by%20Genre.png") )
     itemlist.append( Item( channel=__channel__, title="[COLOR azure]Film per Anno[/COLOR]", action="anno", url=host, thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/Movie%20Year.png" ) )
     itemlist.append( Item( channel=__channel__, title="[COLOR azure]Film Sub-Ita[/COLOR]", action="fichas", url=host + "/sub-ita/", extra="sub" , thumbnail="http://i.imgur.com/qUENzxl.png") )
