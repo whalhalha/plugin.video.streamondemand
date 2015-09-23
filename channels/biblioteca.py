@@ -122,23 +122,14 @@ def cat_elenco(item):
     data = scrapertools.cache_page(item.url)
     
     # Extrae las entradas (carpetas)
-    patron  = '<a href="(.*?)">(.*?)</a>[^<]+<span style='
+    patron  = '<a href=".*?">(.*?)</a>[^<]+<span style='
     matches = re.compile(patron,re.DOTALL).findall(data)
     scrapertools.printMatches(matches)
 
-    for scrapedurl,scrapedtitle in matches:
-        #response = urllib2.urlopen(scrapedurl)
-        #html = response.read()
-        #start = html.find("<span style=\"color: #5f5f5f;\">")
-        #end = html.find("</p>", start)
-        #scrapedplot = html[start:end]
-        #scrapedplot = re.sub(r'<[^>]*>', '', scrapedplot)
-        #scrapedplot = scrapertools.decodeHtmlentities(scrapedplot)
-        scrapedplot = ""
-        scrapedthumbnail = ""
-        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
-        if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"]")
-        itemlist.append( Item(channel=__channel__, action="findvideos", title="[COLOR azure]"+scrapedtitle+"[/COLOR]" , url=scrapedurl , thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/All%20Movies%20by%20Genre.png", folder=True) )
+    for scrapedtitle in matches:
+        scrapedtitle=scrapertools.decodeHtmlentities( scrapedtitle )
+        titolo = scrapedtitle.replace(" ","+")
+        itemlist.append( Item(channel=__channel__, action="do_search", extra=titolo, title= scrapedtitle , folder=True) )
 
     return itemlist
 
