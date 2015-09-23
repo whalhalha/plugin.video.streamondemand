@@ -1,6 +1,7 @@
 # In questo file vanno scritti i nomi dei canali che si intende escludere dalla ricerca globale.
 # Il file buscador.py contenuto in questo repack forza la ricerca in tutti i canali .py compresi nella cartella channels.
 animesubita
+biblioteca
 cineblogfm
 cinestreaming01
 cucinarefacile
