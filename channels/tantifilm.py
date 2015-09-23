@@ -170,7 +170,7 @@ def peliculas(item):
         itemlist.append(
             Item(channel=__channel__,
                  action="episodios" if item.extra == "serie" else "findvideos",
-                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
+                 title=scrapedtitle,
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  plot=scrapedplot,
@@ -263,7 +263,7 @@ def episodios(item):
         itemlist.append(
             Item(channel=__channel__,
                  action="findvideos",
-                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
+                 title=scrapedtitle,
                  url=item.url,
                  thumbnail=item.thumbnail,
                  extra=data1+data2,
@@ -283,12 +283,16 @@ def episodios(item):
             itemlist.append(
                 Item(channel=__channel__,
                      action="findvideos",
-                     title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
+                     title=scrapedtitle,
                      url=item.url,
                      thumbnail=item.thumbnail,
                      extra=html,
                      fulltitle=item.title,
                      show=item.title))
+
+    if config.get_library_support():
+        itemlist.append( Item(channel=__channel__, title=item.title, url=item.url, action="add_serie_to_library", extra="episodios", show=item.title) )
+        itemlist.append( Item(channel=item.channel, title="Scarica tutti gli episodi della serie", url=item.url, action="download_all_episodes", extra="episodios", show=item.title) )
 
     return itemlist
 
@@ -325,3 +329,4 @@ def findvideos(item):
                  folder=False))
 
     return itemlist
+
