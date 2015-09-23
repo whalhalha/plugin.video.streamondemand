@@ -4,14 +4,13 @@
 # Canal para guardaserie - Thank you robalo!
 # http://blog.tvalacarta.info/plugin-xbmc/streamondemand.
 #------------------------------------------------------------
-import urlparse,urllib2,urllib,re
-import os, sys
+import re
+import sys
 
 from core import logger
 from core import config
 from core import scrapertools
 from core.item import Item
-from servers import servertools
 
 __channel__ = "guardaserie"
 __category__ = "S"
@@ -154,7 +153,7 @@ def cerca( item ):
 
            scrapedtitle = scrapedtitle[7:]
            
-        itemlist.append( Item( channel=__channel__, action="episodios",title="[COLOR azure]" + scrapedtitle + "[/COLOR]", fulltitle=scrapedtitle, url=scrapedurl, show=scrapedtitle , thumbnail=scrapedthumbnail ) )
+        itemlist.append( Item( channel=__channel__, action="episodios",title="[COLOR azure]" + scrapedtitle + "[/COLOR]", fulltitle=scrapedtitle, url=scrapedurl, show=scrapedtitle ) )
 
     return itemlist
 
@@ -186,7 +185,11 @@ def episodios(item):
             ## [host+path]?[argumentos]?[Referer]
             url = host + "/wp-admin/admin-ajax.php?action=get_episode&id=" + serie_id + "&season=" + scrapedseason + "&episode=" + scrapedepisode + "?" + item.url 
 
-            itemlist.append( Item( channel=__channel__, action="findvideos", title="[COLOR azure]" + title + "[/COLOR]", url=url, fulltitle=item.title, show=item.title ) )
+            itemlist.append( Item( channel=__channel__, action="findvideos", title="[COLOR azure]" + title + "[/COLOR]", url=url, fulltitle=item.title, show=item.title, thumbnail=item.thumbnail ) )
+
+    if config.get_library_support():
+        itemlist.append( Item(channel=__channel__, title="[COLOR azure]" + item.title + "[/COLOR]", url=item.url, action="add_serie_to_library", extra="episodios", show=item.show) )
+        itemlist.append( Item(channel=__channel__, title="[COLOR azure]Scarica tutti gli episodi della serie[/COLOR]", url=item.url, action="download_all_episodes", extra="episodios", show=item.show) )
 
     return itemlist
 
@@ -214,3 +217,4 @@ def findvideos( item ):
     itemlist.append( Item( channel=__channel__, action="play",title="[COLOR azure]" + title + "[/COLOR]", url=url, server=server , fulltitle=item.fulltitle, show=item.show, folder=False ) )
 
     return itemlist
+
