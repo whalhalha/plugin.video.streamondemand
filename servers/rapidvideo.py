@@ -15,7 +15,12 @@ from lib.jsbeautifier.unpackers import packer
 def test_video_exists(page_url):
     logger.info("[rapidvideo.py] test_video_exists(page_url='%s')" % page_url)
 
-    data = scrapertools.cache_page(page_url)
+    page_url = page_url.replace('.tv/', '.org/')
+
+    video_id = scrapertools.get_match(page_url, 'org/([A-Za-z0-9]+)')
+    url = 'http://www.rapidvideo.org/embed-%s-607x360.html' % video_id
+
+    data = scrapertools.cache_page(url)
 
     if "The file was removed from RapidVideo" in data:
         return False, "The file not exists or was removed from RapidVideo."
@@ -26,7 +31,12 @@ def test_video_exists(page_url):
 def get_video_url(page_url, premium=False, user="", password="", video_password=""):
     logger.info("[rapidvideo.py] url=" + page_url)
 
-    data = scrapertools.cache_page(page_url)
+    page_url = page_url.replace('.tv/', '.org/')
+
+    video_id = scrapertools.get_match(page_url, 'org/([A-Za-z0-9]+)')
+    url = 'http://www.rapidvideo.org/embed-%s-607x360.html' % video_id
+
+    data = scrapertools.cache_page(url)
 
     packed = scrapertools.get_match(data, "<script type='text/javascript'>eval.function.p,a,c,k,e,.*?</script>")
     unpacked = packer.unpack(packed)
@@ -40,7 +50,7 @@ def get_video_url(page_url, premium=False, user="", password="", video_password=
     return video_urls
 
 
-# Encuentra vÃÂ­deos de este servidor en el texto pasado
+# Encuentra vÃ­deos de este servidor en el texto pasado
 def find_videos(data):
     encontrados = set()
     devuelve = []
@@ -62,7 +72,7 @@ def find_videos(data):
 
         for match in matches:
             titulo = "[rapidvideo]"
-            url = "http://www.rapidvideo.org/embed-%s-607x360.html" % match
+            url = "http://www.rapidvideo.org/" + match
             if url not in encontrados:
                 logger.info("  url=" + url)
                 devuelve.append([titulo, url, 'rapidvideo'])
