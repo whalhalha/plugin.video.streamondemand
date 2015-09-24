@@ -118,7 +118,7 @@ def peliculasrobalo(item):
     # Extrae las entradas (carpetas)
     patronvideos = '<div class="span4".*?<a.*?<p><img src="([^"]+)".*?'
     patronvideos += '<div class="span8">.*?<a href="([^"]+)"> <h1>([^"]+)</h1></a>.*?'
-    patronvideos += '<p><strong>.*?</strong>.*?<br />([^"]+)<a href'
+    patronvideos += '<strong>([^<]*)</strong>.*?<br />([^<+]+)'
     matches = re.compile(patronvideos, re.DOTALL).finditer(data)
 
     for match in matches:
@@ -126,7 +126,7 @@ def peliculasrobalo(item):
         scrapedurl = urlparse.urljoin(item.url, match.group(2))
         scrapedthumbnail = urlparse.urljoin(item.url, match.group(1))
         scrapedthumbnail = scrapedthumbnail.replace(" ", "%20")
-        scrapedplot = scrapertools.unescape(match.group(4))
+        scrapedplot = scrapertools.unescape("[COLOR orange]" + match.group(4) + "[/COLOR]\n" + match.group(5).strip())
         scrapedplot = scrapertools.htmlclean(scrapedplot).strip()
         if DEBUG: logger.info(
             "title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
