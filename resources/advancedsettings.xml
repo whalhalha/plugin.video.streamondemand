@@ -1,5 +1,4 @@
 <advancedsettings>
-<playlisttimeout>35</playlisttimeout>
 <network>
 <autodetectpingtime>30</autodetectpingtime> 	<!-- Tiempo en segundos entre pings para detectar nuevas xbox. Por defecto 30, minimo 1, maximo 240 -->
 <curlclienttimeout>60</curlclienttimeout> 		<!-- Timeout en segundos para el reproductor (y otras conexiones). Por defecto 10, minimo 1, maximo 1000 -->
