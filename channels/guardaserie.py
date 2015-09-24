@@ -73,7 +73,7 @@ def fichas( item ):
 
     for scrapedurl, scrapedtitle in matches:
 
-        itemlist.append( Item( channel=__channel__, action="episodios", title="[COLOR azure]" + scrapedtitle + "[/COLOR]", fulltitle=scrapedtitle, url=scrapedurl, show=scrapedtitle ) )
+        itemlist.append( Item( channel=__channel__, action="episodios", title= scrapedtitle , fulltitle=scrapedtitle, url=scrapedurl, show=scrapedtitle ) )
 
     return itemlist
 
@@ -92,7 +92,7 @@ def anime( item ):
 
     for scrapedurl, scrapedtitle in matches:
 
-        itemlist.append( Item( channel=__channel__, action="episodios", title="[COLOR azure]" + scrapedtitle + "[/COLOR]", fulltitle=scrapedtitle, url=scrapedurl, show=scrapedtitle, thumbnail="http://www.itrentenni.com/wp-content/uploads/2015/02/tv-series.jpg" ) )
+        itemlist.append( Item( channel=__channel__, action="episodios", title= scrapedtitle , fulltitle=scrapedtitle, url=scrapedurl, show=scrapedtitle, thumbnail="http://www.itrentenni.com/wp-content/uploads/2015/02/tv-series.jpg" ) )
 
     return itemlist
 
@@ -111,7 +111,7 @@ def cartoni( item ):
 
     for scrapedurl, scrapedtitle in matches:
 
-        itemlist.append( Item( channel=__channel__, action="episodios", title="[COLOR azure]" + scrapedtitle + "[/COLOR]", fulltitle=scrapedtitle, url=scrapedurl, show=scrapedtitle, thumbnail="http://www.itrentenni.com/wp-content/uploads/2015/02/tv-series.jpg" ) )
+        itemlist.append( Item( channel=__channel__, action="episodios", title= scrapedtitle , fulltitle=scrapedtitle, url=scrapedurl, show=scrapedtitle, thumbnail="http://www.itrentenni.com/wp-content/uploads/2015/02/tv-series.jpg" ) )
 
     return itemlist
 
@@ -130,7 +130,7 @@ def progs( item ):
 
     for scrapedurl, scrapedtitle in matches:
 
-        itemlist.append( Item( channel=__channel__, action="episodios",title="[COLOR azure]" + scrapedtitle + "[/COLOR]", fulltitle=scrapedtitle, url=scrapedurl, show=scrapedtitle, thumbnail="http://www.itrentenni.com/wp-content/uploads/2015/02/tv-series.jpg" ) )
+        itemlist.append( Item( channel=__channel__, action="episodios",title= scrapedtitle, fulltitle=scrapedtitle, url=scrapedurl, show=scrapedtitle, thumbnail="http://www.itrentenni.com/wp-content/uploads/2015/02/tv-series.jpg" ) )
 
     return itemlist
 
@@ -153,7 +153,7 @@ def cerca( item ):
 
            scrapedtitle = scrapedtitle[7:]
            
-        itemlist.append( Item( channel=__channel__, action="episodios",title="[COLOR azure]" + scrapedtitle + "[/COLOR]", fulltitle=scrapedtitle, url=scrapedurl, show=scrapedtitle ) )
+        itemlist.append( Item( channel=__channel__, action="episodios",title= scrapedtitle , fulltitle=scrapedtitle, url=scrapedurl, show=scrapedtitle ) )
 
     return itemlist
 
@@ -185,10 +185,10 @@ def episodios(item):
             ## [host+path]?[argumentos]?[Referer]
             url = host + "/wp-admin/admin-ajax.php?action=get_episode&id=" + serie_id + "&season=" + scrapedseason + "&episode=" + scrapedepisode + "?" + item.url 
 
-            itemlist.append( Item( channel=__channel__, action="findvideos", title="[COLOR azure]" + title + "[/COLOR]", url=url, fulltitle=item.title, show=item.title, thumbnail=item.thumbnail ) )
+            itemlist.append( Item( channel=__channel__, action="findvideos", title= title, url=url, fulltitle=item.title, show=item.title, thumbnail=item.thumbnail ) )
 
     if config.get_library_support():
-        itemlist.append( Item(channel=__channel__, title="[COLOR azure]" + item.title + "[/COLOR]", url=item.url, action="add_serie_to_library", extra="episodios", show=item.show) )
+        itemlist.append( Item(channel=__channel__, title= item.title , url=item.url, action="add_serie_to_library", extra="episodios", show=item.show) )
         itemlist.append( Item(channel=__channel__, title="[COLOR azure]Scarica tutti gli episodi della serie[/COLOR]", url=item.url, action="download_all_episodes", extra="episodios", show=item.show) )
 
     return itemlist
@@ -214,7 +214,7 @@ def findvideos( item ):
 
     title = "[" + server + "] " + item.title
 
-    itemlist.append( Item( channel=__channel__, action="play",title="[COLOR azure]" + title + "[/COLOR]", url=url, server=server , fulltitle=item.fulltitle, show=item.show, folder=False ) )
+    itemlist.append( Item( channel=__channel__, action="play",title= title , url=url, server=server , fulltitle=item.fulltitle, show=item.show, folder=False ) )
 
     return itemlist
 
