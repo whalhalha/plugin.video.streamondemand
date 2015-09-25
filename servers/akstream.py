@@ -18,9 +18,7 @@ def get_video_url(page_url, premium=False, user="", password="", video_password=
     video_urls = []
 
     br = mechanize.Browser()
-    br.addheaders = [('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; rv:38.0) Gecko/20100101 Firefox/38.0'),
-                     ('Accept-Encoding', 'gzip, deflate'),
-                     ('Connection', 'keep-alive')]
+    br.addheaders = [('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; rv:38.0) Gecko/20100101 Firefox/38.0')]
     br.set_handle_robots(False)
 
     r = br.open(page_url)
@@ -99,4 +97,3 @@ def test():
     video_urls = get_video_url("http://akstream.net/v/8513acv2alss")
 
     return len(video_urls) > 0
-
