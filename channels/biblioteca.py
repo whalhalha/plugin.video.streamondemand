@@ -215,6 +215,7 @@ def cat_registi_N_O_P(item):
     scrapertools.printMatches(matches)
 
     for scrapedtitle in matches:
+        scrapedtitle=scrapertools.decodeHtmlentities(scrapedtitle.replace("N/A",""))
         titolo = scrapedtitle.replace(" ","+")
         itemlist.append( Item(channel=__channel__, action="do_search", extra=titolo, title= scrapedtitle , folder=True) )
 
