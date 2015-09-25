@@ -39,7 +39,7 @@ def mainlist(item):
                      title="[COLOR azure]Cinema - Novita'[/COLOR]",
                      url=sito,
                      thumbnail="http://orig03.deviantart.net/6889/f/2014/079/7/b/movies_and_popcorn_folder_icon_by_matheusgrilo-d7ay4tw.png"),
-		Item(channel=__channel__,
+                Item(channel=__channel__,
                      action="peliculasrobalo",
                      title="[COLOR azure]Alta Definizione [HD][/COLOR]",
                      url="http://www.cb01.eu/tag/film-hd-altadefinizione/",
@@ -134,7 +134,10 @@ def peliculasrobalo(item):
             Item(channel=__channel__,
                  action="findvid",
                  title=scrapedtitle,
-                 url=scrapedurl, thumbnail=scrapedthumbnail, plot=scrapedplot, viewmode="movie_with_plot",
+                 url=scrapedurl,
+                 thumbnail=scrapedthumbnail,
+                 plot=scrapedplot,
+                 viewmode="movie_with_plot",
                  fanart=scrapedthumbnail))
 
     # Next page mark
@@ -260,6 +263,7 @@ def menugeneros(item):
                  plot=scrapedplot))
 
     return itemlist
+
 
 def menuhd(item):
     logger.info("[cineblog01.py] menugeneros")
@@ -398,6 +402,7 @@ def listserie(item):
 
     return itemlist
 
+
 def listaaz(item):
     logger.info("[cineblog01.py] listaaz")
     itemlist = []
@@ -406,7 +411,8 @@ def listaaz(item):
     logger.info(data)
 
     # Narrow search by selecting only the combo
-    bloque = scrapertools.get_match(data, '<a href="#char_5a" title="Go to the letter Z">Z</a></span></div>(.*?)</ul></div><div style="clear:both;"></div></div>')
+    bloque = scrapertools.get_match(data,
+                                    '<a href="#char_5a" title="Go to the letter Z">Z</a></span></div>(.*?)</ul></div><div style="clear:both;"></div></div>')
 
     # The categories are the options for the combo  
     patron = '<li><a href="([^"]+)"><span class="head">([^<]+)</span></a></li>'
@@ -429,7 +435,7 @@ def listaaz(item):
 
     return itemlist
 
-	
+
 def listaletra(item):
     logger.info("[cineblog01.py] listaaz")
     itemlist = []
@@ -453,14 +459,15 @@ def listaletra(item):
         if (DEBUG): logger.info("title=[" + scrapedtitle + "], url=[" + scrapedurl + "]")
         itemlist.append(
             Item(channel=__channel__,
-                 action = "listanime",
-                 title = scrapedtitle,
+                 action="listanime",
+                 title=scrapedtitle,
                  url=sitoanime + scrapedurl,
                  thumbnail="http://www.justforpastime.net/uploads/3/8/1/5/38155083/273372_orig.jpg",
                  plot=scrapedplot))
 
     return itemlist
-	
+
+
 def animegenere(item):
     logger.info("[cineblog01.py] animegenere")
     itemlist = []
@@ -476,15 +483,15 @@ def animegenere(item):
     matches = re.compile(patron, re.DOTALL).findall(bloque)
     scrapertools.printMatches(matches)
 
-    for scrapedurl,scrapedtitle in matches:
-        scrapedtitle = scrapertools.decodeHtmlentities( scrapedtitle )
+    for scrapedurl, scrapedtitle in matches:
+        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         if DEBUG: logger.info(
             "title=[" + scrapedtitle + "], url=[" + scrapedurl + "]")
         itemlist.append(
             Item(channel=__channel__,
                  action="listanime",
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
-                 url= sitoanime + scrapedurl))
+                 url=sitoanime + scrapedurl))
 
     return itemlist
 
@@ -510,7 +517,8 @@ def listanime(item):
         scrapedplot = scrapertools.unescape(match.group(4))
         if scrapedplot.startswith(""):
             scrapedplot = scrapedplot[149:]
-        if DEBUG: logger.info("title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
+        if DEBUG: logger.info(
+            "title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
 
         # Añade al listado de XBMC
         itemlist.append(
@@ -576,7 +584,7 @@ def findvid(item):
                  fulltitle=item.title,
                  show=item.title,
                  folder=False))
-    
+
     streaming_3D = scrapertools.find_single_match(data, '<strong>Streaming 3D[^<]+</strong>(.*?)<table height="30">')
     patron = '<td><a href="([^"]+)" target="_blank">([^<]+)</a></td>'
     matches = re.compile(patron, re.DOTALL).findall(streaming_hd)
@@ -607,7 +615,8 @@ def findvid(item):
                  show=item.title,
                  folder=False))
 
-    download_hd = scrapertools.find_single_match(data, '<strong>Download HD[^<]+</strong>(.*?)<table width="100%" height="20">')
+    download_hd = scrapertools.find_single_match(data,
+                                                 '<strong>Download HD[^<]+</strong>(.*?)<table width="100%" height="20">')
     patron = '<td><a href="([^"]+)" target="_blank">([^<]+)</a></td>'
     matches = re.compile(patron, re.DOTALL).findall(download_hd)
     for scrapedurl, scrapedtitle in matches:
@@ -704,7 +713,10 @@ def play(item):
 
     print "##############################################################"
     if "go.php" in item.url:
-        data = scrapertools.get_match(data, 'window.location.href = "([^"]+)";')
+        try:
+            data = scrapertools.get_match(data, 'window.location.href = "([^"]+)";')
+        except IndexError:
+            data = scrapertools.get_match(data, r'<a href="([^"]+)" class="btn-wrapper">Clicca per proseguire</a>')
         print "##### play go.php data ##\n%s\n##" % data
     elif "/link/" in item.url:
         from lib.jsbeautifier.unpackers import packer
@@ -732,3 +744,4 @@ def play(item):
         videoitem.channel = __channel__
 
     return itemlist
+
