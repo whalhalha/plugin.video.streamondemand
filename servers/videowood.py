@@ -6,12 +6,11 @@
 # by DrZ3r0
 # ------------------------------------------------------------
 
-import urlparse, urllib2, urllib, re
-import os
+import re
 
 from core import scrapertools
 from core import logger
-from core import config
+from core import unpackerjs3
 
 
 def test_video_exists(page_url):
@@ -22,12 +21,7 @@ def test_video_exists(page_url):
     if "This video doesn't exist." in data:
         return False, 'The requested video was not found.'
 
-    pattern = "file\s*:\s*'[^']+/video/[^']+"
-    match = re.search(pattern, data, re.DOTALL)
-    if match:
-        return True, ""
-
-    return False, 'No video link found.'
+    return True, ""
 
 
 def get_video_url(page_url, premium=False, user="", password="", video_password=""):
@@ -35,9 +29,11 @@ def get_video_url(page_url, premium=False, user="", password="", video_password=
     video_urls = []
 
     data = scrapertools.cache_page(page_url)
+    data = scrapertools.find_single_match(data, "(eval.function.p,a,c,k,e,.*?)\s*</script>")
+    data = unpackerjs3.unpackjs(data)
 
     # URL del vídeo
-    pattern = "file\s*:\s*'([^']+/video/[^']+)"
+    pattern = r'"file"\s*:\s*"([^"]+/video/[^"]+)'
     match = re.search(pattern, data, re.DOTALL)
 
     url = match.group(1)
@@ -67,3 +63,4 @@ def find_videos(text):
             logger.info("  url duplicada=" + url)
 
     return devuelve
+
