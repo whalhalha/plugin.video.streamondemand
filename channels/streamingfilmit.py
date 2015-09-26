@@ -244,12 +244,15 @@ def play(item):
     data = scrapertools.cache_page(item.url, headers=headers)
     data = scrapertools.decodeHtmlentities(data).replace('http://cineblog01.pw', 'http://k4pp4.pw')
 
-    url = scrapertools.find_single_match(data, r'<a\s*href="([^"]+)"><h1')
+    url = scrapertools.find_single_match(data, r'<meta http-equiv="refresh" content="\d+;\s*url=([^"]+)"')
 
     data = scrapertools.cache_page(url, headers=headers)
 
     if "go.php" in url:
-        data = scrapertools.get_match(data, 'window.location.href = "([^"]+)";')
+        try:
+            data = scrapertools.get_match(data, 'window.location.href = "([^"]+)";')
+        except IndexError:
+            data = scrapertools.get_match(data, r'<a href="([^"]+)" class="btn-wrapper">Clicca per proseguire</a>')
     elif "/link/" in url:
         from lib.jsbeautifier.unpackers import packer
         try:
@@ -271,4 +274,3 @@ def play(item):
         videoitem.channel = __channel__
 
     return itemlist
-
