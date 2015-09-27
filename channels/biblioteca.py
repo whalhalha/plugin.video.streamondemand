@@ -1,364 +1,186 @@
 # -*- coding: utf-8 -*-
-#------------------------------------------------------------
+# ------------------------------------------------------------
 # streamondemand - XBMC Plugin
 # Ricerca "Biblioteca"
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
-#------------------------------------------------------------
-import urlparse,urllib2,urllib,re
-import os, sys
-import time
+# http://www.mimediacenter.info/foro/viewforum.php?f=36
+# ------------------------------------------------------------
+import re
 
 from core import logger
 from core import config
 from core import scrapertools
 from core.item import Item
-from servers import servertools
 
 __channel__ = "biblioteca"
 __category__ = "F"
 __type__ = "generic"
-__title__ = "Biblioteca"
+__title__ = "biblioteca"
 __language__ = "IT"
 
-host = "http://altadefinizione.co"
-
-headers = [
-    ['User-Agent', 'Mozilla/5.0 (Windows NT 6.1; rv:38.0) Gecko/20100101 Firefox/38.0'],
-    ['Accept-Encoding', 'gzip, deflate'],
-    ['Referer', 'http://altadefinizione.co/'],
-    ['Connection', 'keep-alive']
-]
+host = "http://www.ibs.it"
 
 DEBUG = config.get_setting("debug")
+
 
 def isGeneric():
     return True
 
+
 def mainlist(item):
     logger.info("streamondemand.biblioteca mainlist")
     itemlist = []
-    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Film per Registi [A][/COLOR]", action="cat_registi_A", url="http://altadefinizione.co/registi/", thumbnail="http://cinema.clubefl.gr/wp-content/themes/director-theme/images/logo.png"))
-    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Film per Registi [B C D][/COLOR]", action="cat_registi_B_C_D", url="http://altadefinizione.co/registi/", thumbnail="http://cinema.clubefl.gr/wp-content/themes/director-theme/images/logo.png"))
-    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Film per Registi [E F][/COLOR]", action="cat_registi_E_F", url="http://altadefinizione.co/registi/", thumbnail="http://cinema.clubefl.gr/wp-content/themes/director-theme/images/logo.png"))
-    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Film per Registi [G][/COLOR]", action="cat_registi_G", url="http://altadefinizione.co/registi/", thumbnail="http://cinema.clubefl.gr/wp-content/themes/director-theme/images/logo.png"))
-    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Film per Registi [H I][/COLOR]", action="cat_registi_H_I", url="http://altadefinizione.co/registi/", thumbnail="http://cinema.clubefl.gr/wp-content/themes/director-theme/images/logo.png"))
-    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Film per Registi [J][/COLOR]", action="cat_registi_J", url="http://altadefinizione.co/registi/", thumbnail="http://cinema.clubefl.gr/wp-content/themes/director-theme/images/logo.png"))
-    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Film per Registi [K L][/COLOR]", action="cat_registi_K_L", url="http://altadefinizione.co/registi/", thumbnail="http://cinema.clubefl.gr/wp-content/themes/director-theme/images/logo.png"))
-    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Film per Registi [M][/COLOR]", action="cat_registi_M", url="http://altadefinizione.co/registi/", thumbnail="http://cinema.clubefl.gr/wp-content/themes/director-theme/images/logo.png"))
-    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Film per Registi [N O P][/COLOR]", action="cat_registi_N_O_P", url="http://altadefinizione.co/registi/", thumbnail="http://cinema.clubefl.gr/wp-content/themes/director-theme/images/logo.png"))
-    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Film per Registi [Q R][/COLOR]", action="cat_registi_Q_R", url="http://altadefinizione.co/registi/", thumbnail="http://cinema.clubefl.gr/wp-content/themes/director-theme/images/logo.png"))
-    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Film per Registi [S][/COLOR]", action="cat_registi_S", url="http://altadefinizione.co/registi/", thumbnail="http://cinema.clubefl.gr/wp-content/themes/director-theme/images/logo.png"))
-    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Film per Registi [T U V][/COLOR]", action="cat_registi_T_U_V", url="http://altadefinizione.co/registi/", thumbnail="http://cinema.clubefl.gr/wp-content/themes/director-theme/images/logo.png"))
-    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Film per Registi [W X Y Z][/COLOR]", action="cat_registi_W_X_Y_Z", url="http://altadefinizione.co/registi/", thumbnail="http://cinema.clubefl.gr/wp-content/themes/director-theme/images/logo.png"))
-    #itemlist.append( Item(channel=__channel__, title="[COLOR azure]Film per Attori/Attrici[/COLOR]", action="cat_attori", url="http://altadefinizione.co/attori/", thumbnail="http://repository-butchabay.googlecode.com/svn/branches/eden/skin.cirrus.extended.v2/extras/moviegenres/All%20Movies%20by%20Actor.png"))
-    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Elenco Film [A-Z][/COLOR]", action="categorias", url="http://www.darkstream.tv/", thumbnail="http://repository-butchabay.googlecode.com/svn/branches/eden/skin.cirrus.extended.v2/extras/moviegenres/Movies%20A-Z.png"))
-    #itemlist.append( Item(channel=__channel__, title="[COLOR yellow]Cerca...[/COLOR]", action="search", thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search"))
+    itemlist.append(
+        Item(channel=__channel__,
+             title="[COLOR azure]Indice Registi [A-Z][/COLOR]",
+             action="cat_lettera_registi",
+             url="http://www.ibs.it/dvd/lista+registi.html",
+             thumbnail="http://cinema.clubefl.gr/wp-content/themes/director-theme/images/logo.png"))
+    itemlist.append(
+        Item(channel=__channel__,
+             title="[COLOR azure]Indice Attori/Attrici [A-Z][/COLOR]",
+             action="cat_lettera_attori",
+             url="http://www.ibs.it/dvd-film/lista-attori.html",
+             thumbnail="http://cinema.clubefl.gr/wp-content/themes/director-theme/images/logo.png"))
+    # itemlist.append( Item(channel=__channel__, title="[COLOR azure]Film per Attori/Attrici[/COLOR]", action="cat_attori", url="http://altadefinizione.co/attori/", thumbnail="http://repository-butchabay.googlecode.com/svn/branches/eden/skin.cirrus.extended.v2/extras/moviegenres/All%20Movies%20by%20Actor.png"))
+    itemlist.append(
+        Item(channel=__channel__,
+             title="[COLOR azure]Elenco Film [A-Z][/COLOR]",
+             action="categorias",
+             url="http://www.darkstream.tv/",
+             thumbnail="http://repository-butchabay.googlecode.com/svn/branches/eden/skin.cirrus.extended.v2/extras/moviegenres/Movies%20A-Z.png"))
+    # itemlist.append( Item(channel=__channel__, title="[COLOR yellow]Cerca...[/COLOR]", action="search", thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search"))
 
-    
     return itemlist
 
 
-def cat_registi_A(item):
-    logger.info("streamondemand.biblioteca cat_registi_A")
+def cat_lettera_registi(item):
+    logger.info("streamondemand.biblioteca cat_registi")
     itemlist = []
 
-    # Descarga la pagina
-    data = anti_cloudflare( item.url )
-    
-    # Extrae las entradas (carpetas)
-    patron  = '<li><a href="http://altadefinizione.co/regista/a.*?" rel="tag">(.*?)</a></li>'
-    matches = re.compile(patron,re.DOTALL).findall(data)
-    scrapertools.printMatches(matches)
+    matches = [("A", "/dvd/ser/serreg.asp?q=A"),
+               ('B', '/dvd/ser/serreg.asp?q=B'),
+               ('C', '/dvd/ser/serreg.asp?q=C'),
+               ('D', '/dvd/ser/serreg.asp?q=D'),
+               ('E', '/dvd/ser/serreg.asp?q=E'),
+               ('F', '/dvd/ser/serreg.asp?q=F'),
+               ('G', '/dvd/ser/serreg.asp?q=G'),
+               ('H', '/dvd/ser/serreg.asp?q=H'),
+               ('I', '/dvd/ser/serreg.asp?q=I'),
+               ('J', '/dvd/ser/serreg.asp?q=J'),
+               ('K', '/dvd/ser/serreg.asp?q=K'),
+               ('L', '/dvd/ser/serreg.asp?q=L'),
+               ('M', '/dvd/ser/serreg.asp?q=M'),
+               ('N', '/dvd/ser/serreg.asp?q=N'),
+               ('O', '/dvd/ser/serreg.asp?q=O'),
+               ('P', '/dvd/ser/serreg.asp?q=P'),
+               ('Q', '/dvd/ser/serreg.asp?q=Q'),
+               ('R', '/dvd/ser/serreg.asp?q=R'),
+               ('S', '/dvd/ser/serreg.asp?q=S'),
+               ('T', '/dvd/ser/serreg.asp?q=T'),
+               ('U', '/dvd/ser/serreg.asp?q=U'),
+               ('V', '/dvd/ser/serreg.asp?q=V'),
+               ('W', '/dvd/ser/serreg.asp?q=W'),
+               ('X', '/dvd/ser/serreg.asp?q=X'),
+               ('Y', '/dvd/ser/serreg.asp?q=Y'),
+               ('Z', '/dvd/ser/serreg.asp?q=Z')]
 
-    for scrapedtitle in matches:
+    for  scrapedtitle, scrapedurl in matches:
+        url = host + scrapedurl
         titolo = scrapedtitle.replace(" ","+")
-        itemlist.append( Item(channel=__channel__, action="do_search", extra=titolo, title= scrapedtitle , folder=True) )
-
-    return itemlist
-
-def cat_registi_B_C_D(item):
-    logger.info("streamondemand.biblioteca cat_registi_B_C_D")
-    itemlist = []
-
-    # Descarga la pagina
-    data = anti_cloudflare( item.url )
-    
-    # Extrae las entradas (carpetas)
-    patron  = '<li><a href="http://altadefinizione.co/regista/[bcd].*?" rel="tag">(.*?)</a></li>'
-    matches = re.compile(patron,re.DOTALL).findall(data)
-    scrapertools.printMatches(matches)
-
-    for scrapedtitle in matches:
-        titolo = scrapedtitle.replace(" ","+")
-        itemlist.append( Item(channel=__channel__, action="do_search", extra=titolo, title= scrapedtitle , folder=True) )
-
-    return itemlist
-
-def cat_registi_E_F(item):
-    logger.info("streamondemand.biblioteca cat_registi_E_F")
-    itemlist = []
-
-    # Descarga la pagina
-    data = anti_cloudflare( item.url )
-    
-    # Extrae las entradas (carpetas)
-    patron  = '<li><a href="http://altadefinizione.co/regista/[ef].*?" rel="tag">(.*?)</a></li>'
-    matches = re.compile(patron,re.DOTALL).findall(data)
-    scrapertools.printMatches(matches)
-
-    for scrapedtitle in matches:
-        titolo = scrapedtitle.replace(" ","+")
-        itemlist.append( Item(channel=__channel__, action="do_search", extra=titolo, title= scrapedtitle , folder=True) )
-
-    return itemlist
-
-def cat_registi_G(item):
-    logger.info("streamondemand.biblioteca cat_registi_G")
-    itemlist = []
-
-    # Descarga la pagina
-    data = anti_cloudflare( item.url )
-    
-    # Extrae las entradas (carpetas)
-    patron  = '<li><a href="http://altadefinizione.co/regista/g.*?" rel="tag">(.*?)</a></li>'
-    matches = re.compile(patron,re.DOTALL).findall(data)
-    scrapertools.printMatches(matches)
-
-    for scrapedtitle in matches:
-        titolo = scrapedtitle.replace(" ","+")
-        itemlist.append( Item(channel=__channel__, action="do_search", extra=titolo, title= scrapedtitle , folder=True) )
-
-    return itemlist
-
-def cat_registi_H_I(item):
-    logger.info("streamondemand.biblioteca cat_registi_H_I")
-    itemlist = []
-
-    # Descarga la pagina
-    data = anti_cloudflare( item.url )
-    
-    # Extrae las entradas (carpetas)
-    patron  = '<li><a href="http://altadefinizione.co/regista/[hi].*?" rel="tag">(.*?)</a></li>'
-    matches = re.compile(patron,re.DOTALL).findall(data)
-    scrapertools.printMatches(matches)
-
-    for scrapedtitle in matches:
-        titolo = scrapedtitle.replace(" ","+")
-        itemlist.append( Item(channel=__channel__, action="do_search", extra=titolo, title= scrapedtitle , folder=True) )
-
-    return itemlist
-
-def cat_registi_J(item):
-    logger.info("streamondemand.biblioteca cat_registi_J")
-    itemlist = []
-
-    # Descarga la pagina
-    data = anti_cloudflare( item.url )
-    
-    # Extrae las entradas (carpetas)
-    patron  = '<li><a href="http://altadefinizione.co/regista/[j].*?" rel="tag">(.*?)</a></li>'
-    matches = re.compile(patron,re.DOTALL).findall(data)
-    scrapertools.printMatches(matches)
-
-    for scrapedtitle in matches:
-        titolo = scrapedtitle.replace(" ","+")
-        itemlist.append( Item(channel=__channel__, action="do_search", extra=titolo, title= scrapedtitle , folder=True) )
-
-    return itemlist
-
-def cat_registi_K_L(item):
-    logger.info("streamondemand.biblioteca cat_registi_K_L")
-    itemlist = []
-
-    # Descarga la pagina
-    data = anti_cloudflare( item.url )
-    
-    # Extrae las entradas (carpetas)
-    patron  = '<li><a href="http://altadefinizione.co/regista/[kl].*?" rel="tag">(.*?)</a></li>'
-    matches = re.compile(patron,re.DOTALL).findall(data)
-    scrapertools.printMatches(matches)
-
-    for scrapedtitle in matches:
-        titolo = scrapedtitle.replace(" ","+")
-        itemlist.append( Item(channel=__channel__, action="do_search", extra=titolo, title= scrapedtitle , folder=True) )
-
-    return itemlist
-
-def cat_registi_M(item):
-    logger.info("streamondemand.biblioteca cat_registi_M")
-    itemlist = []
-
-    # Descarga la pagina
-    data = anti_cloudflare( item.url )
-    
-    # Extrae las entradas (carpetas)
-    patron  = '<li><a href="http://altadefinizione.co/regista/[m].*?" rel="tag">(.*?)</a></li>'
-    matches = re.compile(patron,re.DOTALL).findall(data)
-    scrapertools.printMatches(matches)
-
-    for scrapedtitle in matches:
-        titolo = scrapedtitle.replace(" ","+")
-        itemlist.append( Item(channel=__channel__, action="do_search", extra=titolo, title= scrapedtitle , folder=True) )
-
-    return itemlist
-
-def cat_registi_N_O_P(item):
-    logger.info("streamondemand.biblioteca cat_registi_N_O_P")
-    itemlist = []
-
-    # Descarga la pagina
-    data = anti_cloudflare( item.url )
-    
-    # Extrae las entradas (carpetas)
-    patron  = '<li><a href="http://altadefinizione.co/regista/[nop].*?" rel="tag">(.*?)</a></li>'
-    matches = re.compile(patron,re.DOTALL).findall(data)
-    scrapertools.printMatches(matches)
-
-    for scrapedtitle in matches:
-        scrapedtitle=scrapertools.decodeHtmlentities(scrapedtitle.replace("N/A",""))
-        titolo = scrapedtitle.replace(" ","+")
-        itemlist.append( Item(channel=__channel__, action="do_search", extra=titolo, title= scrapedtitle , folder=True) )
-
-    return itemlist
-
-def cat_registi_Q_R(item):
-    logger.info("streamondemand.biblioteca cat_registi_Q_R")
-    itemlist = []
-
-    # Descarga la pagina
-    data = anti_cloudflare( item.url )
-    
-    # Extrae las entradas (carpetas)
-    patron  = '<li><a href="http://altadefinizione.co/regista/[qr].*?" rel="tag">(.*?)</a></li>'
-    matches = re.compile(patron,re.DOTALL).findall(data)
-    scrapertools.printMatches(matches)
-
-    for scrapedtitle in matches:
-        titolo = scrapedtitle.replace(" ","+")
-        itemlist.append( Item(channel=__channel__, action="do_search", extra=titolo, title= scrapedtitle , folder=True) )
-
-    return itemlist
-
-def cat_registi_S(item):
-    logger.info("streamondemand.biblioteca cat_registi_S")
-    itemlist = []
-
-    # Descarga la pagina
-    data = anti_cloudflare( item.url )
-    
-    # Extrae las entradas (carpetas)
-    patron  = '<li><a href="http://altadefinizione.co/regista/[s].*?" rel="tag">(.*?)</a></li>'
-    matches = re.compile(patron,re.DOTALL).findall(data)
-    scrapertools.printMatches(matches)
-
-    for scrapedtitle in matches:
-        titolo = scrapedtitle.replace(" ","+")
-        itemlist.append( Item(channel=__channel__, action="do_search", extra=titolo, title= scrapedtitle , folder=True) )
-
-    return itemlist
-
-def cat_registi_T_U_V(item):
-    logger.info("streamondemand.biblioteca cat_registi_T_U_V")
-    itemlist = []
-
-    # Descarga la pagina
-    data = anti_cloudflare( item.url )
-    
-    # Extrae las entradas (carpetas)
-    patron  = '<li><a href="http://altadefinizione.co/regista/[tuv].*?" rel="tag">(.*?)</a></li>'
-    matches = re.compile(patron,re.DOTALL).findall(data)
-    scrapertools.printMatches(matches)
-
-    for scrapedtitle in matches:
-        titolo = scrapedtitle.replace(" ","+")
-        itemlist.append( Item(channel=__channel__, action="do_search", extra=titolo, title= scrapedtitle , folder=True) )
+        itemlist.append(Item(channel=__channel__, action="cat_ruolo", extra=titolo, title=scrapedtitle, url=url, folder=True))
 
     return itemlist
 
 
-def cat_registi_W_X_Y_Z(item):
-    logger.info("streamondemand.biblioteca cat_registi_W_X_Y_Z")
-    itemlist = []
-
-    # Descarga la pagina
-    data = anti_cloudflare( item.url )
-    
-    # Extrae las entradas (carpetas)
-    patron  = '<li><a href="http://altadefinizione.co/regista/[wxyz].*?" rel="tag">(.*?)</a></li>'
-    matches = re.compile(patron,re.DOTALL).findall(data)
-    scrapertools.printMatches(matches)
-
-    for scrapedtitle in matches:
-        titolo = scrapedtitle.replace(" ","+")
-        itemlist.append( Item(channel=__channel__, action="do_search", extra=titolo, title= scrapedtitle , folder=True) )
-
-    return itemlist
-
-
-def cat_attori(item):
+def cat_lettera_attori(item):
     logger.info("streamondemand.biblioteca cat_attori")
     itemlist = []
 
-    # Descarga la pagina
-    data = anti_cloudflare( item.url )
-    
-    # Extrae las entradas (carpetas)
-    patron  = '<li><a href=".*?" rel="tag">(.*?)</a></li>'
-    matches = re.compile(patron,re.DOTALL).findall(data)
-    scrapertools.printMatches(matches)
+    matches = [('A', '/dvd/ser/seratt.asp?q=A'),
+               ('B', '/dvd/ser/seratt.asp?q=B'),
+               ('C', '/dvd/ser/seratt.asp?q=C'),
+               ('D', '/dvd/ser/seratt.asp?q=D'),
+               ('E', '/dvd/ser/seratt.asp?q=E'),
+               ('F', '/dvd/ser/seratt.asp?q=F'),
+               ('G', '/dvd/ser/seratt.asp?q=G'),
+               ('H', '/dvd/ser/seratt.asp?q=H'),
+               ('I', '/dvd/ser/seratt.asp?q=I'),
+               ('J', '/dvd/ser/seratt.asp?q=J'),
+               ('K', '/dvd/ser/seratt.asp?q=K'),
+               ('L', '/dvd/ser/seratt.asp?q=L'),
+               ('M', '/dvd/ser/seratt.asp?q=M'),
+               ('N', '/dvd/ser/seratt.asp?q=N'),
+               ('O', '/dvd/ser/seratt.asp?q=O'),
+               ('P', '/dvd/ser/seratt.asp?q=P'),
+               ('Q', '/dvd/ser/seratt.asp?q=Q'),
+               ('R', '/dvd/ser/seratt.asp?q=R'),
+               ('S', '/dvd/ser/seratt.asp?q=S'),
+               ('T', '/dvd/ser/seratt.asp?q=T'),
+               ('U', '/dvd/ser/seratt.asp?q=U'),
+               ('V', '/dvd/ser/seratt.asp?q=V'),
+               ('W', '/dvd/ser/seratt.asp?q=W'),
+               ('X', '/dvd/ser/seratt.asp?q=X'),
+               ('Y', '/dvd/ser/seratt.asp?q=Y'),
+               ('Z', '/dvd/ser/seratt.asp?q=Z')]
 
-    for scrapedtitle in matches:
+    for  scrapedtitle, scrapedurl in matches:
+        url = host + scrapedurl
         titolo = scrapedtitle.replace(" ","+")
-        itemlist.append( Item(channel=__channel__, action="do_search", extra=titolo, title= scrapedtitle , folder=True) )
+        itemlist.append(Item(channel=__channel__, action="cat_ruolo", title=scrapedtitle, url=url, folder=True))
 
     return itemlist
 
-def categorias(item):
-    logger.info("streamondemand.biblioteca categorias")
+
+def cat_ruolo(item):
+    logger.info("streamondemand.biblioteca cat_registi")
     itemlist = []
 
-    # Descarga la pagina
     data = scrapertools.cache_page(item.url)
-    
-    # Extrae las entradas (carpetas)
-    patron  = '<li class="menu-item-3[^>]+><a[^=]+=[^=]+="(.*?)">(.*?)</a>'
-    matches = re.compile(patron,re.DOTALL).findall(data)
-    scrapertools.printMatches(matches)
+    logger.info(data)
 
-    for scrapedurl,scrapedtitle in matches:
-        scrapedplot = ""
-        scrapedthumbnail = ""
-        scrapedtitle=scrapertools.decodeHtmlentities(scrapedtitle.replace("Home",""))
-        scrapedtitle=scrapertools.decodeHtmlentities(scrapedtitle.replace("http://www.darkstream.tv/",""))
-        if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"]")
-        itemlist.append( Item(channel=__channel__, action="cat_elenco", title="[COLOR azure]"+scrapedtitle+"[/COLOR]" , url=scrapedurl , thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/All%20Movies%20by%20Genre.png", folder=True) )
+    # Narrow search by selecting only the combo
+    patron = r'<td bgColor=#ffffff width="33%"><table width="100%"><tr><td bgcolor="eeeee4">(.*?)</font></td></tr></table></td>'
+    bloques = re.compile(patron, re.DOTALL).findall(data)
+
+    patron = r'<a\s*(?:rel="nofollow")?\s*href="([^"]+)">([^<]+)</a>'
+    for bloque in bloques:
+        # Extrae las entradas (carpetas)
+        matches = re.compile(patron, re.DOTALL).findall(bloque)
+
+        for scrapedurl, scrapedtitle in matches:
+            url = host + scrapedurl
+            itemlist.append(
+                Item(channel=__channel__, action="cat_filmografia", title=scrapedtitle, url=url, folder=True))
 
     return itemlist
 
-def cat_elenco(item):
-    logger.info("streamondemand.biblioteca cat_elenco")
+
+def cat_filmografia(item):
+    logger.info("streamondemand.biblioteca cat_registi")
     itemlist = []
 
-    # Descarga la pagina
     data = scrapertools.cache_page(item.url)
-    
+    logger.info(data)
+
     # Extrae las entradas (carpetas)
-    patron  = '<a href=".*?">(.*?)</a>[^<]+<span style='
-    matches = re.compile(patron,re.DOTALL).findall(data)
+    patron = r'<td width="90" valign="middle" height="120"><a href="[^"]+"><img alt="([^"]+)" border="0" src="([^"]+)"></a></td>'
+    matches = re.compile(patron, re.DOTALL).findall(data)
     scrapertools.printMatches(matches)
 
-    for scrapedtitle in matches:
-        scrapedtitle=scrapertools.decodeHtmlentities( scrapedtitle )
-        titolo = scrapedtitle.replace(" ","+")
-        itemlist.append( Item(channel=__channel__, action="do_search", extra=titolo, title= scrapedtitle , folder=True) )
+    for scrapedtitle, scrapedthumbnail in matches:
+        titolo = scrapedtitle.replace(" ", "+")
+        itemlist.append(
+            Item(channel=__channel__, action="do_search", extra=titolo, title=scrapedtitle, thumbnail=scrapedthumbnail,
+                 folder=True))
 
     return itemlist
+
 
 def do_search(item):
     logger.info("streamondemand.channels.biblioteca do_search")
 
     tecleado = item.extra
-    mostra = tecleado.replace("+"," ")
+    mostra = tecleado.replace("+", " ")
 
     itemlist = []
 
@@ -366,22 +188,22 @@ def do_search(item):
     import glob
     import imp
 
-    master_exclude_data_file = os.path.join( config.get_runtime_path() , "resources", "biblioteca.txt")
-    logger.info("streamondemand.channels.buscador master_exclude_data_file="+master_exclude_data_file)
+    master_exclude_data_file = os.path.join(config.get_runtime_path(), "resources", "biblioteca.txt")
+    logger.info("streamondemand.channels.buscador master_exclude_data_file=" + master_exclude_data_file)
 
-    exclude_data_file = os.path.join( config.get_data_path() , "biblioteca.txt")
-    logger.info("streamondemand.channels.buscador exclude_data_file="+exclude_data_file)
+    exclude_data_file = os.path.join(config.get_data_path(), "biblioteca.txt")
+    logger.info("streamondemand.channels.buscador exclude_data_file=" + exclude_data_file)
 
-    channels_path = os.path.join( config.get_runtime_path() , "channels" , '*.py' )
-    logger.info("streamondemand.channels.buscador channels_path="+channels_path)
+    channels_path = os.path.join(config.get_runtime_path(), "channels", '*.py')
+    logger.info("streamondemand.channels.buscador channels_path=" + channels_path)
 
-    excluir=""
+    excluir = ""
 
     if os.path.exists(master_exclude_data_file):
         logger.info("streamondemand.channels.buscador Encontrado fichero exclusiones")
 
-        fileexclude = open(master_exclude_data_file,"r")
-        excluir= fileexclude.read()
+        fileexclude = open(master_exclude_data_file, "r")
+        excluir = fileexclude.read()
         fileexclude.close()
     else:
         logger.info("streamondemand.channels.buscador No encontrado fichero exclusiones")
@@ -393,7 +215,7 @@ def do_search(item):
     try:
         import xbmcgui
         progreso = xbmcgui.DialogProgressBG()
-        progreso.create("Ricerca di "+ mostra.title())
+        progreso.create("Ricerca di " + mostra.title())
     except:
         show_dialog = False
 
@@ -401,57 +223,41 @@ def do_search(item):
     number_of_channels = len(channel_files)
 
     for index, infile in enumerate(channel_files):
-        percentage = index*100/number_of_channels
+        percentage = index * 100 / number_of_channels
 
         basename = os.path.basename(infile)
         basename_without_extension = basename[:-3]
-        
+
         if basename_without_extension not in excluir:
 
             if show_dialog:
-                progreso.update(percentage, ' Sto cercando "' + mostra+ '"')
+                progreso.update(percentage, ' Sto cercando "' + mostra + '"')
 
-            logger.info("streamondemand.channels.buscador Tentativo di ricerca su " + basename_without_extension + " per "+ mostra)
+            logger.info(
+                "streamondemand.channels.buscador Tentativo di ricerca su " + basename_without_extension + " per " + mostra)
             try:
 
                 # http://docs.python.org/library/imp.html?highlight=imp#module-imp
                 obj = imp.load_source(basename_without_extension, infile)
-                logger.info("streamondemand.channels.buscador cargado " + basename_without_extension + " de "+ infile)
-                channel_result_itemlist = obj.search( Item() , tecleado)
+                logger.info("streamondemand.channels.buscador cargado " + basename_without_extension + " de " + infile)
+                channel_result_itemlist = obj.search(Item(), tecleado)
                 for item in channel_result_itemlist:
-                    item.title = scrapertools.decodeHtmlentities( item.title )
+                    item.title = scrapertools.decodeHtmlentities(item.title)
                     item.title = item.title + " [COLOR orange]su[/COLOR] [COLOR green]" + basename_without_extension + "[/COLOR]"
                     item.viewmode = "list"
 
-                itemlist.extend( channel_result_itemlist )
+                itemlist.extend(channel_result_itemlist)
             except:
                 import traceback
-                logger.error( traceback.format_exc() )
+                logger.error(traceback.format_exc())
 
         else:
-            logger.info("streamondemand.channels.buscador do_search_results, Escluso il server " + basename_without_extension)
+            logger.info(
+                "streamondemand.channels.buscador do_search_results, Escluso il server " + basename_without_extension)
 
-    itemlist = sorted(itemlist, key=lambda Item: Item.title) 
+    itemlist = sorted(itemlist, key=lambda Item: Item.title)
 
     if show_dialog:
         progreso.close()
 
     return itemlist
-
-def anti_cloudflare(url):
-    # global headers
-
-    try:
-        resp_headers = scrapertools.get_headers_from_response(url, headers=headers)
-        resp_headers = dict(resp_headers)
-    except urllib2.HTTPError, e:
-        resp_headers = e.headers
-
-    if 'refresh' in resp_headers:
-        time.sleep(int(resp_headers['refresh'][:1]))
-        
-        scrapertools.get_headers_from_response(host + "/" + resp_headers['refresh'][7:], headers=headers)
-
-    return scrapertools.cache_page(url, headers=headers)
-
-

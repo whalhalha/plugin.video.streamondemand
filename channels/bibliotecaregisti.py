@@ -67,6 +67,7 @@ def cat_registi_A(item):
     scrapertools.printMatches(matches)
 
     for scrapedtitle in matches:
+        scrapedtitle=scrapertools.decodeHtmlentities(scrapedtitle.replace("Aldo","Aldo Baglio"))
         titolo = scrapedtitle.replace(" ","+")
         itemlist.append( Item(channel=__channel__, action="do_search", extra=titolo, title= scrapedtitle , folder=True) )
 
@@ -121,6 +122,8 @@ def cat_registi_G(item):
     scrapertools.printMatches(matches)
 
     for scrapedtitle in matches:
+        scrapedtitle=scrapertools.decodeHtmlentities(scrapedtitle.replace("Giacomo","Giacomo Poretti"))
+        scrapedtitle=scrapertools.decodeHtmlentities(scrapedtitle.replace("Giovanni","Giovanni Storti"))
         titolo = scrapedtitle.replace(" ","+")
         itemlist.append( Item(channel=__channel__, action="do_search", extra=titolo, title= scrapedtitle , folder=True) )
 
