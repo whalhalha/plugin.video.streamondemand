@@ -1,25 +1,25 @@
 # In questo file vanno scritti i nomi dei canali che si intende escludere dalla ricerca globale.
 # Il file buscador.py contenuto in questo repack forza la ricerca in tutti i canali .py compresi nella cartella channels.
 animesubita
-biblioteca
+altadefinizioneclick
 cineblogfm
 cinestreaming01
+cinemagratis
 cucinarefacile
 documentaristreaming
 documoo
 eurostreaming
 filmgratiscc
-filmpertutti
 filmstreampw
 guardaserie
 hubberfilm
 ildocumento
 itastreaming
-liberoita
 liberostreaming
-pianetastreaming
 serietvsubita
 seriehd
+storiedellarte
+streamblog
 youtube
 #service channels
 filmontv
@@ -28,3 +28,7 @@ buscador
 libreria
 novedades
 tengourl
+biblioteca
+bibliotecaregisti
+bibliotecaattori
+chimerarevo
