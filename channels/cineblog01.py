@@ -21,6 +21,14 @@ __title__ = "CineBlog 01"
 __language__ = "IT"
 
 sito = "http://www.cb01.eu"
+
+headers = [
+    ['User-Agent', 'Mozilla/5.0 (Windows NT 6.1; rv:38.0) Gecko/20100101 Firefox/38.0'],
+    ['Accept-Encoding', 'gzip, deflate'],
+    ['Referer', 'http://www.cb01.eu/'],
+    ['Connection', 'keep-alive']
+]
+
 sitoanime = "http://www.cineblog01.cc"
 
 DEBUG = config.get_setting("debug")
@@ -112,7 +120,8 @@ def peliculasrobalo(item):
         item.url = sito
 
     # Descarga la página
-    data = scrapertools.cache_page(item.url)
+    #data = scrapertools.cache_page(item.url)
+    data = anti_cloudflare( item.url )
     logger.info(data)
 
     # Extrae las entradas (carpetas)
@@ -176,7 +185,8 @@ def peliculas(item):
         item.url = sito
 
     # Descarga la página
-    data = scrapertools.cache_page(item.url)
+    #data = scrapertools.cache_page(item.url)
+    data = anti_cloudflare( item.url )
     logger.info(data)
 
     # Extrae las entradas (carpetas)
@@ -236,7 +246,8 @@ def menugeneros(item):
     logger.info("[cineblog01.py] menugeneros")
     itemlist = []
 
-    data = scrapertools.cache_page(item.url)
+    data = anti_cloudflare( item.url )
+    #data = scrapertools.cache_page(item.url)
     logger.info(data)
 
     # Narrow search by selecting only the combo
@@ -269,7 +280,8 @@ def menuhd(item):
     logger.info("[cineblog01.py] menugeneros")
     itemlist = []
 
-    data = scrapertools.cache_page(item.url)
+    data = anti_cloudflare( item.url )
+    #data = scrapertools.cache_page(item.url)
     logger.info(data)
 
     # Narrow search by selecting only the combo
@@ -302,7 +314,8 @@ def menuanyos(item):
     logger.info("[cineblog01.py] menuvk")
     itemlist = []
 
-    data = scrapertools.cache_page(item.url)
+    #data = scrapertools.cache_page(item.url)
+    data = anti_cloudflare( item.url )
     logger.info(data)
 
     # Narrow search by selecting only the combo
@@ -744,4 +757,21 @@ def play(item):
         videoitem.channel = __channel__
 
     return itemlist
+
+def anti_cloudflare(url):
+    # global headers
+
+    try:
+        resp_headers = scrapertools.get_headers_from_response(url, headers=headers)
+        resp_headers = dict(resp_headers)
+    except urllib2.HTTPError, e:
+        resp_headers = e.headers
+
+    if 'refresh' in resp_headers:
+        time.sleep(int(resp_headers['refresh'][:1]))
+        
+        scrapertools.get_headers_from_response(host + "/" + resp_headers['refresh'][7:], headers=headers)
+
+    return scrapertools.cache_page(url, headers=headers)
+
 
