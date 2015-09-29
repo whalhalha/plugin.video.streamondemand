@@ -378,7 +378,7 @@ def listserie(item):
     itemlist = []
 
     # Descarga la página
-    data = scrapertools.cache_page(item.url)
+    data = anti_cloudflare(item.url)
     logger.info(data)
 
     # Extrae las entradas (carpetas)
@@ -422,7 +422,7 @@ def listaaz(item):
     logger.info("[cineblog01.py] listaaz")
     itemlist = []
 
-    data = scrapertools.cache_page(item.url)
+    data = anti_cloudflare(item.url)
     logger.info(data)
 
     # Narrow search by selecting only the combo
@@ -455,7 +455,7 @@ def listaletra(item):
     logger.info("[cineblog01.py] listaaz")
     itemlist = []
 
-    data = scrapertools.cache_page(item.url)
+    data = anti_cloudflare(item.url)
     logger.info(data)
 
     # Narrow search by selecting only the combo
@@ -487,7 +487,7 @@ def animegenere(item):
     logger.info("[cineblog01.py] animegenere")
     itemlist = []
 
-    data = scrapertools.cache_page(item.url)
+    data = anti_cloudflare(item.url)
     logger.info(data)
 
     # Narrow search by selecting only the combo
@@ -516,7 +516,7 @@ def listanime(item):
     itemlist = []
 
     # Descarga la página
-    data = scrapertools.cache_page(item.url)
+    data = anti_cloudflare(item.url)
     logger.info(data)
 
     # Extrae las entradas (carpetas)
@@ -565,7 +565,7 @@ def findvid(item):
     itemlist = []
 
     ## Descarga la página
-    data = scrapertools.cache_page(item.url)
+    data = anti_cloudflare(item.url)
     data = scrapertools.decodeHtmlentities(data).replace('http://cineblog01.pw', 'http://k4pp4.pw')
 
     ## Extrae las entradas
@@ -658,7 +658,7 @@ def findvid_serie(item):
     itemlist = []
 
     ## Descarga la página
-    data = scrapertools.cache_page(item.url)
+    data = anti_cloudflare(item.url)
     data = scrapertools.decodeHtmlentities(data).replace('http://cineblog01.pw', 'http://k4pp4.pw')
 
     patron1 = '<p(?:\s*style="[^"]*")?>(?:<strong>)?([^<]+)(<a.*?)(?:</strong>)?</p>'
@@ -691,7 +691,7 @@ def findvid_anime(item):
     itemlist = []
 
     ## Descarga la página
-    data = scrapertools.cache_page(item.url)
+    data = anti_cloudflare(item.url)
     data = scrapertools.decodeHtmlentities(data).replace('http://cineblog01.pw', 'http://k4pp4.pw')
 
     patron1 = '(?:<p>|<td bgcolor="#ECEAE1">)<span class="txt_dow">(.*?)(?:</p>)?(?:\s*</span>)?\s*</td>'
@@ -724,7 +724,7 @@ def findvid_anime(item):
 def play(item):
     logger.info("[cineblog01.py] play")
 
-    data = scrapertools.cache_page(item.url)
+    data = anti_cloudflare(item.url)
 
     print "##############################################################"
     if "go.php" in item.url:
