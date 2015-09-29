@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<channel>
+    <id>altadefinizione01cf</id>
+    <name>AltaDefinizione01 (Test CF)</name>
+    <language>it</language>
+    <update_url>https://raw.githubusercontent.com/Zanzibar82/plugin.video.streamondemand/master/channels/altadefinizione01cf.py</update_url>
+    <active>true</active>
+    <include_in_global_search>true</include_in_global_search>
+    <version>1</version>
+    <adult>false</version>
+    <date>05/09/2015</date>
+    <changes>Anti Clouflare Tests</changes>
+    <categories>
+        <category>movie</category>
+        <category>serie</category>
+        <category>anime</category>
+        <category>vos</category>
+    </categories>
+</channel>
