@@ -2,11 +2,13 @@
 # ------------------------------------------------------------
 # streamondemand.- XBMC Plugin
 # Canal para altadefinizione01
-# http://blog.tvalacarta.info/plugin-xbmc/streamondemand.
+# http://www.mimediacenter.info/foro/viewforum.php?f=36
 # ------------------------------------------------------------
 import urlparse
 import re
 import sys
+import urllib2
+import time
 
 from core import logger
 from core import config
@@ -22,6 +24,13 @@ __language__ = "IT"
 
 sito = "http://www.altadefinizione01.com/"
 
+headers = [
+    ['User-Agent', 'Mozilla/5.0 (Windows NT 6.1; rv:38.0) Gecko/20100101 Firefox/38.0'],
+    ['Accept-Encoding', 'gzip, deflate'],
+    ['Referer', 'http://www.altadefinizione01.com'],
+    ['Connection', 'keep-alive']
+]
+
 DEBUG = config.get_setting("debug")
 
 
@@ -33,22 +42,22 @@ def mainlist(item):
     logger.info("streamondemand.altadefinizione01 mainlist")
 
     itemlist = [Item(channel=__channel__,
-                     title="[COLOR azure]Ultimi film inseriti[/COLOR]",
+                     title="Ultimi film inseriti",
                      action="peliculas",
                      url=sito,
                      thumbnail="http://orig03.deviantart.net/6889/f/2014/079/7/b/movies_and_popcorn_folder_icon_by_matheusgrilo-d7ay4tw.png"),
                 Item(channel=__channel__,
-                     title="[COLOR azure]Film Sub-Ita[/COLOR]",
+                     title="Film Sub-Ita",
                      action="peliculas",
                      url=sito+"genere/sub-ita/",
                      thumbnail="http://i.imgur.com/qUENzxl.png"),
                 Item(channel=__channel__,
-                     title="[COLOR azure]Categorie film[/COLOR]",
+                     title="Categorie film",
                      action="categorias",
                      url=sito,
                      thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/All%20Movies%20by%20Genre.png"),
                 Item(channel=__channel__,
-                     title="[COLOR yellow]Cerca...[/COLOR]",
+                     title="Cerca...",
                      action="search",
                      thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search")]
 
@@ -60,8 +69,23 @@ def peliculas(item):
     itemlist = []
 
     # Descarga la pagina
-    data = scrapertools.cache_page(item.url)
+    #data = scrapertools.cache_page(item.url)
 
+    data = anti_cloudflare(item.url)
+    logger.info(data)
+	
+    ## ------------------------------------------------
+    cookies = ""
+    matches = re.compile( '(.altadefinizione01.com.*?)\n', re.DOTALL ).findall( config.get_cookie_data() )
+    for cookie in matches:
+        name = cookie.split( '\t' )[5]
+        value = cookie.split( '\t' )[6]
+        cookies+= name + "=" + value + ";"
+    headers.append( ['Cookie',cookies[:-1]] )
+    import urllib
+    _headers = urllib.urlencode( dict( headers ) )
+    ## ------------------------------------------------
+	
     # Extrae las entradas (carpetas)
     patron = '<a\s+href="([^"]+)"\s+title="[^"]*">\s+<img\s+width="[^"]*"\s+height="[^"]*"\s+src="([^"]+)"\s+class="[^"]*"\s+alt="([^"]+)"'
     matches = re.compile(patron, re.DOTALL).findall(data)
@@ -79,7 +103,7 @@ def peliculas(item):
         itemlist.append(
             Item(channel=__channel__,
                  action="findvid",
-                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
+                 title="" + scrapedtitle + "",
                  url=scrapedurl,
                  viewmode="movie_with_plot",
                  thumbnail=scrapedthumbnail,
@@ -96,7 +120,7 @@ def peliculas(item):
         itemlist.append(
             Item(channel=__channel__,
                  action="peliculas",
-                 title="[COLOR orange]Successivo >>[/COLOR]",
+                 title="Successivo >>",
                  url=scrapedurl,
                  thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png",
                  folder=True))
@@ -108,7 +132,8 @@ def categorias(item):
     logger.info("streamondemand.altadefinizione01 categorias")
     itemlist = []
 
-    data = scrapertools.cache_page(item.url)
+    #data = scrapertools.cache_page(item.url)
+    data = anti_cloudflare(item.url)
     logger.info(data)
 
     # Narrow search by selecting only the combo
@@ -128,7 +153,7 @@ def categorias(item):
         itemlist.append(
             Item(channel=__channel__,
                  action="peliculas",
-                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
+                 title="" + scrapedtitle + "",
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  plot=scrapedplot))
@@ -151,25 +176,46 @@ def search(item, texto):
 
 def findvid(item):
     logger.info("[altadefinizione01.py] findvideos")
+    itemlist = []
 
     ## Descarga la página
-    data = scrapertools.cache_page(item.url)
-    data = scrapertools.find_single_match(data, "(eval.function.p,a,c,k,e,.*?)\s*</script>")
-    if data != "":
-        from core import unpackerjs3
-        data_unpack = unpackerjs3.unpackjs(data)
-        if data_unpack == "":
-            from lib.jsbeautifier.unpackers import packer
-            data_unpack = packer.unpack(data)
+    data = re.sub(
+        r'\t|\n|\r',
+        '',
+        anti_cloudflare(item.url)
+    )
+    '''
+    <a href="http://www.vid.gg/video/1926a2839ef78" rel="nofollow" target="_blank"><li class="part"><span class="a"><i class="fa fa-circle-o fa-lg"></i> Streaming</span><span class="b"><img src="http://www.vidgg.to/images/favicon.ico" alt="Vidgg" height="10"> Vidgg</span><span class="d">360p</span><span class="c"><ul class="link_rating rating" data="8"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul>
+    '''
+    patron = '<a href="([^"]+)"[^>]+><li class="part">'                       # url
+    patron+= '<span class="a"><i[^>]+></i>([^<]+)</span>'                     # type
+    patron+= '<span class="b"><img src="([^"]+)"[^>]+>([^<]+)</span>'         # thumbnail & title
+    patron+= '<span class="d">([^<]+)</span>'                                 # quality
+    patron+= '<span class="c"><ul class="link_rating rating" data="([^"]+)">' # rating
 
-        itemlist = servertools.find_video_items(data=data_unpack.replace(r'\\/', '/'))
+    matches = re.compile(patron, re.DOTALL).findall(data)
 
-        for videoitem in itemlist:
-            videoitem.title = "".join([item.title, videoitem.title])
-            videoitem.fulltitle = item.fulltitle
-            videoitem.thumbnail = item.thumbnail
-            videoitem.channel = __channel__
-    else:
-        itemlist = servertools.find_video_items(item=item)
+    for url, type, thumbnail, scrapedtitle, quality, rating in matches:
+
+        title = "[" + scrapedtitle.strip() + "] " + type + " (" + quality.strip() + ") (" + rating + ")"
+
+        itemlist.append( Item( channel=__channel__, action="findvideos", title=title, url=url, thumbnail=thumbnail, fulltitle=item.title, show=item.title, plot=item.plot ) )
+
 
     return itemlist
+	
+def anti_cloudflare(url):
+    # global headers
+
+    try:
+        resp_headers = scrapertools.get_headers_from_response(url, headers=headers)
+        resp_headers = dict(resp_headers)
+    except urllib2.HTTPError, e:
+        resp_headers = e.headers
+
+    if 'refresh' in resp_headers:
+        time.sleep(int(resp_headers['refresh'][:1]))
+
+        scrapertools.get_headers_from_response(sito + "/" + resp_headers['refresh'][7:], headers=headers)
+
+    return scrapertools.cache_page(url, headers=headers)
