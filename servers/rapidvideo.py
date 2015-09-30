@@ -61,8 +61,8 @@ def find_videos(data):
     # http://www.rapidvideo.org/xr1nb7cfh58a
 
     patterns = [
-        r'rapidvideo\....?/([A-Z0-9a-z]+)',
-        r'rapidvideo\....?/embed-([^-]+)-'
+        r'rapidvideo\....?/([A-Z0-9a-z]{12})',
+        r'rapidvideo\....?/embed-([^-]{12})-'
     ]
 
     for pattern in patterns:
