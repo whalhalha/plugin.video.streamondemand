@@ -105,7 +105,7 @@ def categoryarchive(item):
         scrapedplot = ""
         scrapedthumbnail = ""
         if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
-        itemlist.append( Item(channel=__channel__, action="findvid_serie", title="[COLOR azure]" + scrapedtitle + "[/COLOR]", url=scrapedurl , thumbnail="http://repository-butchabay.googlecode.com/svn/branches/eden/skin.cirrus.extended.v2/extras/moviegenres/TV%20Series.png" , plot=scrapedplot , folder=True) )
+        itemlist.append( Item(channel=__channel__, action="findvid_serie", fulltitle=scrapedtitle, show=scrapedtitle, title="[COLOR azure]" + scrapedtitle + "[/COLOR]", url=scrapedurl , thumbnail="http://repository-butchabay.googlecode.com/svn/branches/eden/skin.cirrus.extended.v2/extras/moviegenres/TV%20Series.png" , plot=scrapedplot , folder=True) )
 
     return itemlist
 
@@ -142,7 +142,7 @@ def cerca(item):
         scrapedplot = ""
         scrapedthumbnail = ""
         if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"]")
-        itemlist.append( Item(channel=__channel__, action="findvideos",title="[COLOR azure]" + scrapedtitle + "[/COLOR]" , url=scrapedurl , folder=True) )
+        itemlist.append( Item(channel=__channel__, action="findvideos", fulltitle=scrapedtitle, show=scrapedtitle, title="[COLOR azure]" + scrapedtitle + "[/COLOR]" , url=scrapedurl , folder=True) )
 
     return itemlist
 
@@ -191,3 +191,4 @@ def findvid_serie(item):
             itemlist.extend(li)
 
     return itemlist
+
