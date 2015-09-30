@@ -150,7 +150,7 @@ def peliculas(item):
 
     for scrapedurl,scrapedtitle,scrapedthumbnail in matches:
         if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
-        itemlist.append( Item(channel=__channel__, action="episodios" if item.extra == "serie" else "findvideos", title=scrapedtitle, url=scrapedurl , thumbnail=scrapedthumbnail , viewmode="movie_with_plot", fanart=scrapedthumbnail , folder=True ) )
+        itemlist.append( Item(channel=__channel__, action="episodios" if item.extra == "serie" else "findvideos", fulltitle=scrapedtitle, show=scrapedtitle, title=scrapedtitle, url=scrapedurl , thumbnail=scrapedthumbnail , viewmode="movie_with_plot", fanart=scrapedthumbnail , folder=True ) )
 
 
     # Extrae el paginador
@@ -180,7 +180,7 @@ def serie_tv(item):
 
     for scrapedurl,scrapedtitle,scrapedthumbnail in matches:
         if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
-        itemlist.append( Item(channel=__channel__, action="episodios" , title=scrapedtitle, url=scrapedurl , thumbnail=scrapedthumbnail , viewmode="movie_with_plot", fanart=scrapedthumbnail , folder=True ) )
+        itemlist.append( Item(channel=__channel__, action="episodios" , fulltitle=scrapedtitle, show=scrapedtitle, title=scrapedtitle, url=scrapedurl , thumbnail=scrapedthumbnail , viewmode="movie_with_plot", fanart=scrapedthumbnail , folder=True ) )
 
 
     # Extrae el paginador
@@ -279,6 +279,7 @@ def play( item ):
 
     for videoitem in itemlist:
         videoitem.title = item.show
+        videoitem.show = item.show
         videoitem.fulltitle = item.fulltitle
         videoitem.thumbnail = item.thumbnail
         videoitem.channel = __channel__

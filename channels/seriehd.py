@@ -128,7 +128,7 @@ def episodios(item):
             ## [host+path]?[argumentos]?[Referer]
             url = item.url + "?st_num=" + scrapedseason + "&pt_num=" + scrapedepisode + "?" + item.url
 
-            itemlist.append( Item( channel=__channel__, action="findvideos", title=title, url=url, fulltitle=item.title, show=item.title, thumbnail=item.thumbnail) )
+            itemlist.append( Item( channel=__channel__, action="findvideos", title=title, url=url, fulltitle=item.fulltitle, show=item.show, thumbnail=item.thumbnail) )
 
     if config.get_library_support():
         itemlist.append( Item(channel=__channel__, title=item.title, url=item.url, action="add_serie_to_library", extra="episodios", show=item.show) )
@@ -166,6 +166,7 @@ def play( item ):
 
     for videoitem in itemlist:
         videoitem.title = item.show
+        videoitem.show = item.show
         videoitem.fulltitle = item.fulltitle
         videoitem.thumbnail = item.thumbnail
         videoitem.channel = __channel__

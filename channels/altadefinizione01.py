@@ -80,6 +80,8 @@ def peliculas(item):
             Item(channel=__channel__,
                  action="findvid",
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
+                 fulltitle=scrapedtitle,
+                 show=scrapedtitle,
                  url=scrapedurl,
                  viewmode="movie_with_plot",
                  thumbnail=scrapedthumbnail,
@@ -167,6 +169,7 @@ def findvid(item):
         for videoitem in itemlist:
             videoitem.title = "".join([item.title, videoitem.title])
             videoitem.fulltitle = item.fulltitle
+            videoitem.show = item.show
             videoitem.thumbnail = item.thumbnail
             videoitem.channel = __channel__
     else:

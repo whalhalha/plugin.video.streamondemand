@@ -79,6 +79,8 @@ def peliculas(item):
         itemlist.append(
             Item(channel=__channel__,
                  action="play",
+                 fulltitle=scrapedtitle,
+                 show=scrapedtitle,
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
                  url=scrapedurl,
                  viewmode="movie_with_plot",

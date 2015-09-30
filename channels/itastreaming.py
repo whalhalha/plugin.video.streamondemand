@@ -107,6 +107,8 @@ def peliculas(item):
         itemlist.append(
             Item(channel=__channel__,
                  action="findvid",
+                 fulltitle=scrapedtitle,
+                 show=scrapedtitle,
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
                  url=scrapedurl,
                  viewmode="movie_with_plot",
@@ -155,6 +157,8 @@ def peliculas_search(item):
         itemlist.append(
             Item(channel=__channel__,
                  action="findvid",
+                 fulltitle=scrapedtitle,
+                 show=scrapedtitle,
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
                  url=scrapedurl,
                  viewmode="movie_with_plot",
@@ -274,8 +278,8 @@ def findvid(item):
                      server='googlevideo',
                      title=item.title + " [COLOR azure]" + scrapedtitle + "[/COLOR]",
                      url=scrapedurl,
-                     fulltitle=item.title,
-                     show=item.title,
+                     fulltitle=item.fulltitle,
+                     show=item.show,
                      folder=False))
     else:
         patron = r'<div id="usual1" class="usual1">\s*<p><iframe\s*(?:width="[^"]+")?\s*(?:height="[^"]+")?\s*src="([^"]+)"'
@@ -299,8 +303,8 @@ def findvid(item):
                              server='googlevideo',
                              title=item.title + " [COLOR azure]" + scrapedtitle + "[/COLOR]",
                              url=scrapedurl,
-                             fulltitle=item.title,
-                             show=item.title,
+                             fulltitle=item.fulltitle,
+                             show=item.show,
                              folder=False))
 
     return itemlist

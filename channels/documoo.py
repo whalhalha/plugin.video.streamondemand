@@ -79,6 +79,8 @@ def peliculas(item):
         itemlist.append(
             Item(channel=__channel__,
                  action="play",
+                 fulltitle=scrapedtitle,
+                 show=scrapedtitle,
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
                  url=scrapedurl,
                  viewmode="movie_with_plot",
@@ -132,6 +134,8 @@ def random(item):
             Item(channel=__channel__,
                  action="play",
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
+                 fulltitle=scrapedtitle,
+                 show=scrapedtitle,
                  url=scrapedurl,
                  viewmode="movie_with_plot",
                  thumbnail=scrapedthumbnail,

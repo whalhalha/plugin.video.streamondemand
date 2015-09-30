@@ -21,7 +21,7 @@ __type__ = "generic"
 __title__ = "Italia-Film.co"
 __language__ = "IT"
 
-DEBUG = True #config.get_setting("debug")
+DEBUG = config.get_setting("debug")
 EVIDENCE = "   "
 
 def isGeneric():
@@ -33,7 +33,7 @@ def mainlist(item):
     itemlist.append( Item(channel=__channel__, title="[COLOR azure]Film - Novita'[/COLOR]" , action="peliculas", url="http://www.italia-film.co/category/film-del-2015-streaming/",thumbnail="http://dc584.4shared.com/img/XImgcB94/s7/13feaf0b538/saquinho_de_pipoca_01"))
     itemlist.append( Item(channel=__channel__, title="[COLOR azure]Film HD[/COLOR]" , action="peliculas", url="http://www.italia-film.co/category/film-hd/",thumbnail="http://i.imgur.com/3ED6lOP.png"))
     itemlist.append( Item(channel=__channel__, title="[COLOR azure]Anime e Cartoon[/COLOR]" , action="peliculas", url="http://www.italia-film.co/category/anime-e-cartoon/", thumbnail="http://orig09.deviantart.net/df5a/f/2014/169/2/a/fist_of_the_north_star_folder_icon_by_minacsky_saya-d7mq8c8.png"))
-    #itemlist.append( Item(channel=__channel__, title="[COLOR azure]Contenuti per Genere[/COLOR]" , action="categorias", url="http://www.italia-film.co/", thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/All%20Movies%20by%20Genre.png"))
+    # itemlist.append( Item(channel=__channel__, title="[COLOR azure]Contenuti per Genere[/COLOR]" , action="categorias", url="http://www.italia-film.co/", thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/All%20Movies%20by%20Genre.png"))
     itemlist.append( Item(channel=__channel__, title="[COLOR yellow]Cerca...[/COLOR]" , action="search", thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search"))
     itemlist.append( Item(channel=__channel__, title="[COLOR azure]Serie TV[/COLOR]" , action="peliculaserie", extra="serie", url="http://www.italia-film.co/category/telefilm/", thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/New%20TV%20Shows.png"))
     itemlist.append( Item(channel=__channel__, title="[COLOR yellow]Cerca Serie TV...[/COLOR]" , action="search", extra="serie", thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search"))
@@ -47,7 +47,7 @@ def categorias(item):
     data = scrapertools.cache_page(item.url)
     data = scrapertools.find_single_match(data,'<a href=".">Categorie</a>(.*?)</div>')
 
-    patron = '<li class="[^"]+"><a href="([^"]+)">([^<]+)</a></li>'
+    # patron = '<li class="[^"]+"><a href="([^"]+)">([^<]+)</a></li>'
     patron = '<li[^>]+><a href="([^"]+)">([^<]+)</a></li>'
     matches = re.compile(patron,re.DOTALL).findall(data)
     scrapertools.printMatches(matches)
@@ -74,11 +74,11 @@ def serie_ep(item):
     matches = re.compile(patron,re.DOTALL).findall(data)
     scrapertools.printMatches(matches)
     
-    for url,title in matches:
+    for url,scrapedtitle in matches:
         scrapedtitle = scrapertools.decodeHtmlentities( scrapedtitle )
         scrapedurl = urlparse.urljoin(item.url,url)
-        if DEBUG: logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
-        itemlist.append( Item(channel=__channel__, action='findvideos', title=scrapedtitle, url=scrapedurl, folder=True) )
+        if DEBUG: logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"]")
+        itemlist.append( Item(channel=__channel__, action='findvideos', fulltitle=scrapedtitle, show=scrapedtitle, title=scrapedtitle, url=scrapedurl, folder=True) )
 
     return itemlist
 
@@ -124,7 +124,7 @@ def peliculas(item):
 
         if (DEBUG): logger.info("title=["+title+"], url=["+url+"], thumbnail=["+thumbnail+"]")
 
-        itemlist.append( Item(channel=__channel__, action='findvideos', title="[COLOR azure]" + title + "[/COLOR]", url=url , thumbnail=thumbnail , fanart=thumbnail, plot=plot , viewmode="movie_with_plot", folder=True) )
+        itemlist.append( Item(channel=__channel__, action='findvideos', fulltitle=title, show=title, title="[COLOR azure]" + title + "[/COLOR]", url=url , thumbnail=thumbnail , fanart=thumbnail, plot=plot , viewmode="movie_with_plot", folder=True) )
 
     # Siguiente
     try:
@@ -158,7 +158,7 @@ def peliculasx(item):
 
         if (DEBUG): logger.info("title=["+title+"], url=["+url+"], thumbnail=["+thumbnail+"]")
 
-        itemlist.append( Item(channel=__channel__, action='serie_ep', title="[COLOR azure]" + title + "[/COLOR]", url=url , thumbnail=thumbnail , fanart=thumbnail, plot=plot , viewmode="movie_with_plot", folder=True) )
+        itemlist.append( Item(channel=__channel__, action='serie_ep', fulltitle=title, show=title, title="[COLOR azure]" + title + "[/COLOR]", url=url , thumbnail=thumbnail , fanart=thumbnail, plot=plot , viewmode="movie_with_plot", folder=True) )
 
     # Siguiente
     try:

@@ -128,6 +128,8 @@ def peliculas(item):
         itemlist.append(
             Item(channel=__channel__,
                  action="findvideos",
+                 fulltitle=scrapedtitle,
+                 show=scrapedtitle,
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
@@ -189,6 +191,8 @@ def pelicat(item):
         itemlist.append(
             Item(channel=__channel__,
                  action="findvideos",
+                 fulltitle=scrapedtitle,
+                 show=scrapedtitle,
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
@@ -231,8 +235,8 @@ def findvideos(item):
                  action="play",
                  title=title,
                  url=scrapedurl,
-                 fulltitle=item.title,
-                 show=item.title,
+                 fulltitle=item.fulltitle,
+                 show=item.show,
                  folder=False))
 
     return itemlist
@@ -269,6 +273,7 @@ def play(item):
 
     for videoitem in itemlist:
         videoitem.title = item.show
+        videoitem.show = item.show
         videoitem.fulltitle = item.fulltitle
         videoitem.thumbnail = item.thumbnail
         videoitem.channel = __channel__

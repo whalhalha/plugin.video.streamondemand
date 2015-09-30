@@ -86,7 +86,7 @@ def peliculas(item):
     for scrapedurl,scrapedthumbnail,scrapedtitle in matches:
         #scrapedtitle=scrapertools.decodeHtmlentities(scrapedtitle.replace("Streaming e download ita ",""))
         if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
-        itemlist.append( Item(channel=__channel__, action="findvideos", title="[COLOR azure]"+scrapedtitle+"[/COLOR]" , url=scrapedurl , thumbnail=scrapedthumbnail , plot=scrapedplot , folder=True) )
+        itemlist.append( Item(channel=__channel__, action="findvideos", fulltitle=scrapedtitle, show=scrapedtitle, title="[COLOR azure]"+scrapedtitle+"[/COLOR]" , url=scrapedurl , thumbnail=scrapedthumbnail, folder=True) )
 
     # Extrae el paginador
     patronvideos  = '<span class="pnext"><a href="(.*?)">Avanti</a></span>'
