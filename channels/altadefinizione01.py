@@ -14,7 +14,6 @@ from core import logger
 from core import config
 from core import scrapertools
 from core.item import Item
-from servers import servertools
 
 __channel__ = "altadefinizione01"
 __category__ = "F,S,A"
@@ -49,7 +48,7 @@ def mainlist(item):
                 Item(channel=__channel__,
                      title="[COLOR azure]Film Sub-Ita[/COLOR]",
                      action="peliculas",
-                     url=sito+"genere/sub-ita/",
+                     url=sito + "genere/sub-ita/",
                      thumbnail="http://i.imgur.com/qUENzxl.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Categorie film[/COLOR]",
@@ -69,23 +68,23 @@ def peliculas(item):
     itemlist = []
 
     # Descarga la pagina
-    #data = scrapertools.cache_page(item.url)
+    # data = scrapertools.cache_page(item.url)
 
     data = anti_cloudflare(item.url)
     logger.info(data)
-	
+
     ## ------------------------------------------------
     cookies = ""
-    matches = re.compile( '(.altadefinizione01.com.*?)\n', re.DOTALL ).findall( config.get_cookie_data() )
+    matches = re.compile('(.altadefinizione01.com.*?)\n', re.DOTALL).findall(config.get_cookie_data())
     for cookie in matches:
-        name = cookie.split( '\t' )[5]
-        value = cookie.split( '\t' )[6]
-        cookies+= name + "=" + value + ";"
-    headers.append( ['Cookie',cookies[:-1]] )
+        name = cookie.split('\t')[5]
+        value = cookie.split('\t')[6]
+        cookies += name + "=" + value + ";"
+    headers.append(['Cookie', cookies[:-1]])
     import urllib
-    _headers = urllib.urlencode( dict( headers ) )
+    _headers = urllib.urlencode(dict(headers))
     ## ------------------------------------------------
-	
+
     # Extrae las entradas (carpetas)
     patron = '<a\s+href="([^"]+)"\s+title="[^"]*">\s+<img\s+width="[^"]*"\s+height="[^"]*"\s+src="([^"]+)"\s+class="[^"]*"\s+alt="([^"]+)"'
     matches = re.compile(patron, re.DOTALL).findall(data)
@@ -99,7 +98,8 @@ def peliculas(item):
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle.replace("Streaming", ""))
         scrapedplot = re.sub(r'<[^>]*>', '', scrapedplot)
         scrapedplot = scrapertools.decodeHtmlentities(scrapedplot)
-        if DEBUG: logger.info("title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
+        if DEBUG: logger.info(
+            "title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
         itemlist.append(
             Item(channel=__channel__,
                  action="findvid",
@@ -134,7 +134,7 @@ def categorias(item):
     logger.info("streamondemand.altadefinizione01 categorias")
     itemlist = []
 
-    #data = scrapertools.cache_page(item.url)
+    # data = scrapertools.cache_page(item.url)
     data = anti_cloudflare(item.url)
     logger.info(data)
 
@@ -151,7 +151,8 @@ def categorias(item):
         scrapedurl = urlparse.urljoin(item.url, url)
         scrapedthumbnail = ""
         scrapedplot = ""
-        if DEBUG: logger.info("title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
+        if DEBUG: logger.info(
+            "title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
         itemlist.append(
             Item(channel=__channel__,
                  action="peliculas",
@@ -189,23 +190,29 @@ def findvid(item):
     '''
     <a href="http://www.vid.gg/video/1926a2839ef78" rel="nofollow" target="_blank"><li class="part"><span class="a"><i class="fa fa-circle-o fa-lg"></i> Streaming</span><span class="b"><img src="http://www.vidgg.to/images/favicon.ico" alt="Vidgg" height="10"> Vidgg</span><span class="d">360p</span><span class="c"><ul class="link_rating rating" data="8"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul>
     '''
-    patron = '<a href="([^"]+)"[^>]+><li class="part">'                       # url
-    patron+= '<span class="a"><i[^>]+></i>([^<]+)</span>'                     # type
-    patron+= '<span class="b"><img src="([^"]+)"[^>]+>([^<]+)</span>'         # thumbnail & title
-    patron+= '<span class="d">([^<]+)</span>'                                 # quality
-    patron+= '<span class="c"><ul class="link_rating rating" data="([^"]+)">' # rating
+    patron = '<a href="([^"]+)"[^>]+><li class="part">'  # url
+    patron += '<span class="a"><i[^>]+></i>([^<]+)</span>'  # type
+    patron += '<span class="b"><img src="([^"]+)"[^>]+>([^<]+)</span>'  # thumbnail & title
+    patron += '<span class="d">([^<]+)</span>'  # quality
+    patron += '<span class="c"><ul class="link_rating rating" data="([^"]+)">'  # rating
 
     matches = re.compile(patron, re.DOTALL).findall(data)
 
     for url, type, thumbnail, scrapedtitle, quality, rating in matches:
-
         title = "[" + scrapedtitle.strip() + "] " + type + " (" + quality.strip() + ") (" + rating + ")"
 
-        itemlist.append( Item( channel=__channel__, action="findvideos", title=title, url=url, thumbnail=thumbnail, fulltitle=item.fulltitle, show=item.show, plot=item.plot ) )
-
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="findvideos",
+                 title=title, url=url,
+                 thumbnail=thumbnail,
+                 fulltitle=item.fulltitle,
+                 show=item.show,
+                 plot=item.plot))
 
     return itemlist
-	
+
+
 def anti_cloudflare(url):
     # global headers
 
@@ -218,6 +225,7 @@ def anti_cloudflare(url):
     if 'refresh' in resp_headers:
         time.sleep(int(resp_headers['refresh'][:1]))
 
-        scrapertools.get_headers_from_response(sito + "/" + resp_headers['refresh'][7:], headers=headers)
+        scrapertools.get_headers_from_response(sito + resp_headers['refresh'][7:], headers=headers)
 
     return scrapertools.cache_page(url, headers=headers)
+
