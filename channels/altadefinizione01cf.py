@@ -26,7 +26,7 @@ headers = [
     ['Host','www.altadefinizione01.com'],
     ['User-Agent', 'Mozilla/5.0 (Windows NT 6.1; rv:38.0) Gecko/20100101 Firefox/38.0'],
     ['Accept-Encoding', 'gzip, deflate'],
-    ['Referer', 'http://www.altadefinizione01.com/'],
+    ['Referer', 'https://www.google.com'],
     ['Cookie','__cfduid=dac9bb25ed00a859a9110ef6b704de05d1443568760; cf_clearance=769e9603f6ce90d193236d954e3eb83e6f5c1d47-1443568764-604800; _ga=GA1.2.1244324045.1443568764; _gat=1; __atuvc=1%7C39; __atuvs=560b1da67eedd20a000'],
     ['Connection', 'keep-alive']
 ]
