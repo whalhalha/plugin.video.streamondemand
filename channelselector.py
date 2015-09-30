@@ -216,7 +216,6 @@ def channels_list():
     if config.get_setting("personalchannel5")=="true":
         itemlist.append( Item( title=config.get_setting("personalchannelname5") , channel="personal5" , language="" , category="" , type="generic"  ))
     itemlist.append( Item( title="[COLOR azure]AltaDefinizione01[/COLOR]"      , channel="altadefinizione01"           , language="IT"    , category="B,F,S,A"   , type="generic"))
-    itemlist.append( Item( title="[COLOR azure]AltaDefinizione01 (Test CF)[/COLOR]"      , channel="altadefinizione01cf"           , language="IT"    , category="B,F,S,A"   , type="generic", thumbnail="http://www.altadefinizione01.com/wp-content/uploads/2015/04/logo.png"))
     #itemlist.append( Item( title="[COLOR azure]Altadefinizione.click[/COLOR]" , channel="altadefinizioneclick" , language="IT" , category="F,S,A" , type="generic"))
     itemlist.append( Item( title="[COLOR azure]Anime Sub Ita[/COLOR]"   , channel="animesubita"           , language="IT"    , category="A"   , type="generic"))
     itemlist.append( Item( title="[COLOR azure]Asian Sub-Ita[/COLOR]"      , channel="asiansubita"           , language="IT"    , category="F,S"   , type="generic"))
