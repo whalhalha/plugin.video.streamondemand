@@ -170,6 +170,8 @@ def peliculas(item):
         itemlist.append(
             Item(channel=__channel__,
                  action="episodios" if item.extra == "serie" else "findvideos",
+                 fulltitle=scrapedtitle,
+                 show=scrapedtitle,
                  title=scrapedtitle,
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
@@ -223,6 +225,8 @@ def latest(item):
         itemlist.append(
             Item(channel=__channel__,
                  action="findvideos",
+                 fulltitle=scrapedtitle,
+                 show=scrapedtitle,
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
@@ -267,8 +271,8 @@ def episodios(item):
                  url=item.url,
                  thumbnail=item.thumbnail,
                  extra=data1+data2,
-                 fulltitle=item.title,
-                 show=item.title))
+                 fulltitle=item.fulltitle,
+                 show=item.show))
 
     if len(itemlist) == 0:
         patron = '<a href="(#wpwm-tabs-\d+)">([^<]+)</a></li>'
@@ -287,12 +291,12 @@ def episodios(item):
                      url=item.url,
                      thumbnail=item.thumbnail,
                      extra=html,
-                     fulltitle=item.title,
-                     show=item.title))
+                     fulltitle=item.fulltitle,
+                     show=item.show))
 
     if config.get_library_support():
-        itemlist.append( Item(channel=__channel__, title=item.title, url=item.url, action="add_serie_to_library", extra="episodios", show=item.title) )
-        itemlist.append( Item(channel=item.channel, title="Scarica tutti gli episodi della serie", url=item.url, action="download_all_episodes", extra="episodios", show=item.title) )
+        itemlist.append( Item(channel=__channel__, title=item.title, url=item.url, action="add_serie_to_library", extra="episodios", show=item.show) )
+        itemlist.append( Item(channel=item.channel, title="Scarica tutti gli episodi della serie", url=item.url, action="download_all_episodes", extra="episodios", show=item.show) )
 
     return itemlist
 

@@ -75,7 +75,7 @@ def peliculas(item):
     for scrapedurl,scrapedthumbnail,scrapedtitle,scrapedplot in matches:
         scrapedtitle = scrapertools.decodeHtmlentities( scrapedtitle )
         if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
-        itemlist.append( Item(channel=__channel__, action="findvideos", title=scrapedtitle, url=scrapedurl , plot=scrapedplot, thumbnail=scrapedthumbnail, folder=True, fanart=scrapedthumbnail) )
+        itemlist.append( Item(channel=__channel__, action="findvideos", fulltitle=scrapedtitle, show=scrapedtitle, title=scrapedtitle, url=scrapedurl , plot=scrapedplot, thumbnail=scrapedthumbnail, folder=True, fanart=scrapedthumbnail) )
 
     # Extrae el paginador
     patronvideos = '<a href="([^"]+)">&raquo;</a>'
@@ -106,7 +106,7 @@ def serietv80(item):
     for scrapedurl,scrapedthumbnail,scrapedtitle in matches:
         scrapedtitle = scrapertools.decodeHtmlentities( scrapedtitle )
         if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
-        itemlist.append( Item(channel=__channel__, action="findvideos", title=scrapedtitle, url=scrapedurl , thumbnail=scrapedthumbnail, folder=True, fanart=scrapedthumbnail) )
+        itemlist.append( Item(channel=__channel__, action="findvideos", fulltitle=scrapedtitle, show=scrapedtitle, title=scrapedtitle, url=scrapedurl , thumbnail=scrapedthumbnail, folder=True, fanart=scrapedthumbnail) )
 
     # Extrae el paginador
     patronvideos = '<a href="([^"]+)">&raquo;</a>'
@@ -268,9 +268,9 @@ def serie(item):
     scrapertools.printMatches(matches)
 
     for scrapedurl,scrapedthumbnail,scrapedtitle in matches:
-        title = scrapertools.decodeHtmlentities( scrapedtitle )
+        scrapedtitle = scrapertools.decodeHtmlentities( scrapedtitle )
         if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
-        itemlist.append( Item(channel=__channel__, action="findvideos", title=title, url=scrapedurl , thumbnail=scrapedthumbnail, folder=True, fanart=scrapedthumbnail) )
+        itemlist.append( Item(channel=__channel__, action="findvideos", fulltitle=scrapedtitle, show=scrapedtitle, title=scrapedtitle, url=scrapedurl , thumbnail=scrapedthumbnail, folder=True, fanart=scrapedthumbnail) )
 
     # Extrae el paginador
     patronvideos = '<a href="([^"]+)">&raquo;</a>'

@@ -77,6 +77,8 @@ def peliculas(item):
         itemlist.append(
             Item(channel=__channel__,
                  action="findvideos",
+                 fulltitle=scrapedtitle,
+                 show=scrapedtitle,
                  title=scrapedtitle,
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
@@ -124,6 +126,8 @@ def serietv(item):
         itemlist.append(
             Item(channel=__channel__,
                  action="episodios",
+                 fulltitle=scrapedtitle,
+                 show=scrapedtitle,
                  title=scrapedtitle,
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
@@ -212,8 +216,8 @@ def episodios(item):
         load_episodios()
 
     if config.get_library_support():
-        itemlist.append( Item(channel=__channel__, title=item.title, url=item.url, action="add_serie_to_library", extra="episodios", show=item.title) )
-        itemlist.append( Item(channel=item.channel, title="Scarica tutti gli episodi della serie", url=item.url, action="download_all_episodes", extra="episodios", show=item.title) )
+        itemlist.append( Item(channel=__channel__, title=item.title, url=item.url, action="add_serie_to_library", extra="episodios", show=item.show) )
+        itemlist.append( Item(channel=item.channel, title="Scarica tutti gli episodi della serie", url=item.url, action="download_all_episodes", extra="episodios", show=item.show) )
 
     return itemlist
 

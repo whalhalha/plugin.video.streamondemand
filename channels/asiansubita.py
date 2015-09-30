@@ -134,6 +134,7 @@ def play( item ):
     for videoitem in itemlist:
         videoitem.title = item.show
         videoitem.fulltitle = item.fulltitle
+        videoitem.show = item.show
         videoitem.thumbnail = item.thumbnail
         videoitem.channel = __channel__
 

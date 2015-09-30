@@ -55,7 +55,7 @@ def peliculas(item):
         scrapedplot = re.sub(r'<[^>]*>', '', scrapedplot)
         scrapedplot = scrapertools.decodeHtmlentities(scrapedplot)
         if (DEBUG): logger.info("url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"], title=["+scrapedtitle+"]")
-        itemlist.append( Item(channel=__channel__, action="findvideos", url=scrapedurl , thumbnail=scrapedthumbnail , title=scrapedtitle , folder=True, fanart=scrapedthumbnail, plot=scrapedplot) )
+        itemlist.append( Item(channel=__channel__, action="findvideos", url=scrapedurl , thumbnail=scrapedthumbnail , fulltitle=scrapedtitle, show=scrapedtitle, title=scrapedtitle , folder=True, fanart=scrapedthumbnail, plot=scrapedplot) )
 
     # Extrae el paginador
     patronvideos  = '<a class="nextpostslink" href="(.*?)">&raquo;</a>'

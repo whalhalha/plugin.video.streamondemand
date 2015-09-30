@@ -191,9 +191,6 @@ def do_search(item):
     master_exclude_data_file = os.path.join(config.get_runtime_path(), "resources", "biblioteca.txt")
     logger.info("streamondemand.channels.buscador master_exclude_data_file=" + master_exclude_data_file)
 
-    exclude_data_file = os.path.join(config.get_data_path(), "biblioteca.txt")
-    logger.info("streamondemand.channels.buscador exclude_data_file=" + exclude_data_file)
-
     channels_path = os.path.join(config.get_runtime_path(), "channels", '*.py')
     logger.info("streamondemand.channels.buscador channels_path=" + channels_path)
 

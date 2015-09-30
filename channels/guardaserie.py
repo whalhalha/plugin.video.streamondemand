@@ -73,7 +73,7 @@ def fichas( item ):
 
     for scrapedurl, scrapedtitle in matches:
 
-        itemlist.append( Item( channel=__channel__, action="episodios", title= scrapedtitle , fulltitle=scrapedtitle, url=scrapedurl, show=scrapedtitle ) )
+        itemlist.append( Item( channel=__channel__, action="episodios", title= scrapedtitle , fulltitle=scrapedtitle, show=scrapedtitle, url=scrapedurl ) )
 
     return itemlist
 
@@ -92,7 +92,7 @@ def anime( item ):
 
     for scrapedurl, scrapedtitle in matches:
 
-        itemlist.append( Item( channel=__channel__, action="episodios", title= scrapedtitle , fulltitle=scrapedtitle, url=scrapedurl, show=scrapedtitle, thumbnail="http://www.itrentenni.com/wp-content/uploads/2015/02/tv-series.jpg" ) )
+        itemlist.append( Item( channel=__channel__, action="episodios", title= scrapedtitle , fulltitle=scrapedtitle, show=scrapedtitle, url=scrapedurl, thumbnail="http://www.itrentenni.com/wp-content/uploads/2015/02/tv-series.jpg" ) )
 
     return itemlist
 

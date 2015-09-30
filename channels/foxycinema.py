@@ -123,7 +123,7 @@ def peliculas(item):
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         scrapedplot = ""
         if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
-        itemlist.append( Item(channel=__channel__, action="findvideos", title="[COLOR azure]"+scrapedtitle+"[/COLOR]" , url=sito+scrapedurl , thumbnail=scrapedthumbnail , plot=scrapedplot , folder=True) )
+        itemlist.append( Item(channel=__channel__, action="findvideos", fulltitle=scrapedtitle, show=scrapedtitle, title="[COLOR azure]"+scrapedtitle+"[/COLOR]" , url=sito+scrapedurl , thumbnail=scrapedthumbnail , plot=scrapedplot , folder=True) )
 
     # Extrae el paginador
     patronvideos  = '<a class="next" href="(.*?)">&gt;&nbsp;'
@@ -152,7 +152,7 @@ def peliculasearch(item):
     for scrapedurl,scrapedtitle in matches:
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"]")
-        itemlist.append( Item(channel=__channel__, action="findvideos", title=scrapedtitle, url=sito+scrapedurl , folder=True) )
+        itemlist.append( Item(channel=__channel__, action="findvideos", fulltitle=scrapedtitle, show=scrapedtitle, title=scrapedtitle, url=sito+scrapedurl , folder=True) )
 
     # Extrae el paginador
     patronvideos  = '<li><a class="next" href="(.*?)" title="Avanti"><i class="uk-icon-angle-right"></i></a></li>'
