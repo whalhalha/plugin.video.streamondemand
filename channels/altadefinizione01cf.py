@@ -173,26 +173,31 @@ def search(item, texto):
 
 def findvid(item):
     logger.info("[altadefinizione01.py] findvideos")
+    itemlist = []
 
     ## Descarga la página
-    data = anti_cloudflare(item.url)
-    data = scrapertools.find_single_match(data, "(eval.function.p,a,c,k,e,.*?)\s*</script>")
-    if data != "":
-        from core import unpackerjs3
-        data_unpack = unpackerjs3.unpackjs(data)
-        if data_unpack == "":
-            from lib.jsbeautifier.unpackers import packer
-            data_unpack = packer.unpack(data)
+    data = re.sub(
+        r'\t|\n|\r',
+        '',
+        anti_cloudflare(item.url)
+    )
+    '''
+    <a href="http://www.vid.gg/video/1926a2839ef78" rel="nofollow" target="_blank"><li class="part"><span class="a"><i class="fa fa-circle-o fa-lg"></i> Streaming</span><span class="b"><img src="http://www.vidgg.to/images/favicon.ico" alt="Vidgg" height="10"> Vidgg</span><span class="d">360p</span><span class="c"><ul class="link_rating rating" data="8"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul>
+    '''
+    patron = '<a href="([^"]+)"[^>]+><li class="part">'                       # url
+    patron+= '<span class="a"><i[^>]+></i>([^<]+)</span>'                     # type
+    patron+= '<span class="b"><img src="([^"]+)"[^>]+>([^<]+)</span>'         # thumbnail & title
+    patron+= '<span class="d">([^<]+)</span>'                                 # quality
+    patron+= '<span class="c"><ul class="link_rating rating" data="([^"]+)">' # rating
 
-        itemlist = servertools.find_video_items(data=data_unpack.replace(r'\\/', '/'))
+    matches = re.compile(patron, re.DOTALL).findall(data)
 
-        for videoitem in itemlist:
-            videoitem.title = "".join([item.title, videoitem.title])
-            videoitem.fulltitle = item.fulltitle
-            videoitem.thumbnail = item.thumbnail
-            videoitem.channel = __channel__
-    else:
-        itemlist = servertools.find_video_items(item=item)
+    for url, type, thumbnail, scrapedtitle, quality, rating in matches:
+
+        title = "[" + scrapedtitle.strip() + "] " + type + " (" + quality.strip() + ") (" + rating + ")"
+
+        itemlist.append( Item( channel=__channel__, action="findvideos", title=title, url=url, thumbnail=thumbnail, fulltitle=item.title, show=item.title, plot=item.plot ) )
+
 
     return itemlist
 
