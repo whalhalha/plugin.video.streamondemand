@@ -42,12 +42,12 @@ def mainlist(item):
              url="http://www.ibs.it/dvd-film/lista-attori.html",
              thumbnail="http://cinema.clubefl.gr/wp-content/themes/director-theme/images/logo.png"))
     # itemlist.append( Item(channel=__channel__, title="[COLOR azure]Film per Attori/Attrici[/COLOR]", action="cat_attori", url="http://altadefinizione.co/attori/", thumbnail="http://repository-butchabay.googlecode.com/svn/branches/eden/skin.cirrus.extended.v2/extras/moviegenres/All%20Movies%20by%20Actor.png"))
-    itemlist.append(
-        Item(channel=__channel__,
-             title="[COLOR azure]Elenco Film [A-Z][/COLOR]",
-             action="categorias",
-             url="http://www.darkstream.tv/",
-             thumbnail="http://repository-butchabay.googlecode.com/svn/branches/eden/skin.cirrus.extended.v2/extras/moviegenres/Movies%20A-Z.png"))
+    # itemlist.append(
+    #     Item(channel=__channel__,
+    #          title="[COLOR azure]Elenco Film [A-Z][/COLOR]",
+    #          action="categorias",
+    #          url="http://www.darkstream.tv/",
+    #          thumbnail="http://repository-butchabay.googlecode.com/svn/branches/eden/skin.cirrus.extended.v2/extras/moviegenres/Movies%20A-Z.png"))
     # itemlist.append( Item(channel=__channel__, title="[COLOR yellow]Cerca...[/COLOR]", action="search", thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search"))
 
     return itemlist
@@ -84,10 +84,9 @@ def cat_lettera_registi(item):
                ('Y', '/dvd/ser/serreg.asp?q=Y'),
                ('Z', '/dvd/ser/serreg.asp?q=Z')]
 
-    for  scrapedtitle, scrapedurl in matches:
+    for scrapedtitle, scrapedurl in matches:
         url = host + scrapedurl
-        titolo = scrapedtitle.replace(" ","+")
-        itemlist.append(Item(channel=__channel__, action="cat_ruolo", extra=titolo, title=scrapedtitle, url=url, folder=True))
+        itemlist.append(Item(channel=__channel__, action="cat_ruolo", title=scrapedtitle, url=url, folder=True))
 
     return itemlist
 
@@ -123,9 +122,8 @@ def cat_lettera_attori(item):
                ('Y', '/dvd/ser/seratt.asp?q=Y'),
                ('Z', '/dvd/ser/seratt.asp?q=Z')]
 
-    for  scrapedtitle, scrapedurl in matches:
+    for scrapedtitle, scrapedurl in matches:
         url = host + scrapedurl
-        titolo = scrapedtitle.replace(" ","+")
         itemlist.append(Item(channel=__channel__, action="cat_ruolo", title=scrapedtitle, url=url, folder=True))
 
     return itemlist
@@ -187,6 +185,7 @@ def do_search(item):
     import os
     import glob
     import imp
+    from lib.fuzzywuzzy import fuzz
 
     master_exclude_data_file = os.path.join(config.get_runtime_path(), "resources", "biblioteca.txt")
     logger.info("streamondemand.channels.buscador master_exclude_data_file=" + master_exclude_data_file)
@@ -212,7 +211,7 @@ def do_search(item):
     try:
         import xbmcgui
         progreso = xbmcgui.DialogProgressBG()
-        progreso.create("Ricerca di " + mostra.title())
+        progreso.create("Ricerca di " + mostra)
     except:
         show_dialog = False
 
@@ -230,18 +229,17 @@ def do_search(item):
             if show_dialog:
                 progreso.update(percentage, ' Sto cercando "' + mostra + '"')
 
-            logger.info(
-                "streamondemand.channels.buscador Tentativo di ricerca su " + basename_without_extension + " per " + mostra)
+            logger.info("streamondemand.channels.buscador Tentativo di ricerca su " + basename_without_extension + " per " + mostra)
             try:
 
                 # http://docs.python.org/library/imp.html?highlight=imp#module-imp
                 obj = imp.load_source(basename_without_extension, infile)
                 logger.info("streamondemand.channels.buscador cargado " + basename_without_extension + " de " + infile)
                 channel_result_itemlist = obj.search(Item(), tecleado)
-                for item in channel_result_itemlist:
-                    item.title = scrapertools.decodeHtmlentities(item.title)
-                    item.title = item.title + " [COLOR orange]su[/COLOR] [COLOR green]" + basename_without_extension + "[/COLOR]"
-                    item.viewmode = "list"
+                for new_item in channel_result_itemlist:
+                    new_item.title = scrapertools.decodeHtmlentities(new_item.title)
+                    new_item.title = new_item.title + " [COLOR orange]su[/COLOR] [COLOR green]" + basename_without_extension + "[/COLOR]"
+                    new_item.viewmode = "list"
 
                 itemlist.extend(channel_result_itemlist)
             except:
@@ -252,9 +250,17 @@ def do_search(item):
             logger.info(
                 "streamondemand.channels.buscador do_search_results, Escluso il server " + basename_without_extension)
 
-    itemlist = sorted(itemlist, key=lambda Item: Item.title)
+    new_itemlist = []
+    for new_item in itemlist:
+        ratio = fuzz.WRatio(item.title, new_item.fulltitle)
+        # print str(ratio) + "\t" + new_item.fulltitle + "\t" + new_item.title
+        if ratio > 85:
+            new_itemlist.append(new_item)
+
+    itemlist = sorted(new_itemlist, key=lambda Item: Item.title)
 
     if show_dialog:
         progreso.close()
 
     return itemlist
+
