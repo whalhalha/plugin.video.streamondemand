@@ -136,6 +136,8 @@ def search_peliculas(item):
         itemlist.append(
             Item(channel=__channel__,
                  action="findvideos",
+                 fulltitle=scrapedtitle,
+                 show=scrapedtitle,
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
