@@ -100,6 +100,9 @@ def peliculas(item):
         scrapedplot = scrapertools.decodeHtmlentities(scrapedplot)
         if DEBUG: logger.info(
             "title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
+        ## ------------------------------------------------
+        scrapedthumbnail+= "|" + _headers
+        ## ------------------------------------------------
         itemlist.append(
             Item(channel=__channel__,
                  action="findvid",
