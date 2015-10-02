@@ -158,6 +158,7 @@ def cat_ruolo(item):
 
         for scrapedurl, scrapedtitle in matches:
             url = host + scrapedurl
+            scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
             itemlist.append(
                 Item(channel=__channel__, action="cat_filmografia", title=scrapedtitle, url=url, folder=True))
 
