@@ -4,14 +4,12 @@
 # Ricerca "Biblioteca"
 # http://www.mimediacenter.info/foro/viewforum.php?f=36
 # ------------------------------------------------------------
-import urlparse,urllib2,urllib,re
-import os, sys
+import re
 
 from core import logger
 from core import config
 from core import scrapertools
 from core.item import Item
-from servers import servertools
 
 __channel__ = "biblioteca"
 __category__ = "F"
@@ -33,36 +31,27 @@ def mainlist(item):
     itemlist = []
     itemlist.append(
         Item(channel=__channel__,
-             title="[COLOR yellow]Cerca Registi...[/COLOR]",
-             action="search",
-             extra="reg",
-             thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search"))
-    itemlist.append(
-        Item(channel=__channel__,
              title="[COLOR azure]Indice Registi [A-Z][/COLOR]",
              action="cat_lettera_registi",
              url="http://www.ibs.it/dvd/lista+registi.html",
              thumbnail="http://cinema.clubefl.gr/wp-content/themes/director-theme/images/logo.png"))
     itemlist.append(
         Item(channel=__channel__,
-             title="[COLOR yellow]Cerca Attori-Attrici...[/COLOR]",
-             action="search",
-             extra="att",
-             thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search"))
-    itemlist.append(
-        Item(channel=__channel__,
              title="[COLOR azure]Indice Attori/Attrici [A-Z][/COLOR]",
              action="cat_lettera_attori",
              url="http://www.ibs.it/dvd-film/lista-attori.html",
              thumbnail="http://cinema.clubefl.gr/wp-content/themes/director-theme/images/logo.png"))
-    itemlist.append(
-        Item(channel=__channel__,
-             title="[COLOR yellow]Cerca Film...[/COLOR]",
-             action="search",
-             extra="mov",
-             thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search"))
+    # itemlist.append( Item(channel=__channel__, title="[COLOR azure]Film per Attori/Attrici[/COLOR]", action="cat_attori", url="http://altadefinizione.co/attori/", thumbnail="http://repository-butchabay.googlecode.com/svn/branches/eden/skin.cirrus.extended.v2/extras/moviegenres/All%20Movies%20by%20Actor.png"))
+    # itemlist.append(
+    #     Item(channel=__channel__,
+    #          title="[COLOR azure]Elenco Film [A-Z][/COLOR]",
+    #          action="categorias",
+    #          url="http://www.darkstream.tv/",
+    #          thumbnail="http://repository-butchabay.googlecode.com/svn/branches/eden/skin.cirrus.extended.v2/extras/moviegenres/Movies%20A-Z.png"))
+    # itemlist.append( Item(channel=__channel__, title="[COLOR yellow]Cerca...[/COLOR]", action="search", thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search"))
 
     return itemlist
+
 
 def cat_lettera_registi(item):
     logger.info("streamondemand.biblioteca cat_registi")
@@ -97,7 +86,12 @@ def cat_lettera_registi(item):
 
     for scrapedtitle, scrapedurl in matches:
         url = host + scrapedurl
-        itemlist.append(Item(channel=__channel__, action="cat_ruolo", title=scrapedtitle, url=url, folder=True))
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="cat_ruolo",
+                 title=scrapedtitle,
+                 url=url,
+                 folder=True))
 
     return itemlist
 
@@ -135,7 +129,12 @@ def cat_lettera_attori(item):
 
     for scrapedtitle, scrapedurl in matches:
         url = host + scrapedurl
-        itemlist.append(Item(channel=__channel__, action="cat_ruolo", title=scrapedtitle, url=url, folder=True))
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="cat_ruolo",
+                 title=scrapedtitle,
+                 url=url,
+                 folder=True))
 
     return itemlist
 
@@ -157,35 +156,17 @@ def cat_ruolo(item):
         matches = re.compile(patron, re.DOTALL).findall(bloque)
 
         for scrapedurl, scrapedtitle in matches:
+            scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle).strip()
             url = host + scrapedurl
-            scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
             itemlist.append(
-                Item(channel=__channel__, action="cat_filmografia", title=scrapedtitle, url=url, folder=True))
+                Item(channel=__channel__,
+                     action="cat_filmografia",
+                     title=scrapedtitle,
+                     url=url,
+                     folder=True))
 
     return itemlist
 
-def search(item,texto):
-    logger.info("[biblioteca.py] "+item.url+" search "+texto)
-    
-
-    try:
-        if item.extra == "reg":
-            item.url = "http://www.ibs.it/dvd/ser/serpge.asp?A=&I6.x=83&I6.y=18&P="+texto+"&SEQ=Q&SL=&T=&dep=0&dh=25&ls=&shop=&ty=kw"
-            return cat_filmografia(item)
-        if item.extra == "att":
-            item.url = "http://www.ibs.it/dvd/ser/serpge.asp?A="+texto+"&I6.x=0&I6.y=0&P=&SEQ=Q&SL=&T=&dep=0&dh=25&ls=&shop=&ty=kw"
-            return cat_filmografia(item)
-        if item.extra == "mov":
-            item.url = "http://www.ibs.it/dvd/ser/serpge.asp?A=&I6.x=72&I6.y=13&P=&SEQ=Q&SL=&T="+texto+"&dep=0&dh=25&ls=&shop=&ty=kw"
-            return cat_filmografia(item)
-
-        
-    # Se captura la excepción, para no interrumpir al buscador global si un canal falla
-    except:
-        import sys
-        for line in sys.exc_info():
-            logger.error( "%s" % line )
-        return []
 
 def cat_filmografia(item):
     logger.info("streamondemand.biblioteca cat_registi")
@@ -197,21 +178,26 @@ def cat_filmografia(item):
     # Extrae las entradas (carpetas)
     patron = r'<td width="90" valign="middle" height="120"><a href="[^"]+"><img alt="([^"]+)" border="0" src="([^"]+)"></a></td>'
     matches = re.compile(patron, re.DOTALL).findall(data)
-    scrapertools.printMatches(matches)
 
     for scrapedtitle, scrapedthumbnail in matches:
+        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle).strip()
         titolo = scrapedtitle.replace(" ", "+")
         itemlist.append(
-            Item(channel=__channel__, action="do_search", extra=titolo, title=scrapedtitle, thumbnail=scrapedthumbnail,
+            Item(channel=__channel__,
+                 action="do_search",
+                 extra=titolo,
+                 title=scrapedtitle,
+                 thumbnail=scrapedthumbnail,
                  folder=True))
 
     return itemlist
+
 
 def do_search(item):
     logger.info("streamondemand.channels.biblioteca do_search")
 
     tecleado = item.extra
-    mostra = tecleado.replace("+", " ")
+    mostra = item.title
 
     itemlist = []
 
@@ -262,7 +248,8 @@ def do_search(item):
             if show_dialog:
                 progreso.update(percentage, ' Sto cercando "' + mostra + '"')
 
-            logger.info("streamondemand.channels.buscador Tentativo di ricerca su " + basename_without_extension + " per " + mostra)
+            logger.info(
+                "streamondemand.channels.buscador Tentativo di ricerca su " + basename_without_extension + " per " + mostra)
             try:
 
                 # http://docs.python.org/library/imp.html?highlight=imp#module-imp
