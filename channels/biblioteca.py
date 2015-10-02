@@ -55,14 +55,12 @@ def mainlist(item):
              action="cat_lettera_attori",
              url="http://www.ibs.it/dvd-film/lista-attori.html",
              thumbnail="http://cinema.clubefl.gr/wp-content/themes/director-theme/images/logo.png"))
-    # itemlist.append( Item(channel=__channel__, title="[COLOR azure]Film per Attori/Attrici[/COLOR]", action="cat_attori", url="http://altadefinizione.co/attori/", thumbnail="http://repository-butchabay.googlecode.com/svn/branches/eden/skin.cirrus.extended.v2/extras/moviegenres/All%20Movies%20by%20Actor.png"))
-    # itemlist.append(
-    #     Item(channel=__channel__,
-    #          title="[COLOR azure]Elenco Film [A-Z][/COLOR]",
-    #          action="categorias",
-    #          url="http://www.darkstream.tv/",
-    #          thumbnail="http://repository-butchabay.googlecode.com/svn/branches/eden/skin.cirrus.extended.v2/extras/moviegenres/Movies%20A-Z.png"))
-    # itemlist.append( Item(channel=__channel__, title="[COLOR yellow]Cerca...[/COLOR]", action="search", thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search"))
+    itemlist.append(
+        Item(channel=__channel__,
+             title="[COLOR yellow]Cerca Film...[/COLOR]",
+             action="search",
+             extra="mov",
+             thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search"))
 
     return itemlist
 
@@ -175,6 +173,9 @@ def search(item,texto):
             return cat_filmografia(item)
         if item.extra == "att":
             item.url = "http://www.ibs.it/dvd/ser/serpge.asp?A="+texto+"&I6.x=0&I6.y=0&P=&SEQ=Q&SL=&T=&dep=0&dh=25&ls=&shop=&ty=kw"
+            return cat_filmografia(item)
+        if item.extra == "mov":
+            item.url = "http://www.ibs.it/dvd/ser/serpge.asp?A=&I6.x=72&I6.y=13&P=&SEQ=Q&SL=&T="+texto+"&dep=0&dh=25&ls=&shop=&ty=kw"
             return cat_filmografia(item)
 
         
