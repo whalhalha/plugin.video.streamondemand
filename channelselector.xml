@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <version>
 	<name>channelselector</name>
-	<tag>78</tag>
-	<date>02/10/2015</date>
-	<changes>Fixed main menu</changes>
+	<tag>79</tag>
+	<date>03/10/2015</date>
+	<changes>Added new channel</changes>
 </version>
