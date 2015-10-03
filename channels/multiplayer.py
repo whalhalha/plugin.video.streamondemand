@@ -37,7 +37,7 @@ def isGeneric():
 def mainlist(item):
     logger.info("streamondemand.multiplayer mainlist")
     itemlist = []
-    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Recensioni Videogame[/COLOR]", action="peliculas", url="http://multiplayer.it/video/videorecensione/", thumbnail="http://dc584.4shared.com/img/XImgcB94/s7/13feaf0b538/saquinho_de_pipoca_01"))
+    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Recensioni Videogame[/COLOR]", action="peliculas", url="http://multiplayer.it/video/videorecensione/", thumbnail="http://orig03.deviantart.net/6889/f/2014/079/7/b/movies_and_popcorn_folder_icon_by_matheusgrilo-d7ay4tw.png"))
 
     
     return itemlist
@@ -63,7 +63,7 @@ def peliculas(item):
         itemlist.append( Item(channel=__channel__, action="findvideos", title=scrapedtitle, url=sito+scrapedurl , thumbnail=scrapedthumbnail , plot=scrapedplot , folder=True) )
 
     # Extrae el paginador
-    patronvideos  = '<a href="(.*?)" rel="pagina" class="page_link"><span class="next">&nbsp</span>'
+    patronvideos  = '<li><a href="(.*?)" rel="pagina" class="page_link"><span class="next">&nbsp</span></a></li>'
     matches = re.compile(patronvideos,re.DOTALL).findall(data)
     scrapertools.printMatches(matches)
 
