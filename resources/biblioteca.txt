@@ -29,3 +29,6 @@ filmontv
 libreria
 novedades
 tengourl
+webshortfilms
+bibliotrailer
+
