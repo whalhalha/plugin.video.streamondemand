@@ -18,6 +18,7 @@ ildocumento
 italiaserie
 itastreaming
 liberostreaming
+multiplayer
 serietvsubita
 seriehd
 storiedellarte
