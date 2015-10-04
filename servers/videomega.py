@@ -37,58 +37,40 @@ def get_video_url( page_url , premium = False , user="" , password="", video_pas
     return video_urls
 
 # Encuentra vídeos del servidor en el texto pasado
-def find_videos(data):
-    encontrados = set()
-    devuelve = []
+    def find_videos(data):
+        encontrados = set()
+        devuelve = []
 
-    # http://videomega.net/auoxxtvyoy
-    patronvideos  = 'videomega.tv/([A-Za-z0-9]+)'
-    logger.info("streamondemand.videomega find_videos #"+patronvideos+"#")
-    matches = re.compile(patronvideos,re.DOTALL).findall(data)
+        # http://videomega.net/auoxxtvyoy
+        # http://videomega.net/auoxxtvyoy
+        # http://videomega.tv/?ref=NcYTGcGNUY
 
-    for match in matches:
-        titulo = "[videomega]"
-        url = "http://videomega.tv/view.php?ref="+match+"&width=100%&height=400"
-        if url not in encontrados:
-            logger.info("  url="+url)
-            devuelve.append( [ titulo , url , 'videomega' ] )
-            encontrados.add(url)
+        if "<textarea" in data:
+            patterns = [
+                r'<textarea.*?src="[^=]+=([^"]+)"'
+            ]
         else:
-            logger.info("  url duplicada="+url)
+            patterns = [
+                r'videomega.tv/([A-Za-z0-9]+)',
+                r'videomega.tv/cdn.php\?ref\=([A-Za-z0-9]+)',
+                r'videomega.tv/\?ref\=([A-Za-z0-9]+)'
+            ]
 
-    # http://videomega.net/auoxxtvyoy
-    patronvideos  = 'videomega.tv/cdn.php\?ref\=([A-Za-z0-9]+)'
-    logger.info("streamondemand.videomega find_videos #"+patronvideos+"#")
-    matches = re.compile(patronvideos,re.DOTALL).findall(data)
+        for pattern in patterns:
 
-    for match in matches:
-        titulo = "[videomega]"
-        url = "http://videomega.tv/view.php?ref="+match+"&width=100%&height=400"
-        if url not in encontrados:
-            logger.info("  url="+url)
-            devuelve.append( [ titulo , url , 'videomega' ] )
-            encontrados.add(url)
-        else:
-            logger.info("  url duplicada="+url)
-            
-    # http://videomega.tv/?ref=NcYTGcGNUY
-    patronvideos  = 'videomega.tv/\?ref\=([A-Za-z0-9]+)'
-    logger.info("streamondemand.videomega find_videos #"+patronvideos+"#")
-    matches = re.compile(patronvideos,re.DOTALL).findall(data)
+            logger.info("[videomega.py] find_videos #" + pattern + "#")
+            matches = re.compile(pattern, re.DOTALL).findall(data)
 
-    for match in matches:
-        titulo = "[videomega]"
-        url = "http://videomega.tv/view.php?ref="+match+"&width=100%&height=400"
-        if url not in encontrados:
-            logger.info("  url="+url)
-            devuelve.append( [ titulo , url , 'videomega' ] )
-            encontrados.add(url)
-        else:
-            logger.info("  url duplicada="+url)
-            
-    return devuelve
+            for match in matches:
+                titulo = "[videomega]"
+                url = "http://videomega.tv/view.php?ref="+match+"&width=100%&height=400"
+                if url not in encontrados:
+                    logger.info("  url="+url)
+                    devuelve.append( [ titulo , url , 'videomega' ] )
+                    encontrados.add(url)
+                else:
+                    logger.info("  url duplicada="+url)
 
-def test():
-    video_urls = get_video_url("http://videomega.tv/iframe.php?ref=LWfaTEDONS")
+        return devuelve
 
-    return len(video_urls)>0
+
