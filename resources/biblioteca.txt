@@ -1,7 +1,7 @@
 #channels
 animesubita
-cineblog01
 cineblogfm
+cinemagratis
 cinestreaming01
 cucinarefacile
 documentaristreaming
