@@ -1,5 +1,6 @@
 #channels
 animesubita
+altadefinizioneclick
 cineblogfm
 cinemagratis
 cinestreaming01
@@ -8,8 +9,8 @@ documentaristreaming
 documoo
 eurostreaming
 filmgratiscc
-filmpertutti
 filmstreampw
+filmsubitotv
 guardaserie
 hubberfilm
 ildocumento
