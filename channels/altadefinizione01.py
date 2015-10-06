@@ -188,15 +188,6 @@ def findvid(item):
     ## Descarga la página
     data = anti_cloudflare(item.url)
 
-    data_pack = scrapertools.find_single_match(data, "(eval.function.p,a,c,k,e,.*?)\s*</script>")
-    if data_pack != "":
-        from core import unpackerjs3
-        data_unpack = unpackerjs3.unpackjs(data_pack)
-        if data_unpack == "":
-            from lib.jsbeautifier.unpackers import packer
-            data_unpack = packer.unpack(data_pack)
-        data = data_unpack.replace(r'\\/', '/')
-
     itemlist = servertools.find_video_items(data=data)
 
     for videoitem in itemlist:
