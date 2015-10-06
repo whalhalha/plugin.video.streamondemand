@@ -14,6 +14,7 @@ from core import logger
 from core import config
 from core import scrapertools
 from core.item import Item
+from servers import servertools
 
 __channel__ = "altadefinizione01"
 __category__ = "F,S,A"
@@ -101,7 +102,7 @@ def peliculas(item):
         if DEBUG: logger.info(
             "title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
         ## ------------------------------------------------
-        scrapedthumbnail+= "|" + _headers
+        scrapedthumbnail += "|" + _headers
         ## ------------------------------------------------
         itemlist.append(
             Item(channel=__channel__,
@@ -185,33 +186,25 @@ def findvid(item):
     itemlist = []
 
     ## Descarga la página
-    data = re.sub(
-        r'\t|\n|\r',
-        '',
-        anti_cloudflare(item.url)
-    )
-    '''
-    <a href="http://www.vid.gg/video/1926a2839ef78" rel="nofollow" target="_blank"><li class="part"><span class="a"><i class="fa fa-circle-o fa-lg"></i> Streaming</span><span class="b"><img src="http://www.vidgg.to/images/favicon.ico" alt="Vidgg" height="10"> Vidgg</span><span class="d">360p</span><span class="c"><ul class="link_rating rating" data="8"><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li><li><i class="fa fa-star"></i></li></ul>
-    '''
-    patron = '<a href="([^"]+)"[^>]+><li class="part">'  # url
-    patron += '<span class="a"><i[^>]+></i>([^<]+)</span>'  # type
-    patron += '<span class="b"><img src="([^"]+)"[^>]+>([^<]+)</span>'  # thumbnail & title
-    patron += '<span class="d">([^<]+)</span>'  # quality
-    patron += '<span class="c"><ul class="link_rating rating" data="([^"]+)">'  # rating
+    data = anti_cloudflare(item.url)
 
-    matches = re.compile(patron, re.DOTALL).findall(data)
+    data_pack = scrapertools.find_single_match(data, "(eval.function.p,a,c,k,e,.*?)\s*</script>")
+    if data_pack != "":
+        from core import unpackerjs3
+        data_unpack = unpackerjs3.unpackjs(data_pack)
+        if data_unpack == "":
+            from lib.jsbeautifier.unpackers import packer
+            data_unpack = packer.unpack(data_pack)
+        data = data_unpack.replace(r'\\/', '/')
 
-    for url, type, thumbnail, scrapedtitle, quality, rating in matches:
-        title = "[" + scrapedtitle.strip() + "] " + type + " (" + quality.strip() + ") (" + rating + ")"
+    itemlist = servertools.find_video_items(data=data)
 
-        itemlist.append(
-            Item(channel=__channel__,
-                 action="findvideos",
-                 title=title, url=url,
-                 thumbnail=thumbnail,
-                 fulltitle=item.fulltitle,
-                 show=item.show,
-                 plot=item.plot))
+    for videoitem in itemlist:
+        videoitem.title = "".join([item.title, videoitem.title])
+        videoitem.fulltitle = item.fulltitle
+        videoitem.show = item.show
+        videoitem.thumbnail = item.thumbnail
+        videoitem.channel = __channel__
 
     return itemlist
 
