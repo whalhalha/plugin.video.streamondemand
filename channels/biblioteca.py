@@ -520,7 +520,6 @@ def do_search(item):
             logger.info("streamondemand.channels.buscador cargado " + basename_without_extension + " de " + infile)
             channel_result_itemlist.extend(obj.search(Item(), tecleado))
             for item in channel_result_itemlist:
-                item.title = scrapertools.decodeHtmlentities(item.title)
                 item.title = item.title + " [COLOR orange]su[/COLOR] [COLOR green]" + basename_without_extension + "[/COLOR]"
                 item.viewmode = "list"
         except:

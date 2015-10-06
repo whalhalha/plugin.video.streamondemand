@@ -110,6 +110,8 @@ def do_search(item):
     import glob
     import imp
     from lib.fuzzywuzzy import fuzz
+    import threading
+    import Queue
 
     master_exclude_data_file = os.path.join(config.get_runtime_path(), "resources", "filmontv.txt")
     logger.info("streamondemand.channels.buscador master_exclude_data_file=" + master_exclude_data_file)
@@ -139,52 +141,43 @@ def do_search(item):
     except:
         show_dialog = False
 
-    channel_files = glob.glob(channels_path)
+    def worker(infile, queue):
+        channel_result_itemlist = []
+        try:
+            basename_without_extension = os.path.basename(infile)[:-3]
+            # http://docs.python.org/library/imp.html?highlight=imp#module-imp
+            obj = imp.load_source(basename_without_extension, infile)
+            logger.info("streamondemand.channels.buscador cargado " + basename_without_extension + " de " + infile)
+            channel_result_itemlist.extend(obj.search(Item(), tecleado))
+            for item in channel_result_itemlist:
+                item.title += " [COLOR green]Guarda in streaming[/COLOR]"
+                item.viewmode = "list"
+        except:
+            import traceback
+            logger.error(traceback.format_exc())
+        queue.put(channel_result_itemlist)
+
+    channel_files = [infile for infile in glob.glob(channels_path) if os.path.basename(infile)[:-3] not in excluir]
+
+    result = Queue.Queue()
+    threads = [threading.Thread(target=worker, args=(infile, result)) for infile in channel_files]
+
+    for t in threads:
+        t.start()
+
     number_of_channels = len(channel_files)
 
-    for index, infile in enumerate(channel_files):
+    for index, t in enumerate(threads):
         percentage = index * 100 / number_of_channels
+        if show_dialog:
+            progreso.update(percentage, ' Sto cercando "' + mostra + '"')
+        t.join()
+        itemlist.extend(result.get())
 
-        basename = os.path.basename(infile)
-        basename_without_extension = basename[:-3]
-
-        if basename_without_extension not in excluir:
-
-            if show_dialog:
-                progreso.update(percentage, ' Sto cercando "' + mostra + '"')
-
-            logger.info(
-                "streamondemand.channels.buscador Tentativo di ricerca su " + basename_without_extension + " per " + mostra)
-            try:
-
-                # http://docs.python.org/library/imp.html?highlight=imp#module-imp
-                obj = imp.load_source(basename_without_extension, infile)
-                logger.info("streamondemand.channels.buscador cargado " + basename_without_extension + " de " + infile)
-                channel_result_itemlist = obj.search(Item(), tecleado)
-                for item in channel_result_itemlist:
-                    item.title += " [COLOR green]Guarda in streaming[/COLOR]"
-                    item.viewmode = "list"
-
-                itemlist.extend(channel_result_itemlist)
-            except:
-                import traceback
-                logger.error(traceback.format_exc())
-
-        else:
-            logger.info(
-                "streamondemand.channels.buscador do_search_results, Escluso il server " + basename_without_extension)
-
-    new_itemlist = []
-    for new_item in itemlist:
-        ratio = fuzz.WRatio(mostra, new_item.fulltitle)
-        # print str(ratio) + "\t" + new_item.fulltitle + "\t" + new_item.title
-        if ratio > 85:
-            new_itemlist.append(new_item)
-
-    itemlist = sorted(new_itemlist, key=lambda Item: Item.title)
+    itemlist = sorted([item for item in itemlist if fuzz.WRatio(mostra, item.fulltitle) > 85],
+                      key=lambda Item: Item.title)
 
     if show_dialog:
         progreso.close()
 
     return itemlist
-
