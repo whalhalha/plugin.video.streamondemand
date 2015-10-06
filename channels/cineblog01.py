@@ -72,7 +72,6 @@ def mainlist(item):
                 Item(channel=__channel__,
                      action="search",
                      title="[COLOR yellow]Cerca Film[/COLOR]",
-                     extra="newsearch",
                      thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search"),
                 Item(channel=__channel__,
                      action="listserie",
@@ -104,7 +103,6 @@ def mainlist(item):
                      title="[COLOR azure]Anime - Lista Completa[/COLOR]",
                      url="http://www.cineblog01.cc/anime/lista-completa-anime-cartoon/",
                      thumbnail="http://i.imgur.com/IjCmx5r.png"),
-
                 Item(channel=__channel__,
                      action="search",
                      title="[COLOR yellow]Cerca Anime[/COLOR]",
@@ -362,12 +360,9 @@ def search(item, texto):
         if item.extra == "cartoni":
             item.url = "http://www.cineblog01.cc/anime/?s=" + texto
             return listanime(item)
-        if item.extra == "newsearch":
-            item.url = "http://www.cb01.eu/?s=" + texto
-            return peliculasrobalo(item)
         else:
             item.url = "http://www.cb01.eu/?s=" + texto
-            return peliculas(item)
+            return peliculasrobalo(item)
 
     # Se captura la excepción, para no interrumpir al buscador global si un canal falla
     except:
