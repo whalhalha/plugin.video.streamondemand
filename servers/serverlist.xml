@@ -1156,7 +1156,7 @@
     <id>videomega</id>
     <update_url>https://raw.githubusercontent.com/Zanzibar82/plugin.video.streamondemand/master/servers/videomega.py</update_url>
     <active>true</active>
-    <version>2</version>
+    <version>3</version>
     <date>04/10/2015</date>
     <changes>robalo fix proposal</changes>
 </server>
