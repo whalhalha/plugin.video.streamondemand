@@ -58,28 +58,34 @@ def peliculas(item):
 
 
     # Extrae las entradas (carpetas)
-    patron = '<img[^s]+src="(.*?)"[^>]+>[^<]+<[^<]+<[^<]+<[^<]+<[^<]+</a>\s*'
-    patron += '<div[^>]+>\s*'
-    patron += '<div[^<]+<[^<]+<[^<]+</div>\s*'
-    patron += '<h3[^>]+>\s*'
-    patron += '<a href="(.*?)"[^>]+>\s*'
-    patron += '(.*?)</a>\s*'
-    patron += '</h3>\s*'
-    patron += '<div[^>]+>\s*'
-    patron += '<span[^>]+>\s*'
-    patron += '<a[^<]+<[^<]+</a>\s*'
-    patron += '<a[^<]+</a>\s*'
-    patron += '</span>\s*'
-    patron += '<span[^<]+</span>\s*'
-    patron += '<a[^<]+<[^<]+<[^<]+<[^<]+<[^<]+</a>\s*'
-    patron += '</div>\s*'
-    patron += '<div[^>]+><p>(.*?)</p>'
+    patron = '<a class="vw-post-box-thumbnail" href="(.*?)"[^>]+>\s*<img[^=]+=[^=]+=[^=]+="(.*?)"[^>]+>'
+    #patron = '<img[^s]+src="(.*?)"[^>]+>[^<]+<[^<]+<[^<]+<[^<]+<[^<]+</a>\s*'
+    #patron += '<div[^>]+>\s*'
+    #patron += '<div[^<]+<[^<]+<[^<]+</div>\s*'
+    #patron += '<h3[^>]+>\s*'
+    #patron += '<a href="(.*?)"[^>]+>\s*'
+    #patron += '(.*?)</a>\s*'
+    #patron += '</h3>\s*'
+    #patron += '<div[^>]+>\s*'
+    #patron += '<span[^>]+>\s*'
+    #patron += '<a[^<]+<[^<]+</a>\s*'
+    #patron += '<a[^<]+</a>\s*'
+    #patron += '</span>\s*'
+    #patron += '<span[^<]+</span>\s*'
+    #patron += '<a[^<]+<[^<]+<[^<]+<[^<]+<[^<]+</a>\s*'
+    #patron += '</div>\s*'
+    #patron += '<div[^>]+><p>(.*?)</p>'
     matches = re.compile(patron, re.DOTALL).findall(data)
     scrapertools.printMatches(matches)
 
-    for scrapedthumbnail, scrapedurl, scrapedtitle, scrapedplot in matches:
-        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle).strip()
-        scrapedplot = scrapertools.decodeHtmlentities(scrapedplot)
+    for scrapedurl, scrapedthumbnail in matches:
+        #scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle).strip()
+        #scrapedplot = scrapertools.decodeHtmlentities(scrapedplot)
+        scrapedplot = ""
+        scrapedtitle = scrapedurl
+        scrapedtitle=scrapertools.decodeHtmlentities(scrapedtitle.replace("http://documentaristreaming.net/",""))
+        scrapedtitle=scrapertools.decodeHtmlentities(scrapedtitle.replace("-"," "))
+        scrapedtitle=scrapertools.decodeHtmlentities(scrapedtitle.replace("/",""))
         if (DEBUG): logger.info(
             "title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
         itemlist.append(
