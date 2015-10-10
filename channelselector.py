@@ -225,7 +225,7 @@ def channels_list():
     #itemlist.append( Item( title="[COLOR azure]Cinemagratis[/COLOR]"        , channel="cinemagratis"       , language="IT"    , category="F"       , type="generic"))
     itemlist.append( Item( title="[COLOR azure]Chimerarevo[/COLOR]"        , channel="chimerarevo"       , language="IT"    , category="D"       , type="generic",thumbnail="http://www.chimerarevo.com/assets/img/chimera-revo.png"))
     itemlist.append( Item( title="[COLOR azure]Cucinarefacile[/COLOR]"        , channel="cucinarefacile"       , language="IT"    , category="D"       , type="generic"))
-    itemlist.append( Item( title="[COLOR azure]Darkstream[/COLOR]"        , channel="darkstream"       , language="IT"    , category="B,F"       , type="generic"))
+    itemlist.append( Item( title="[COLOR azure]Darkstream[/COLOR]"        , channel="darkstream"       , language="IT"    , category="F"       , type="generic"))
     itemlist.append( Item( title="[COLOR azure]Documentari Streaming[/COLOR]"  , channel="documentaristreaming"           , language="IT"    , category="D"   , type="generic"))
     #itemlist.append( Item( title="[COLOR azure]Documoo[/COLOR]"      , channel="documoo"           , language="IT"    , category="D"   , type="generic"))
     itemlist.append( Item( title="[COLOR azure]Eurostreaming[/COLOR]"       , channel="eurostreaming"           , language="IT"    , category="F,S"    , type="generic"))
