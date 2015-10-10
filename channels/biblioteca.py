@@ -93,7 +93,7 @@ def mainlist(item):
                 Item(channel=__channel__,
                      title="[COLOR yellow]Più votati[/COLOR]",
                      action="tmdb_list",
-                     url='http://api.themoviedb.org/3/movie/top_rated?api_key=%s&sort_by=popularity.desc&language=it&page=1' % tmdb_key,
+                     url='http://api.themoviedb.org/3/discover/movie?api_key=%s&certification_country=US&language=it&page=1&sort_by=vote_count.desc' % tmdb_key,
                      thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search"),
                 Item(channel=__channel__,
                      title="[COLOR yellow]Ultimi 2 mesi[/COLOR]",
