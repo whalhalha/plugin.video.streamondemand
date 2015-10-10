@@ -71,6 +71,11 @@ def mainlist(item):
                      extra="tmdb_att_reg",
                      thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search"),
                 Item(channel=__channel__,
+                     title="[COLOR yellow]Cerca Film simili TMDB...[/COLOR]",
+                     action="search",
+                     extra="tmdb_film_sim",
+                     thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search"),
+                Item(channel=__channel__,
                      title="[COLOR yellow]Al Cinema[/COLOR]",
                      action="tmdb_list",
                      url='http://api.themoviedb.org/3/movie/now_playing?api_key=%s&language=it&page=1' % tmdb_key,
@@ -84,6 +89,11 @@ def mainlist(item):
                      title="[COLOR yellow]Più visti[/COLOR]",
                      action="tmdb_list",
                      url='http://api.themoviedb.org/3/movie/top_rated?api_key=%s&language=it&page=1' % tmdb_key,
+                     thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search"),
+                Item(channel=__channel__,
+                     title="[COLOR yellow]Più votati[/COLOR]",
+                     action="tmdb_list",
+                     url='http://api.themoviedb.org/3/movie/top_rated?api_key=%s&sort_by=popularity.desc&language=it&page=1' % tmdb_key,
                      thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search"),
                 Item(channel=__channel__,
                      title="[COLOR yellow]Ultimi 2 mesi[/COLOR]",
@@ -116,6 +126,9 @@ def search(item, texto):
             return cat_filmografia(item)
         if item.extra == "tmdb_mov":
             item.url = 'http://api.themoviedb.org/3/search/movie?api_key=%s&query=%s&language=it' % (tmdb_key, texto)
+            return tmdb_list(item)
+        if item.extra == "tmdb_film_sim":
+            item.url = 'http://api.themoviedb.org/3/search/movie?api_key=%s&append_to_response=similar_movies&query=%s&language=it' % (tmdb_key, texto)
             return tmdb_list(item)
         if item.extra == "tmdb_att_reg":
             item.url = 'http://api.themoviedb.org/3/search/person?api_key=%s&query=%s&include_adult=false&language=it&page=1' % (
