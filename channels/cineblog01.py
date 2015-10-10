@@ -4,16 +4,17 @@
 # Canal para cineblog01
 # http://blog.tvalacarta.info/plugin-xbmc/streamondemand.
 # ------------------------------------------------------------
+import re
+import sys
+import time
 import urllib2
 import urlparse
-import sys
-import re
-import time
-from servers import servertools
-from core import scrapertools
-from core import logger
+
 from core import config
+from core import logger
+from core import scrapertools
 from core.item import Item
+from servers import servertools
 
 __channel__ = "cineblog01"
 __category__ = "F,S,A"
@@ -424,19 +425,23 @@ def episodios(item):
             ## Extrae las entradas
             end = data.find('<a ')
             if end > 0:
-                scrapedtitle = data[:end]
+                scrapedtitle = re.sub(r'<[^>]*>', '', data[:end].strip())
+                if scrapedtitle == '':
+                    scrapedtitle = scrapertools.find_single_match(data,
+                                                                  '<a\s*href="[^"]+"\s*target="_blank">([^<]+)</a>').strip()
                 title = scrapertools.find_single_match(scrapedtitle, '\d+[^\d]+\d+')
                 if title == '':
-                    title = re.sub(r'<[^>]*>', '', scrapedtitle).strip()
-                itemlist.append(
-                    Item(channel=__channel__,
-                         action="findvid_serie",
-                         title=title + " (" + lang_title + ")",
-                         url=item.url,
-                         thumbnail=item.thumbnail,
-                         extra=data,
-                         fulltitle=item.fulltitle,
-                         show=item.show))
+                    title = scrapedtitle
+                if title != '':
+                    itemlist.append(
+                        Item(channel=__channel__,
+                             action="findvid_serie",
+                             title=title + " (" + lang_title + ")",
+                             url=item.url,
+                             thumbnail=item.thumbnail,
+                             extra=data,
+                             fulltitle=item.fulltitle,
+                             show=item.show))
 
     logger.info("[cineblog01.py] episodios")
 
@@ -454,11 +459,12 @@ def episodios(item):
         lang_title = 'SUB ITA' if 'SUB' in lang_title.upper() else 'ITA'
         load_episodios()
 
-    patron = '<strong>([^<]+)</strong></p>\s*(?:<p>&nbsp;</p>\s*)+(.*?)<p>&nbsp;</p>'
-    matches = re.compile(patron, re.DOTALL).findall(data[start:end])
-    for lang_title, match in matches:
-        lang_title = 'SUB ITA' if 'SUB' in lang_title.upper() else 'ITA'
-        load_episodios()
+    if len(matches) == 0:
+        patron = '<strong>([^<]+)</strong></p>\s*(?:<p>&nbsp;</p>\s*)+(.*?)<p>&nbsp;</p>'
+        matches = re.compile(patron, re.DOTALL).findall(data[start:end])
+        for lang_title, match in matches:
+            lang_title = 'SUB ITA' if 'SUB' in lang_title.upper() else 'ITA'
+            load_episodios()
 
     if config.get_library_support():
         itemlist.append(
