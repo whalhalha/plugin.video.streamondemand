@@ -125,10 +125,10 @@ def search(item, texto):
             item.url = "http://www.ibs.it/dvd/ser/serpge.asp?A=&I6.x=72&I6.y=13&P=&SEQ=Q&SL=&T=" + texto + "&dep=0&dh=25&ls=&shop=&ty=kw"
             return cat_filmografia(item)
         if item.extra == "tmdb_mov":
-            item.url = 'http://api.themoviedb.org/3/search/movie?api_key=%s&query=%s&language=it' % (tmdb_key, texto)
+            item.url = 'http://api.themoviedb.org/3/search/movie?api_key=%s&query=%s&language=it&page=1' % (tmdb_key, texto)
             return tmdb_list(item)
         if item.extra == "tmdb_film_sim":
-            item.url = 'http://api.themoviedb.org/3/search/movie?api_key=%s&append_to_response=similar_movies&query=%s&language=it' % (tmdb_key, texto)
+            item.url = 'http://api.themoviedb.org/3/search/movie?api_key=%s&query=%s&append_to_response=similar_movies,alternative_title&language=it&page=1' % (tmdb_key, texto)
             return tmdb_list(item)
         if item.extra == "tmdb_att_reg":
             item.url = 'http://api.themoviedb.org/3/search/person?api_key=%s&query=%s&include_adult=false&language=it&page=1' % (
