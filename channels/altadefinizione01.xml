@@ -7,7 +7,7 @@
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
     <version>9</version>
-    <adult>false</version>
+    <adult>false</adult>
     <date>05/09/2015</date>
     <changes>Update check</changes>
     <categories>
