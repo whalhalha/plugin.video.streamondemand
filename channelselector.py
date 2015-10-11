@@ -261,7 +261,7 @@ def channels_list():
     itemlist.append( Item( title="[COLOR azure]Tantifilm[/COLOR]"        , channel="tantifilm"       , language="IT"    , category="B,F"       , type="generic"))
     itemlist.append( Item( title="[COLOR azure]Webshortfilms[/COLOR]"        , channel="webshortfilms"       , language="IT"    , category="F,D"       , type="generic",thumbnail="https://webshortfilms.files.wordpress.com/2012/07/header_1.jpg"))
     itemlist.append( Item( title="[COLOR azure]Bibliotrailer[/COLOR]"        , channel="bibliotrailer"       , language="IT"    , category="D"       , type="generic",thumbnail="http://4.bp.blogspot.com/-aB26I0ToivA/VeFvARPXSrI/AAAAAAAAAAk/mp-_D_V8IEA/s1600-r/logo.png"))
-    itemlist.append( Item( title="[COLOR azure]Tuttolooneytunes[/COLOR]"        , channel="tuttolooneytunes"       , language="IT"    , category="A,D"       , type="generic",thumbnail="http://1.bp.blogspot.com/-dLQ0FVvvPys/U6hXvJt2EnI/AAAAAAAAACU/7pFMPwtQx1k/s1600/looney%252520tunes.jpg"))
+    #temlist.append( Item( title="[COLOR azure]Tuttolooneytunes[/COLOR]"        , channel="tuttolooneytunes"       , language="IT"    , category="A,D"       , type="generic",thumbnail="http://1.bp.blogspot.com/-dLQ0FVvvPys/U6hXvJt2EnI/AAAAAAAAACU/7pFMPwtQx1k/s1600/looney%252520tunes.jpg"))
 
     return itemlist
 
