@@ -420,28 +420,30 @@ def listserie(item):
 
 
 def episodios(item):
-    def load_episodios():
-        for data in scrapertools.decodeHtmlentities(match).split('</p>'):
+    def load_episodios(html, item, itemlist, lang_title):
+        for data in scrapertools.decodeHtmlentities(html).splitlines():
             ## Extrae las entradas
             end = data.find('<a ')
             if end > 0:
-                scrapedtitle = re.sub(r'<[^>]*>', '', data[:end].strip())
-                if scrapedtitle == '':
-                    scrapedtitle = scrapertools.find_single_match(data,
-                                                                  '<a\s*href="[^"]+"\s*target="_blank">([^<]+)</a>').strip()
-                title = scrapertools.find_single_match(scrapedtitle, '\d+[^\d]+\d+')
-                if title == '':
-                    title = scrapedtitle
-                if title != '':
-                    itemlist.append(
-                        Item(channel=__channel__,
-                             action="findvid_serie",
-                             title=title + " (" + lang_title + ")",
-                             url=item.url,
-                             thumbnail=item.thumbnail,
-                             extra=data,
-                             fulltitle=item.fulltitle,
-                             show=item.show))
+                scrapedtitle = re.sub(r'<[^>]*>', '', data[:end]).strip()
+            else:
+                scrapedtitle = ''
+            if scrapedtitle == '':
+                patron = '<a\s*href="[^"]+"\s*target="_blank">([^<]+)</a>'
+                scrapedtitle = scrapertools.find_single_match(data, patron).strip()
+            title = scrapertools.find_single_match(scrapedtitle, '\d+[^\d]+\d+')
+            if title == '':
+                title = scrapedtitle
+            if title != '':
+                itemlist.append(
+                    Item(channel=__channel__,
+                         action="findvid_serie",
+                         title=title + " (" + lang_title + ")",
+                         url=item.url,
+                         thumbnail=item.thumbnail,
+                         extra=data,
+                         fulltitle=item.fulltitle,
+                         show=item.show))
 
     logger.info("[cineblog01.py] episodios")
 
@@ -453,20 +455,47 @@ def episodios(item):
     start = data.find('<td bgcolor="#ECEAE1">')
     end = data.find('</td>', start)
 
-    patron = r'<div class="sp-head(?: unfolded)?" title="Expand">([^<]+)</div>\s*<div class="sp-body(?: folded)?">(.*?)<div class="spdiv">\[chiudi\]</div>'
-    matches = re.compile(patron, re.DOTALL).findall(data[start:end])
-    for lang_title, match in matches:
-        lang_title = 'SUB ITA' if 'SUB' in lang_title.upper() else 'ITA'
-        load_episodios()
+    data = data[start:end]
 
-    if len(matches) == 0:
-        patron = '<strong>([^<]+)</strong></p>\s*(?:<p>&nbsp;</p>\s*)+(.*?)<p>&nbsp;</p>'
-        matches = re.compile(patron, re.DOTALL).findall(data[start:end])
+    lang_titles = []
+    starts = []
+    patron = r"STAGION[I|E].*?ITA"
+    matches = re.compile(patron).finditer(data)
+    for match in matches:
+        season_title = match.group()
+        if season_title != '':
+            lang_titles.append('SUB ITA' if 'SUB' in season_title.upper() else 'ITA')
+            starts.append(match.end())
+
+    i = 1
+    len_lang_titles = len(lang_titles)
+
+    while i <= len_lang_titles:
+        inizio = starts[i - 1]
+        fine = starts[i] if i < len_lang_titles else -1
+
+        html = data[inizio:fine]
+        lang_title = lang_titles[i - 1]
+
+        load_episodios(html, item, itemlist, lang_title)
+
+        i += 1
+
+    if len(itemlist) == 0:
+        patron = r'<div class="sp-head(?: unfolded)?" title="Expand">([^<]+)</div>\s*<div class="sp-body(?: folded)?">(.*?)<div class="spdiv">\[chiudi\]</div>'
+        matches = re.compile(patron, re.DOTALL).findall(data)
         for lang_title, match in matches:
             lang_title = 'SUB ITA' if 'SUB' in lang_title.upper() else 'ITA'
-            load_episodios()
+            load_episodios(match, item, itemlist, lang_title)
 
-    if config.get_library_support():
+        if len(itemlist) == 0:
+            patron = '<strong>([^<]+)</strong></p>\s*(?:<p>&nbsp;</p>\s*)+(.*?)<p>&nbsp;</p>'
+            matches = re.compile(patron, re.DOTALL).findall(data)
+            for lang_title, match in matches:
+                lang_title = 'SUB ITA' if 'SUB' in lang_title.upper() else 'ITA'
+                load_episodios(match, item, itemlist, lang_title)
+
+    if config.get_library_support() and len(itemlist) != 0:
         itemlist.append(
             Item(channel=__channel__,
                  title=item.title,
@@ -843,3 +872,4 @@ def anti_cloudflare(url):
         scrapertools.get_headers_from_response(sito + "/" + resp_headers['refresh'][7:], headers=headers)
 
     return scrapertools.cache_page(url, headers=headers)
+
