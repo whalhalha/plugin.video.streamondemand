@@ -75,6 +75,11 @@ def mainlist(item):
                      action="search",
                      extra="tmdb_film_sim",
                      thumbnail="http://i.imgur.com/JmcvZDL.png"),
+#                Item(channel=__channel__,
+#                     title="[COLOR yellow]Cerca Serie TV TMDB...[/COLOR]",
+#                     action="search",
+#                     extra="tmdb_tv",
+#                     thumbnail="https://i.imgur.com/2ZWjLn5.jpg?1"),
                 Item(channel=__channel__,
                      title="[COLOR yellow]Al Cinema[/COLOR]",
                      action="tmdb_list",
@@ -127,6 +132,9 @@ def search(item, texto):
         if item.extra == "tmdb_mov":
             item.url = 'http://api.themoviedb.org/3/search/movie?api_key=%s&query=%s&language=it&page=1' % (tmdb_key, texto)
             return tmdb_list(item)
+#        if item.extra == "tmdb_tv":
+#            item.url = 'http://api.themoviedb.org/3/search/tv?api_key=%s&query=%s&language=it&page=1' % (tmdb_key, texto)
+#            return tmdb_list(item)
         if item.extra == "tmdb_film_sim":
             item.url = 'http://api.themoviedb.org/3/search/movie?api_key=%s&query=%s&append_to_response=similar_movies,alternative_title&language=it&page=1' % (tmdb_key, texto)
             return tmdb_list(item)
