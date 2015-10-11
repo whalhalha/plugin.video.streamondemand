@@ -430,7 +430,7 @@ def tmdb_serie_list(item):
     if next != "":
         itemlist.append(
             Item(channel=__channel__,
-                 action="tmdb_list",
+                 action="tmdb_serie_list",
                  title="[COLOR orange]Successivo >>[/COLOR]",
                  url=next,
                  thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png",
