@@ -165,7 +165,7 @@ def episodios(item):
         for data in matches:
             ## Extrae las entradas
             scrapedtitle = data.split('<a ')[0]
-            scrapedtitle = re.sub(r'<[^>]*>', '', scrapedtitle.strip())
+            scrapedtitle = re.sub(r'<[^>]*>', '', scrapedtitle).strip()
             itemlist.append(
                 Item(channel=__channel__,
                      action="findvid_serie",
