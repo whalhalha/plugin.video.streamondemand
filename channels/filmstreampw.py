@@ -192,7 +192,7 @@ def episodios(item):
             url = '%s?news_id=%s&series=%s?%s' % (post_url, serie_id, episode_id, item.url)
             itemlist.append( Item( channel=__channel__, action="findvid_serie", title=title.strip(), url=url, fulltitle=item.fulltitle, show=item.show, thumbnail=item.thumbnail ) )
 
-    if config.get_library_support():
+    if config.get_library_support() and len(itemlist) != 0:
         itemlist.append( Item(channel=__channel__, title=item.title, url=item.url, action="add_serie_to_library", extra="episodios", show=item.show) )
         itemlist.append( Item(channel=__channel__, title="Scarica tutti gli episodi della serie", url=item.url, action="download_all_episodes", extra="episodios", show=item.show) )
 
@@ -220,4 +220,3 @@ def findvid_serie(item):
         videoitem.channel = __channel__
 
     return itemlist
-
