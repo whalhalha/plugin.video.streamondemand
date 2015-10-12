@@ -215,7 +215,7 @@ def episodios(item):
         lang_title = 'SUB ITA' if 'SUB' in (lang_title1+lang_title2).upper() else 'ITA'
         load_episodios()
 
-    if config.get_library_support():
+    if config.get_library_support() and len(itemlist) != 0:
         itemlist.append( Item(channel=__channel__, title=item.title, url=item.url, action="add_serie_to_library", extra="episodios", show=item.show) )
         itemlist.append( Item(channel=item.channel, title="Scarica tutti gli episodi della serie", url=item.url, action="download_all_episodes", extra="episodios", show=item.show) )
 
@@ -238,5 +238,3 @@ def findvid_serie(item):
         videoitem.channel = __channel__
 
     return itemlist
-
-
