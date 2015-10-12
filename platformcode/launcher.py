@@ -5,12 +5,15 @@
 # http://blog.tvalacarta.info/plugin-xbmc/
 #------------------------------------------------------------
 
-import urllib, urllib2
-import os,sys
+import urllib
+import urllib2
+import os
+import sys
+import re
 
 from core import logger
 from core import config
-from core import scrapertools
+
 
 def run():
     logger.info("streamondemand.platformcode.launcher run")
@@ -537,6 +540,8 @@ def download_all_episodes(item,channel,first_episode="",preferred_server="vidspo
             logger.info("streamondemand.platformcode.launcher download_all_episodes, episode="+episode_item.title)
             #episode_title = scrapertools.get_match(episode_item.title,"(\d+x\d+)")
             episode_title = episode_item.title
+            episode_title = re.sub(r"\[COLOR [^]]*\]", "", episode_title)
+            episode_title = re.sub(r"\[/COLOR\]", "", episode_title)
             logger.info("streamondemand.platformcode.launcher download_all_episodes, episode="+episode_title)
         except:
             import traceback
@@ -603,5 +608,3 @@ def download_all_episodes(item,channel,first_episode="",preferred_server="vidspo
 
         if not descargado:
             logger.info("streamondemand.platformcode.launcher download_all_episodes, EPISODIO NO DESCARGADO "+episode_title)
-
-

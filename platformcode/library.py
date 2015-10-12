@@ -110,6 +110,8 @@ def savelibrary(titulo="",url="",thumbnail="",server="",plot="",canal="",categor
         #Limpiamos el titulo para usarlo como fichero
         #from  core import scrapertools
         #filename = scrapertools.get_season_and_episode(titulo)+".strm"
+        titulo = re.sub(r"\[COLOR [^]]*\]", "", titulo)
+        titulo = re.sub(r"\[/COLOR\]", "", titulo)
         filename=string.translate(titulo,allchars,deletechars)+".strm"
 
         fullfilename = os.path.join(pathserie,filename)
