@@ -43,17 +43,35 @@ def isGeneric():
 def mainlist(item):
     logger.info("[cineblog01.py] mainlist")
 
+    # Descarga la página
+    data = scrapertools.cachePage(sitofilm)
+    logger.info(data)
+
+    # Extrae las entradas (carpetas)
+    patronvideos = '<a href="([^"]+)" target="_blank"><strong>'
+    matches = re.compile(patronvideos, re.DOTALL).finditer(data)
+
     # Main options
     itemlist = [Item(channel=__channel__,
                      action="listseasons",
                      title="[COLOR yellow]Tutte le Stagioni[/COLOR]",
                      url=sito,
-                     thumbnail="http://orig03.deviantart.net/6889/f/2014/079/7/b/movies_and_popcorn_folder_icon_by_matheusgrilo-d7ay4tw.png"),
+                     thumbnail="https://upload.wikimedia.org/wikipedia/en/0/0d/Simpsons_FamilyPicture.png")]
                 
-                Item(channel=__channel__,
-                     action="playfilm",
+
+
+    for match in matches:
+        scrapedurl = match.group(1)
+        if (DEBUG): logger.info(
+            "url=[" + scrapedurl + "]")
+
+        # Añade al listado de XBMC
+        itemlist.append(
+            Item(channel=__channel__,
+                     action="play",
                      title="[COLOR red]Il Film[/COLOR]",
-                     thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search")]
+                     url=scrapedurl,
+                     thumbnail="http://images.movieplayer.it/images/2007/09/13/la-locandina-di-the-simpsons-movie-47408.jpg"))
 
     return itemlist
 
@@ -124,17 +142,6 @@ def listepisodes(item):
                  url=scrapedurl))
 
     return itemlist
-
-
-
-
-
-
-
-
-
-
-
 
 
 
