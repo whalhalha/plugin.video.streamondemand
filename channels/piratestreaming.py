@@ -50,8 +50,9 @@ def peliculas(item):
 
     for scrapedurl,scrapedthumbnail,scrapedtitle in matches:
         logger.info("scrapedurl="+scrapedurl)
-        scrapedtitle = scrapertools.decodeHtmlentities( scrapedtitle )
-
+        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
+        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle.replace("  ",""))
+        scrapedtitle="[COLOR azure]" + scrapedtitle + "[/COLOR]"
         try:
             res = urllib2.urlopen(scrapedurl)
             daa = res.read()
@@ -113,8 +114,8 @@ def categoryarchive(item):
 def search(item,texto):
     logger.info("[piratestreaming.py] search "+texto)
     itemlist = []
-    texto = texto.replace(" ","%20")
-    item.url = "http://www.piratestreaming.co/cerca.php?all="+texto
+    texto = texto.replace(" ","+")
+    item.url = "http://www.piratestreaming.co/cerca.php?all="+texto+"&SearchSubmit="
     item.extra = ""
 
     try:
@@ -134,15 +135,17 @@ def cerca(item):
     bloque = scrapertools.get_match(data,'<!-- Featured Item -->(.*?)<!-- End of Content -->')
     
     # Extrae las entradas (carpetas)
-    patron  = '<b><a href=(.*?)>(.*?)</b>'
+    patron ='<div class="featuredItem"> <a href=.*? class="featuredImg" rel="featured"><img src=(.*?) alt="featured item" style="width:  80.8px; height: 109.6px;" /></a>.*?'
+    patron += '<b><a href=(.*?)>(.*?)</b>'
     matches = re.compile(patron,re.DOTALL).findall(bloque)
     scrapertools.printMatches(matches)
 
-    for scrapedurl,scrapedtitle in matches:
+    for scrapedthumbnail,scrapedurl,scrapedtitle in matches:
         scrapedplot = ""
         scrapedthumbnail = ""
+        scrapedtitle=scrapertools.decodeHtmlentities(scrapedtitle.replace("</a>",""))
         if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"]")
-        itemlist.append( Item(channel=__channel__, action="findvideos", fulltitle=scrapedtitle, show=scrapedtitle, title="[COLOR azure]" + scrapedtitle + "[/COLOR]" , url=scrapedurl , folder=True) )
+        itemlist.append( Item(channel=__channel__, action="findvideos", fulltitle=scrapedtitle, show=scrapedtitle, title="[COLOR azure]" + scrapedtitle + "[/COLOR]" , url=scrapedurl , thumbnail=scrapedthumbnail , folder=True) )
 
     return itemlist
 
