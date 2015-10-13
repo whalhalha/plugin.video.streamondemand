@@ -76,12 +76,6 @@ def mainlist(item):
     return itemlist
 
 
-
-
-
-
-
-
 def listseasons(item):
     logger.info("[simpsonita.py] mainlist")
     itemlist = []
@@ -93,7 +87,6 @@ def listseasons(item):
     # Extrae las entradas (carpetas)
     patronvideos = '<a href="([^"]+)">[<strong>]*([^<]+)[\s*<\/strong>]*<\/a>[\s*<\/strong>]*<br\s*\/>'
     matches = re.compile(patronvideos, re.DOTALL).finditer(data)
-
     for match in matches:
         scrapedtitle = scrapertools.unescape(match.group(2))
         scrapedurl = match.group(1)
@@ -108,6 +101,7 @@ def listseasons(item):
                  show=scrapedtitle,
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
                  url=scrapedurl))
+        
 
     return itemlist
 
@@ -123,7 +117,7 @@ def listepisodes(item):
     logger.info(data)
 
     # Extrae las entradas (carpetas)
-    patronvideos = '<a href="([^"]+)" target="_blank">1&#215;([^<]+)'
+    patronvideos = '<a href="([^"]+)" target="_blank">\d&#215;([^<]+)'
     matches = re.compile(patronvideos, re.DOTALL).finditer(data)
 
     for match in matches:
@@ -138,7 +132,7 @@ def listepisodes(item):
                  action="play",
                  fulltitle=scrapedtitle,
                  show=scrapedtitle,
-                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
+                 title="[COLOR azure]"+ scrapedtitle + "[/COLOR]",
                  url=scrapedurl))
 
     return itemlist
