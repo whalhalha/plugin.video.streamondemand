@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 #------------------------------------------------------------
 # streamondemand.- XBMC Plugin
-# Canal para serietvsubita
-# http://blog.tvalacarta.info/plugin-xbmc/streamondemand.
+# Canale per http://serietvsubita.net/
+# http://www.mimediacenter.info/foro/viewforum.php?f=36
 #------------------------------------------------------------
 import urlparse,urllib2,urllib,re
 import os, sys
@@ -14,7 +14,7 @@ from core.item import Item
 from servers import servertools
 
 __channel__ = "serietvsubita"
-__category__ = "F,S,D"
+__category__ = "S"
 __type__ = "generic"
 __title__ = "serietvsubita"
 __language__ = "IT"
@@ -53,14 +53,14 @@ def episodios(item):
     data = scrapertools.cachePage(item.url)
     logger.info("data="+data)
 
-    patron  = '</div><div class="clear"></div>.*?'
-    patron += '<a href="([^"]+)" title="([^"]+)".*?<img.*?src="(.*?)"'
+    #patron  = '</div><div class="clear"></div>.*?'
+    patron = '<h2><a href="([^"]+)".*?title="([^"]+)".*?<p><a href.*?<img.*?src="(.*?)"'
     matches = re.compile(patron,re.DOTALL).findall(data)
     scrapertools.printMatches(matches)
 
     for scrapedurl,scrapedtitle,scrapedthumbnail in matches:
         scrapedplot = ""
-        scrapedtitle=scrapertools.decodeHtmlentities(scrapedtitle.replace("Streaming",""))
+        scrapedtitle=scrapertools.decodeHtmlentities(scrapedtitle)
         if scrapedtitle.startswith("Link to "):
             scrapedtitle = scrapedtitle[8:]
         if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
