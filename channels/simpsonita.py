@@ -31,8 +31,6 @@ headers = [
     ['Connection', 'keep-alive']
 ]
 
-sitofilm = "http://thesimpsonstreaming.altervista.org/i-simpson-il-film-streaming/"
-
 DEBUG = config.get_setting("debug")
 
 

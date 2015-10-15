@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <channel>
-    <id>southparkita</id>
-    <name>SouthParkITA Streaming</name>
+    <id>futuramaita</id>
+    <name>FuturamaITA Streaming</name>
     <language>it</language>
     <update_url></update_url>
     <active>true</active>
