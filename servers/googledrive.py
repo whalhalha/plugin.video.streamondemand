@@ -60,7 +60,7 @@ def get_video_url(page_url, premium=False, user="", password="", video_password=
     return video_urls
 
 
-    # Encuentra v�deos del servidor en el texto pasado
+# Encuentra v�deos del servidor en el texto pasado
 def find_videos(data):
     encontrados = set()
     devuelve = []
@@ -73,6 +73,16 @@ def find_videos(data):
     for media_id in matches:
         titulo = "[googledrive]"
         url = 'https://drive.google.com/file/d/%s/preview' % media_id
+        if url not in encontrados:
+            logger.info("  url=" + url)
+            devuelve.append([titulo, url, 'googledrive'])
+            encontrados.add(url)
+        else:
+            logger.info("  url duplicada=" + url)
+
+    for media_id in matches:
+        titulo = "[googledrive]"
+        url = 'https://docs.google.com/file/d/%s/preview' % media_id
         if url not in encontrados:
             logger.info("  url=" + url)
             devuelve.append([titulo, url, 'googledrive'])
