@@ -230,7 +230,7 @@ def channels_list():
     itemlist.append( Item( title="[COLOR azure]Documentari Streaming[/COLOR]"  , channel="documentaristreaming"           , language="IT"    , category="D"   , type="generic"))
     #itemlist.append( Item( title="[COLOR azure]Documoo[/COLOR]"      , channel="documoo"           , language="IT"    , category="D"   , type="generic"))
     itemlist.append( Item( title="[COLOR azure]Eurostreaming[/COLOR]"       , channel="eurostreaming"           , language="IT"    , category="F,S"    , type="generic"))
-    itemlist.append( Item( title="[COLOR azure]Fastvideo.tv[/COLOR]"        , channel="fastvideotv"       , language="IT"    , category="B,F"       , type="generic"))
+    itemlist.append( Item( title="[COLOR azure]Fastvideo.tv[/COLOR]"        , channel="fastvideotv"       , language="IT"    , category="F"       , type="generic"))
     #itemlist.append( Item( title="[COLOR azure]FilmGratis.cc[/COLOR]"       , channel="filmgratiscc"           , language="IT"    , category="F"   , type="generic"))
     itemlist.append( Item( title="[COLOR azure]FilmStream.org[/COLOR]"          , channel="filmstream"           , language="IT"    , category="F,S"   , type="generic"))
     itemlist.append( Item( title="[COLOR azure]FilmStream.to[/COLOR]"       , channel="filmstreampw"           , language="IT"    , category="F,S"   , type="generic"))
