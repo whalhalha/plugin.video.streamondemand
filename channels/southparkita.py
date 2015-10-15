@@ -16,18 +16,18 @@ from core import scrapertools
 from core.item import Item
 from servers import servertools
 
-__channel__ = "simpsonita"
+__channel__ = "southparkita"
 __category__ = "F,S,A"
 __type__ = "generic"
-__title__ = "SimpsonITA Streaming"
+__title__ = "SouthParkITA Streaming"
 __language__ = "IT"
 
-sito = "http://www.isimpsonita.altervista.org/"
+sito = "http://southparkstreaming.altervista.org/"
 
 headers = [
     ['User-Agent', 'Mozilla/5.0 (Windows NT 6.1; rv:38.0) Gecko/20100101 Firefox/38.0'],
     ['Accept-Encoding', 'gzip, deflate'],
-    ['Referer', 'http://www.isimpsonita.altervista.org/'],
+    ['Referer', 'http://southparkstreaming.altervista.org/'],
     ['Connection', 'keep-alive']
 ]
 
@@ -41,57 +41,52 @@ def isGeneric():
 
 
 def mainlist(item):
-    logger.info("[simpsonita.py] mainlist")
-    itemlist = []
+    logger.info("[cineblog01.py] mainlist")
 
     # Descarga la página
-    data = scrapertools.cachePage(sito)
+    data = scrapertools.cachePage(sitofilm)
     logger.info(data)
 
-
-    itemlist.append(
-        Item(channel=__channel__,
-                action="mainlist",
-                title="[COLOR green]Ricarica...[/COLOR]"))
-
-
-    patronvideos = '<div class="random-article random-k2-article  ">\s*<div class="title">\s*<h4>\s*<a href="([^"]+)">([^<]+)<\/a>'
-    matches = re.compile(patronvideos, re.DOTALL).finditer(data)
-    for match in matches:
-        scrapedtitle = scrapertools.unescape(match.group(2))
-        scrapedurl = sito + match.group(1)
-        if (DEBUG): logger.info(
-            "title=[" + scrapedtitle + "], url=[" + scrapedurl + "]")
-
-        itemlist.append(
-            Item(channel=__channel__,
-                 action="play",
-                 fulltitle=scrapedtitle,
-                 show=scrapedtitle,
-                 title="[COLOR green]Puntata Random - " + scrapedtitle + "[/COLOR]",
-                 url=scrapedurl))
-
-
-
     # Extrae las entradas (carpetas)
-    patronvideos = '<li><a href="([^"]+)"><span class="catTitle">([^<]+)<\/span>'
+    patronvideos = '<a href="([^"]+)" target="_blank"><strong>'
     matches = re.compile(patronvideos, re.DOTALL).finditer(data)
+
+    # Main options
+    itemlist = [Item(channel=__channel__,
+                     action="listseasons",
+                     title="[COLOR yellow]Tutte le Stagioni[/COLOR]",
+                     url=sito,
+                     thumbnail="https://upload.wikimedia.org/wikipedia/en/0/0d/Simpsons_FamilyPicture.png")]
+                
+
+
     for match in matches:
-        scrapedtitle = scrapertools.unescape(match.group(2))
-        scrapedurl = sito + match.group(1)
+        scrapedurl = match.group(1)
         if (DEBUG): logger.info(
-            "title=[" + scrapedtitle + "], url=[" + scrapedurl + "]")
+            "url=[" + scrapedurl + "]")
 
         # Añade al listado de XBMC
         itemlist.append(
             Item(channel=__channel__,
-                 action="listepisodes",
-                 fulltitle=scrapedtitle,
-                 show=scrapedtitle,
-                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
-                 url=scrapedurl))
+                     action="play",
+                     title="[COLOR red]Il Film[/COLOR]",
+                     url=scrapedurl,
+                     thumbnail="http://images.movieplayer.it/images/2007/09/13/la-locandina-di-the-simpsons-movie-47408.jpg"))
 
+    return itemlist
+
+
+def listseasons(item):
+    logger.info("[simpsonita.py] mainlist")
+    itemlist = []
+
+    # Descarga la página
+    data = scrapertools.cachePage(item.url)
+    logger.info(data)
+
+    # Extrae las entradas (carpetas)
     
+        
 
     return itemlist
 
@@ -105,12 +100,12 @@ def listepisodes(item):
     logger.info(data)
 
     # Extrae las entradas (carpetas)
-    patronvideos = '<h3 class="catItemTitle">\s*<a href="([^"]+)">([^<]+)<\/a>'
+    patronvideos = '<a href="([^"]+)" target="_blank">\d&#215;([^<]+)'
     matches = re.compile(patronvideos, re.DOTALL).finditer(data)
 
     for match in matches:
-        scrapedtitle = scrapertools.unescape(match.group(2)).strip()
-        scrapedurl = sito + match.group(1)
+        scrapedtitle = scrapertools.unescape(match.group(2))
+        scrapedurl = match.group(1)
         if (DEBUG): logger.info(
             "title=[" + scrapedtitle + "], url=[" + scrapedurl + "]")
 
@@ -128,7 +123,7 @@ def listepisodes(item):
 def play(item):
     logger.info("[cineblog01.py] play")
 
-    data = scrapertools.cachePage(item.url)
+    data = item.url
 
     itemlist = servertools.find_video_items(data=data)
 
