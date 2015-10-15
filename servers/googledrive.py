@@ -60,12 +60,12 @@ def get_video_url(page_url, premium=False, user="", password="", video_password=
     return video_urls
 
 
-# Encuentra v�deos del servidor en el texto pasado
+    # Encuentra v�deos del servidor en el texto pasado
 def find_videos(data):
     encontrados = set()
     devuelve = []
 
-    patronvideos = r'//drive.google.com/file/d/([a-zA-Z0-9_-]+)'
+    patronvideos = r'.google.com/file/d/([a-zA-Z0-9_-]+)'
     logger.info("[googledrive.py] find_videos #" + patronvideos + "#")
 
     matches = re.compile(patronvideos, re.DOTALL).findall(data)

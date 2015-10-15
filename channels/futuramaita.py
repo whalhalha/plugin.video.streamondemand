@@ -16,20 +16,22 @@ from core import scrapertools
 from core.item import Item
 from servers import servertools
 
-__channel__ = "simpsonita"
+__channel__ = "futuramaita"
 __category__ = "F,S,A"
 __type__ = "generic"
-__title__ = "SimpsonITA Streaming"
+__title__ = "FuturamaITA Streaming"
 __language__ = "IT"
 
-sito = "http://www.isimpsonita.altervista.org/"
+sito = "http://futuramastreamingita.altervista.org/"
 
 headers = [
     ['User-Agent', 'Mozilla/5.0 (Windows NT 6.1; rv:38.0) Gecko/20100101 Firefox/38.0'],
     ['Accept-Encoding', 'gzip, deflate'],
-    ['Referer', 'http://www.isimpsonita.altervista.org/'],
+    ['Referer', 'http://futuramastreamingita.altervista.org/'],
     ['Connection', 'keep-alive']
 ]
+
+sitofilm = "http://thesimpsonstreaming.altervista.org/i-simpson-il-film-streaming/"
 
 DEBUG = config.get_setting("debug")
 
