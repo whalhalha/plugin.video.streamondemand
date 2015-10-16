@@ -43,5 +43,19 @@ def find_videos(data):
             encontrados.add(url)
         else:
             logger.info("  url duplicada="+url)
+    patronvideos = r'.netaddiction.it/embed/([a-zA-Z0-9_-]+)'
+    logger.info("[netaddiction.py] find_videos #"+patronvideos+"#")
+    matches = re.compile(patronvideos,re.DOTALL).findall(data)
+
+    for match in matches:
+        titulo = "[netaddiction]"
+        url = match
+        if url not in encontrados:
+            logger.info("  url="+url)
+            devuelve.append( [ titulo , url , 'netaddiction' ] )
+            encontrados.add(url)
+        else:
+            logger.info("  url duplicada="+url)
+
 
     return devuelve
