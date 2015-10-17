@@ -41,8 +41,13 @@ def mainlist(item):
     itemlist = [Item(channel=__channel__,
                      title="[COLOR azure]Novita' Al Cinema[/COLOR]",
                      action="peliculas",
-                     url=host,
+                     url="%s/streaming-al-cinema/" % host,
                      thumbnail="http://dc584.4shared.com/img/XImgcB94/s7/13feaf0b538/saquinho_de_pipoca_01"),
+                Item(channel=__channel__,
+                     title="[COLOR azure]Popolari[/COLOR]",
+                     action="pelis_top100",
+                     url="%s/top100.html" % host,
+                     thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/All%20Movies%20by%20Genre.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Categorie[/COLOR]",
                      action="categorias",
@@ -159,6 +164,43 @@ def peliculas(item):
                  title="[COLOR orange]Avanti >>[/COLOR]",
                  url=scrapedurl,
                  folder=True))
+
+    return itemlist
+
+
+def pelis_top100(item):
+    logger.info("streamondemand.guardarefilm peliculas")
+    itemlist = []
+
+    # Descarga la pagina
+    data = scrapertools.cache_page(item.url, headers=headers)
+
+    # Extrae las entradas (carpetas)
+    patron = r'<span class="top100_title"><a href="([^"]+)">(.*?\(\d+\))</a>'
+    matches = re.compile(patron).findall(data)
+
+    for scrapedurl, scrapedtitle in matches:
+        html = scrapertools.cache_page(scrapedurl, headers=headers)
+        start = html.find("<div class=\"textwrap\" itemprop=\"description\">")
+        end = html.find("</div>", start)
+        scrapedplot = html[start:end]
+        scrapedplot = re.sub(r'<[^>]*>', '', scrapedplot)
+        scrapedplot = scrapertools.decodeHtmlentities(scrapedplot)
+        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
+        scrapedthumbnail = scrapertools.find_single_match(html, r'class="poster-wrapp"><a href="([^"]+)"')
+        if (DEBUG): logger.info(
+            "title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="episodios" if item.extra == "serie" else "findvideos",
+                 fulltitle=scrapedtitle,
+                 show=scrapedtitle,
+                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
+                 url=scrapedurl,
+                 thumbnail=host + scrapedthumbnail,
+                 plot=scrapedplot,
+                 folder=True,
+                 fanart=host + scrapedthumbnail))
 
     return itemlist
 
