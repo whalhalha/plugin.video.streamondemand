@@ -199,6 +199,11 @@ def episodios(item):
     ## Descarga la página
     data = scrapertools.cache_page(item.url)
 
+    start = data.find('id="pd_rating_holder')
+    end = data.find('id="linkcorrotto-show"', start)
+
+    data = data[start:end]
+
     lang_titles = []
     starts = []
     patron = r"STAGION[I|E].*?ITA"
@@ -214,7 +219,7 @@ def episodios(item):
 
     while i <= len_lang_titles:
         inizio = starts[i - 1]
-        fine = starts[i] if i < len_lang_titles else data.find('id="linkcorrotto-show"')
+        fine = starts[i] if i < len_lang_titles else -1
 
         html = data[inizio:fine]
         lang_title = lang_titles[i - 1]
@@ -222,6 +227,9 @@ def episodios(item):
         load_episodios(html, item, itemlist, lang_title)
 
         i += 1
+
+    if len(itemlist) == 0:
+        load_episodios(data, item, itemlist, 'ITA')
 
     if config.get_library_support() and len(itemlist) != 0:
         itemlist.append(
