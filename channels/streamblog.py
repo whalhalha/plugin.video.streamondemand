@@ -21,10 +21,9 @@ __title__ = "streamblog (IT)"
 __language__ = "IT"
 
 headers = [
-    ['Host', 'www.streamblog.tv'],
-    ['User-Agent', 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:39.0) Gecko/20100101 Firefox/39.0'],
+    ['User-Agent', 'Mozilla/5.0 (Windows NT 6.1; rv:39.0) Gecko/20100101 Firefox/39.0'],
     ['Accept-Encoding', 'gzip, deflate'],
-    ['Cookie', '']
+    ['Connection', 'keep-alive']
 ]
 
 DEBUG = config.get_setting("debug")
@@ -70,7 +69,7 @@ def categorias(item):
     logger.info("streamondemand.streamblog categorias")
     itemlist = []
 
-    data = scrapertools.cache_page(item.url)
+    data = scrapertools.cache_page(item.url, headers=headers)
     logger.info(data)
 
     # Narrow search by selecting only the combo
@@ -79,7 +78,6 @@ def categorias(item):
     # The categories are the options for the combo
     patron = '<li><a href="([^"]+)">(.*?)</a></li>'
     matches = re.compile(patron, re.DOTALL).findall(bloque)
-    scrapertools.printMatches(matches)
 
     for url, titulo in matches:
         scrapedtitle = titulo
@@ -124,7 +122,6 @@ def results(item):
     patron += '</div>\s*'
     patron += '<.*?img src="([^"]+)".*?/>'
     matches = re.compile(patron, re.DOTALL).findall(data)
-    scrapertools.printMatches(matches)
 
     for scrapedurl, scrapedtitle, scrapedthumbnail in matches:
         html = scrapertools.cache_page(scrapedurl, headers=headers)
@@ -149,7 +146,6 @@ def results(item):
     # Extrae el paginador
     patronvideos = '<div class="navigation".*?<span.*?/span>.*?<a href="([^"]+)">'
     matches = re.compile(patronvideos, re.DOTALL).findall(data)
-    scrapertools.printMatches(matches)
 
     if len(matches) > 0:
         scrapedurl = urlparse.urljoin(item.url, matches[0])
@@ -173,7 +169,6 @@ def peliculas(item):
     # Extrae las entradas (carpetas)
     patron = '<div class="poster"><a href="([^"]+)"><img src="([^"]+)" alt="([^"]+)".*?</div>'
     matches = re.compile(patron, re.DOTALL).findall(data)
-    scrapertools.printMatches(matches)
 
     for scrapedurl, scrapedthumbnail, scrapedtitle in matches:
         html = scrapertools.cache_page(scrapedurl, headers=headers)
@@ -199,7 +194,6 @@ def peliculas(item):
     # Extrae el paginador
     patronvideos = '<div class="navigation".*?<span.*?/span>.*?<a href="([^"]+)">'
     matches = re.compile(patronvideos, re.DOTALL).findall(data)
-    scrapertools.printMatches(matches)
 
     if len(matches) > 0:
         scrapedurl = urlparse.urljoin(item.url, matches[0])
@@ -220,15 +214,15 @@ def episodios(item):
 
     itemlist = []
 
-    ## Descarga la página
-    data = scrapertools.cache_page(item.url)
+    # Descarga la página
+    data = scrapertools.cache_page(item.url, headers=headers)
     data = scrapertools.decodeHtmlentities(data)
 
     patron = '<!--/colorend--><br />(.+ StreamNowMovies HD </a>)'
     matches = re.compile(patron, re.DOTALL).findall(data)
     for match in matches:
         for data in match.split('<br />'):
-            ## Extrae las entradas
+            # Extrae las entradas
             scrapedtitle = data.split('<a ')[0]
             itemlist.append(
                 Item(channel=__channel__,
@@ -240,9 +234,20 @@ def episodios(item):
                      fulltitle=item.fulltitle,
                      show=item.show))
 
-    if config.get_library_support():
-        itemlist.append( Item(channel=__channel__, title=item.title, url=item.url, action="add_serie_to_library", extra="episodios", show=item.show) )
-        itemlist.append( Item(channel=item.channel, title="Scarica tutti gli episodi della serie", url=item.url, action="download_all_episodes", extra="episodios", show=item.show) )
+    if config.get_library_support() and len(itemlist) != 0:
+        itemlist.append(
+            Item(channel=__channel__,
+                 title=item.title, url=item.url,
+                 action="add_serie_to_library",
+                 extra="episodios",
+                 show=item.show))
+        itemlist.append(
+            Item(channel=item.channel,
+                 title="Scarica tutti gli episodi della serie",
+                 url=item.url,
+                 action="download_all_episodes",
+                 extra="episodios",
+                 show=item.show))
 
     return itemlist
 
@@ -250,7 +255,7 @@ def episodios(item):
 def findvid_serie(item):
     logger.info("streamondemand.streamblog findvideos")
 
-    ## Descarga la página
+    # Descarga la página
     data = item.extra
 
     itemlist = servertools.find_video_items(data=data)
@@ -263,4 +268,3 @@ def findvid_serie(item):
         videoitem.channel = __channel__
 
     return itemlist
-
