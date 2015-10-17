@@ -23,10 +23,10 @@ __language__ = "IT"
 host = "http://www.itafilm.tv"
 
 headers = [
-    ['Host', 'www.itafilm.tv'],
-    ['User-Agent', 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:39.0) Gecko/20100101 Firefox/39.0'],
-    ['Accept-Encoding', 'gzip, deflate'],
-    ['Cookie', '_ddn_intercept_2_=b33473ad0b70b320a9f7546e213a396a']
+    ['Connection', 'keep-alive'],
+    ['Referer', host],
+    ['User-Agent', 'Mozilla/5.0 (Windows NT 6.1; rv:39.0) Gecko/20100101 Firefox/39.0'],
+    ['Accept-Encoding', 'gzip, deflate']
 ]
 
 
@@ -90,7 +90,6 @@ def search(item, texto):
 
     try:
         if item.extra == "serie":
-            item.url += "/?do=search&subaction=search&story=" + texto
             return serietv(item)
         else:
             return fichas(item)
@@ -273,7 +272,8 @@ def episodios(item):
     ## Descarga la página
     data = scrapertools.cache_page(item.url, headers=headers)
 
-    plot = scrapertools.htmlclean(scrapertools.get_match(data, '<div class="main-news-text main-news-text2">(.*?)</div>')).strip()
+    plot = scrapertools.htmlclean(
+        scrapertools.get_match(data, '<div class="main-news-text main-news-text2">(.*?)</div>')).strip()
 
     ## Extrae las datos - Episodios
     patron = '<br />(\d+x\d+).*?href="//ads.ad-center.com/[^<]+</a>(.*?)<a href="//ads.ad-center.com/[^<]+</a>'
@@ -312,7 +312,7 @@ def episodios(item):
                      fulltitle=item.fulltitle,
                      show=item.show))
 
-    if config.get_library_support():
+    if config.get_library_support() and len(itemlist) != 0:
         itemlist.append(
             Item(channel=__channel__,
                  title=item.show,
