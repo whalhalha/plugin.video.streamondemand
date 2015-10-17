@@ -5,7 +5,6 @@
 # http://blog.tvalacarta.info/plugin-xbmc/streamondemand/
 # ------------------------------------------------------------
 import urlparse
-import urllib2
 import re
 import sys
 
@@ -67,14 +66,11 @@ def categorias(item):
     # Extrae las entradas (carpetas)
     patron = '<a href="([^"]+)" >(.*?)</a>(.*?)\s*</li>'
     matches = re.compile(patron, re.DOTALL).findall(bloque)
-    scrapertools.printMatches(matches)
 
     for scrapedurl, scrapedtitle, scrapedtot in matches:
-        scrapedplot = ""
-        scrapedthumbnail = ""
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle.replace("Animazione", ""))
         scrapedurl = scrapertools.decodeHtmlentities(scrapedurl.replace("%s/category/animazione/" % host, ""))
-        if (DEBUG): logger.info("title=[" + scrapedtitle + "], url=[" + scrapedurl + "]")
+        if DEBUG: logger.info("title=[" + scrapedtitle + "], url=[" + scrapedurl + "]")
         itemlist.append(
             Item(channel=__channel__,
                  action="pelicat",
@@ -112,7 +108,6 @@ def peliculas(item):
     patron += '<[^>]+>\s*'
     patron += '<img[^=]+=[^=]+=[^=]+="([^"]+)"[^>]+>'
     matches = re.compile(patron, re.DOTALL).findall(data)
-    scrapertools.printMatches(matches)
 
     for scrapedtitle, scrapedurl, scrapedthumbnail in matches:
         html = scrapertools.cache_page(scrapedurl, headers=headers)
@@ -122,8 +117,7 @@ def peliculas(item):
         scrapedplot = re.sub(r'<[^>]*>', '', scrapedplot)
         scrapedplot = scrapertools.decodeHtmlentities(scrapedplot)
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
-        # scrapedplot = ""
-        if (DEBUG): logger.info(
+        if DEBUG: logger.info(
             "title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
         itemlist.append(
             Item(channel=__channel__,
@@ -139,7 +133,6 @@ def peliculas(item):
     # Extrae el paginador
     patronvideos = '<a class="nextpostslink" rel="next" href="([^"]+)">&raquo;</a>'
     matches = re.compile(patronvideos, re.DOTALL).findall(data)
-    scrapertools.printMatches(matches)
 
     if len(matches) > 0:
         scrapedurl = urlparse.urljoin(item.url, matches[0])
@@ -174,19 +167,16 @@ def pelicat(item):
     patron += '<[^>]+>\s*'
     patron += '<h4><a[^>]+>(.*?)</a></h4>'
     matches = re.compile(patron, re.DOTALL).findall(data)
-    scrapertools.printMatches(matches)
 
     for scrapedurl, scrapedthumbnail, scrapedtitle in matches:
-        response = urllib2.urlopen(scrapedurl)
-        html = response.read()
+        html = scrapertools.cache_page(scrapedurl, headers=headers)
         start = html.find("<div id=\"detay-aciklama\">")
         end = html.find("</p>", start)
         scrapedplot = html[start:end]
         scrapedplot = re.sub(r'<[^>]*>', '', scrapedplot)
         scrapedplot = scrapertools.decodeHtmlentities(scrapedplot)
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
-        # scrapedplot = ""
-        if (DEBUG): logger.info(
+        if DEBUG: logger.info(
             "title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
         itemlist.append(
             Item(channel=__channel__,
@@ -202,7 +192,6 @@ def pelicat(item):
     # Extrae el paginador
     patronvideos = '<a class="nextpostslink" rel="next" href="([^"]+)">&raquo;</a>'
     matches = re.compile(patronvideos, re.DOTALL).findall(data)
-    scrapertools.printMatches(matches)
 
     if len(matches) > 0:
         scrapedurl = urlparse.urljoin(item.url, matches[0])
@@ -222,10 +211,10 @@ def findvideos(item):
 
     itemlist = []
 
-    ## Descarga la página
+    # Descarga la página
     data = scrapertools.cache_page(item.url, headers=headers)
 
-    ## Extrae las entradas
+    # Extrae las entradas
     patron = r'<td><a(?:\s*target="_blank"\s*rel="nofollow")?\s*href="([^"]+)"\s*(?:target="_blank")?>([^<]+)</a></td>'
     matches = re.compile(patron, re.DOTALL).findall(data)
     for scrapedurl, scrapedtitle in matches:
