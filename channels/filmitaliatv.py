@@ -16,12 +16,12 @@ from servers import servertools
 __channel__ = "filmitaliatv"
 __category__ = "F"
 __type__ = "generic"
-__title__ = "film-italia.tv (IT)"
+__title__ = "filmitalia.tv (IT)"
 __language__ = "IT"
 
 DEBUG = config.get_setting("debug")
 
-sito="http://www.film-italia.tv"
+sito="http://www.film-italia.tv/"
 
 def isGeneric():
     return True
@@ -77,17 +77,24 @@ def peliculas(item):
 
     # Extrae las entradas (carpetas)
     patron = '<div class="post-img small-post-img">\s*'
-    patron += '<a href="(.*?)" title="(.*?)">\s*<img src="(.*?)"[^>]+>'
+    patron += '<a href="(.*?)"[^>]+>\s*'
+    patron += '<img src="(.*?)"[^>]+>[^>]+>\s*'
+    patron += '</div>\s*'
+    patron += '<div[^>]+>\s*'
+    patron += '<div[^>]+>\s*'
+    patron += '<header[^>]+>\s*'
+    patron += '<div[^>]+>\s*'
+    patron += '<h2[^>]+>[^>]+>(.*?)</a>[^>]+>\s*'
+    patron += '<div[^>]+>[^>]+>\s*'
+    patron += '<li>[^>]+>[^>]+>[^>]+>[^>]+>[^>]+>\s*'
+    patron += '</div>[^>]+>\s*'
+    patron += '</header>[^>]+>\s*'
+    patron += '<div[^>]+>\s*'
+    patron += '<p>(.*?)</p>'
     matches = re.compile(patron,re.DOTALL).findall(data)
     scrapertools.printMatches(matches)
 
-    for scrapedurl,scrapedtitle,scrapedthumbnail in matches:
-        response = urllib2.urlopen(scrapedurl)
-        html = response.read()
-        start = html.find("<p style=\"text-align: left;\"><span style=\"color: #808080;\">")
-        end = html.find("<font size=\"1\">+Info »</font>", start)
-        scrapedplot = html[start:end]
-        scrapedplot = re.sub(r'<[^>]*>', '', scrapedplot)
+    for scrapedurl,scrapedthumbnail,scrapedtitle,scrapedplot in matches:
         scrapedplot = scrapertools.decodeHtmlentities(scrapedplot)
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         #scrapedplot = ""
@@ -95,7 +102,7 @@ def peliculas(item):
         itemlist.append( Item(channel=__channel__, action="findvideos", fulltitle=scrapedtitle, show=scrapedtitle, title="[COLOR azure]"+scrapedtitle+"[/COLOR]" , url=scrapedurl , thumbnail=scrapedthumbnail , plot=scrapedplot , folder=True) )
 
     # Extrae el paginador
-    patronvideos  = '<a class="next page-numbers" href="(.*?)">Next &#8250;</a></div>'
+    patronvideos  = '<a class="next page-numbers" href="(.*?)">Next &#8250;'
     matches = re.compile(patronvideos,re.DOTALL).findall(data)
     scrapertools.printMatches(matches)
 
