@@ -82,10 +82,9 @@ def categorias(item):
     # Extrae las entradas (carpetas)
     patron = r'<option[^>]+><a href=\'([^\']+)\'>(.*?)</a></option>'
     matches = re.compile(patron, re.DOTALL).findall(bloque)
-    scrapertools.printMatches(matches)
 
     for scrapedurl, scrapedtitle in matches:
-        if (DEBUG): logger.info("title=[" + scrapedtitle + "], url=[" + scrapedurl + "]")
+        if DEBUG: logger.info("title=[" + scrapedtitle + "], url=[" + scrapedurl + "]")
         itemlist.append(
             Item(channel=__channel__,
                  action="peliculas",
@@ -120,7 +119,6 @@ def search_peliculas(item):
     # Extrae las entradas (carpetas)
     patron = '<a href="([^"]+)" title="([^"]+)" rel="[^"]+">\s*<img width="[^"]+" height="[^"]+" src="([^"]+)" class="[^"]+" alt="[^"]+" />'
     matches = re.compile(patron, re.DOTALL).findall(data)
-    scrapertools.printMatches(matches)
 
     for scrapedurl, scrapedtitle, scrapedthumbnail in matches:
         html = scrapertools.cache_page(scrapedurl, headers=headers)
@@ -131,7 +129,7 @@ def search_peliculas(item):
         scrapedplot = scrapertools.decodeHtmlentities(scrapedplot)
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         scrapedtitle = scrapedtitle.replace("streaming", "").replace("Permalink to ", "")
-        if (DEBUG): logger.info(
+        if DEBUG: logger.info(
             "title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
         itemlist.append(
             Item(channel=__channel__,
@@ -157,7 +155,6 @@ def peliculas(item):
     # Extrae las entradas (carpetas)
     patron = '<div class="media3">[^>]+><a href="([^"]+)"><img[^s]+src="([^"]+)"[^>]+></a><[^>]+><a[^>]+><p>(.*?)</p></a></div>'
     matches = re.compile(patron, re.DOTALL).findall(data)
-    scrapertools.printMatches(matches)
 
     for scrapedurl, scrapedthumbnail, scrapedtitle in matches:
         html = scrapertools.cache_page(scrapedurl, headers=headers)
@@ -168,7 +165,8 @@ def peliculas(item):
         scrapedplot = scrapertools.decodeHtmlentities(scrapedplot)
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         scrapedtitle = scrapedtitle.replace("streaming", "")
-        if (DEBUG): logger.info("title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
+        if DEBUG: logger.info(
+            "title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
         itemlist.append(
             Item(channel=__channel__,
                  action="episodios" if item.extra == "serie" else "findvideos",
@@ -183,7 +181,6 @@ def peliculas(item):
     # Extrae el paginador
     patronvideos = '<a class="nextpostslink" rel="next" href="([^"]+)">»</a>'
     matches = re.compile(patronvideos, re.DOTALL).findall(data)
-    scrapertools.printMatches(matches)
 
     if len(matches) > 0:
         scrapedurl = urlparse.urljoin(item.url, matches[0])
@@ -211,7 +208,6 @@ def latest(item):
     patron += '<a href="([^"]+)" title="([^"]+)" rel="bookmark">\s*'
     patron += '<img[^s]+src="([^"]+)"[^>]+>'
     matches = re.compile(patron, re.DOTALL).findall(data)
-    scrapertools.printMatches(matches)
 
     for scrapedurl, scrapedtitle, scrapedthumbnail in matches:
         html = scrapertools.cache_page(scrapedurl, headers=headers)
@@ -223,7 +219,8 @@ def latest(item):
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         scrapedtitle = scrapedtitle.replace("Permalink to ", "")
         scrapedtitle = scrapedtitle.replace("streaming", "")
-        if (DEBUG): logger.info("title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
+        if DEBUG: logger.info(
+            "title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
         itemlist.append(
             Item(channel=__channel__,
                  action="findvideos",
@@ -238,7 +235,6 @@ def latest(item):
     # Extrae el paginador
     patronvideos = '<a class="nextpostslink" rel="next" href="([^"]+)">»</a>'
     matches = re.compile(patronvideos, re.DOTALL).findall(data)
-    scrapertools.printMatches(matches)
 
     if len(matches) > 0:
         scrapedurl = urlparse.urljoin(item.url, matches[0])
@@ -258,7 +254,7 @@ def episodios(item):
 
     itemlist = []
 
-    data = scrapertools.cache_page(item.url)
+    data = scrapertools.cache_page(item.url, headers=headers)
     data = scrapertools.decodeHtmlentities(data)
 
     patron = '<p>((.*?)<a href="[^"]+" target="_blank">([^<]+)</a>)((?:.*?<a href="[^"]+" target="_blank">[^<]+</a>)*)'
@@ -272,7 +268,7 @@ def episodios(item):
                  title=scrapedtitle,
                  url=item.url,
                  thumbnail=item.thumbnail,
-                 extra=data1+data2,
+                 extra=data1 + data2,
                  fulltitle=item.fulltitle,
                  show=item.show))
 
@@ -296,9 +292,21 @@ def episodios(item):
                      fulltitle=item.fulltitle,
                      show=item.show))
 
-    if config.get_library_support():
-        itemlist.append( Item(channel=__channel__, title=item.title, url=item.url, action="add_serie_to_library", extra="episodios", show=item.show) )
-        itemlist.append( Item(channel=item.channel, title="Scarica tutti gli episodi della serie", url=item.url, action="download_all_episodes", extra="episodios", show=item.show) )
+    if config.get_library_support() and len(itemlist) != 0:
+        itemlist.append(
+            Item(channel=__channel__,
+                 title=item.title,
+                 url=item.url,
+                 action="add_serie_to_library",
+                 extra="episodios",
+                 show=item.show))
+        itemlist.append(
+            Item(channel=item.channel,
+                 title="Scarica tutti gli episodi della serie",
+                 url=item.url,
+                 action="download_all_episodes",
+                 extra="episodios",
+                 show=item.show))
 
     return itemlist
 
@@ -306,7 +314,7 @@ def episodios(item):
 def findvideos(item):
     logger.info("streamondemand.tantifilm findvideos")
 
-    ## Descarga la página
+    # Descarga la página
     data = item.extra if item.extra != '' else scrapertools.cache_page(item.url, headers=headers)
 
     itemlist = servertools.find_video_items(data=data)
@@ -318,7 +326,7 @@ def findvideos(item):
         videoitem.plot = item.plot
         videoitem.channel = __channel__
 
-    ## Extrae las entradas
+    # Extrae las entradas
     patron = r'\{"file":"([^"]+)","type":"[^"]+","label":"([^"]+)"\}'
     matches = re.compile(patron, re.DOTALL).findall(data)
     for scrapedurl, scrapedtitle in matches:
@@ -335,4 +343,3 @@ def findvideos(item):
                  folder=False))
 
     return itemlist
-
