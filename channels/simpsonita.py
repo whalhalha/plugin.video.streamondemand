@@ -96,8 +96,8 @@ def listepisodes(item):
         itemlist.append(
             Item(channel=__channel__,
                  action="findvideos",
-                 fulltitle=scrapedtitle,
-                 show=scrapedtitle,
+                 fulltitle=item.fulltitle,
+                 show=item.show,
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
                  url=scrapedurl))
 
