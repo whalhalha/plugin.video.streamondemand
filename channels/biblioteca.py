@@ -42,21 +42,7 @@ def isGeneric():
 
 def mainlist(item):
     logger.info("streamondemand.biblioteca mainlist")
-    itemlist = [  # Item(channel=__channel__,
-                  # title="[COLOR azure]Indice Registi [A-Z][/COLOR]",
-                  # action="cat_lettera_registi",
-                  # url="http://www.ibs.it/dvd/lista+registi.html",
-                  # thumbnail="http://cinema.clubefl.gr/wp-content/themes/director-theme/images/logo.png"),
-                  # Item(channel=__channel__,
-                  # title="[COLOR azure]Indice Attori/Attrici [A-Z][/COLOR]",
-                  # action="cat_lettera_attori",
-                  # url="http://www.ibs.it/dvd-film/lista-attori.html",
-                  # thumbnail="http://cinema.clubefl.gr/wp-content/themes/director-theme/images/logo.png"),
-                  # Item(channel="buscador",
-                  # title="[COLOR yellow]Cerca per canale...[/COLOR]",
-                  # action="mainlist",
-                  # thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search"),
-                  Item(channel="buscador",
+    itemlist = [  Item(channel="buscador",
                        title="[COLOR yellow]Cerca nei Canali...[/COLOR]",
                        action="mainlist",
                        thumbnail="http://i.imgur.com/pE5WSZp.png"),
@@ -100,6 +86,11 @@ def mainlist(item):
                        action="tmdb_list",
                        url='http://api.themoviedb.org/3/discover/movie?api_key=%s&certification_country=US&language=it&page=1&sort_by=vote_count.desc' % tmdb_key,
                        thumbnail="http://i.imgur.com/5ShnO8w.png"),
+                  #Item(channel=__channel__,
+                  #     title="[COLOR yellow]Premi Oscar[/COLOR]",
+                  #     action="tmdb_oscar",
+                  #     url='http://api.themoviedb.org/3/list/509ec17b19c2950a0600050d?api_key=%s&language=it' % tmdb_key,
+                  #     thumbnail="http://i.imgur.com/5ShnO8w.png"),
                   Item(channel=__channel__,
                        title="[COLOR yellow]Ultimi 2 mesi[/COLOR]",
                        action="tmdb_list",
@@ -120,15 +111,6 @@ def search(item, texto):
     logger.info("[biblioteca.py] " + item.url + " search " + texto)
 
     try:
-        if item.extra == "reg":
-            item.url = "http://www.ibs.it/dvd/ser/serpge.asp?A=&I6.x=83&I6.y=18&P=" + texto + "&SEQ=Q&SL=&T=&dep=0&dh=25&ls=&shop=&ty=kw"
-            return cat_filmografia(item)
-        if item.extra == "att":
-            item.url = "http://www.ibs.it/dvd/ser/serpge.asp?A=" + texto + "&I6.x=0&I6.y=0&P=&SEQ=Q&SL=&T=&dep=0&dh=25&ls=&shop=&ty=kw"
-            return cat_filmografia(item)
-        if item.extra == "mov":
-            item.url = "http://www.ibs.it/dvd/ser/serpge.asp?A=&I6.x=72&I6.y=13&P=&SEQ=Q&SL=&T=" + texto + "&dep=0&dh=25&ls=&shop=&ty=kw"
-            return cat_filmografia(item)
         if item.extra == "tmdb_mov":
             item.url = 'http://api.themoviedb.org/3/search/movie?api_key=%s&query=%s&language=it&page=1' % (
             tmdb_key, texto)
@@ -154,143 +136,39 @@ def search(item, texto):
         return []
 
 
-def cat_lettera_registi(item):
-    logger.info("streamondemand.biblioteca cat_registi")
+
+def tmdb_oscar(item):
+    try:
+        result = scrapertools.cache_page(item.url)
+        result = json.loads(result)
+        items = result['results']
+    except:
+        return
+
     itemlist = []
+    for item in items:
+        try:
+            title = item['title']
+            title = scrapertools.decodeHtmlentities(title)
+            title = title.encode('utf-8')
 
-    matches = [("A", "/dvd/ser/serreg.asp?q=A"),
-               ('B', '/dvd/ser/serreg.asp?q=B'),
-               ('C', '/dvd/ser/serreg.asp?q=C'),
-               ('D', '/dvd/ser/serreg.asp?q=D'),
-               ('E', '/dvd/ser/serreg.asp?q=E'),
-               ('F', '/dvd/ser/serreg.asp?q=F'),
-               ('G', '/dvd/ser/serreg.asp?q=G'),
-               ('H', '/dvd/ser/serreg.asp?q=H'),
-               ('I', '/dvd/ser/serreg.asp?q=I'),
-               ('J', '/dvd/ser/serreg.asp?q=J'),
-               ('K', '/dvd/ser/serreg.asp?q=K'),
-               ('L', '/dvd/ser/serreg.asp?q=L'),
-               ('M', '/dvd/ser/serreg.asp?q=M'),
-               ('N', '/dvd/ser/serreg.asp?q=N'),
-               ('O', '/dvd/ser/serreg.asp?q=O'),
-               ('P', '/dvd/ser/serreg.asp?q=P'),
-               ('Q', '/dvd/ser/serreg.asp?q=Q'),
-               ('R', '/dvd/ser/serreg.asp?q=R'),
-               ('S', '/dvd/ser/serreg.asp?q=S'),
-               ('T', '/dvd/ser/serreg.asp?q=T'),
-               ('U', '/dvd/ser/serreg.asp?q=U'),
-               ('V', '/dvd/ser/serreg.asp?q=V'),
-               ('W', '/dvd/ser/serreg.asp?q=W'),
-               ('X', '/dvd/ser/serreg.asp?q=X'),
-               ('Y', '/dvd/ser/serreg.asp?q=Y'),
-               ('Z', '/dvd/ser/serreg.asp?q=Z')]
+            poster = item['image_url']
+            if poster == '' or poster == None:
+                raise Exception()
+            else:
+                poster = '%s%s' % (tmdb_poster, poster)
+            poster = poster.encode('utf-8')
 
-    for scrapedtitle, scrapedurl in matches:
-        url = host + scrapedurl
-        itemlist.append(
-            Item(channel=__channel__,
-                 action="cat_ruolo",
-                 title="[COLOR azure]%s[/COLOR]" % scrapedtitle,
-                 url=url,
-                 folder=True))
-
-    return itemlist
-
-
-def cat_lettera_attori(item):
-    logger.info("streamondemand.biblioteca cat_attori")
-    itemlist = []
-
-    matches = [('A', '/dvd/ser/seratt.asp?q=A'),
-               ('B', '/dvd/ser/seratt.asp?q=B'),
-               ('C', '/dvd/ser/seratt.asp?q=C'),
-               ('D', '/dvd/ser/seratt.asp?q=D'),
-               ('E', '/dvd/ser/seratt.asp?q=E'),
-               ('F', '/dvd/ser/seratt.asp?q=F'),
-               ('G', '/dvd/ser/seratt.asp?q=G'),
-               ('H', '/dvd/ser/seratt.asp?q=H'),
-               ('I', '/dvd/ser/seratt.asp?q=I'),
-               ('J', '/dvd/ser/seratt.asp?q=J'),
-               ('K', '/dvd/ser/seratt.asp?q=K'),
-               ('L', '/dvd/ser/seratt.asp?q=L'),
-               ('M', '/dvd/ser/seratt.asp?q=M'),
-               ('N', '/dvd/ser/seratt.asp?q=N'),
-               ('O', '/dvd/ser/seratt.asp?q=O'),
-               ('P', '/dvd/ser/seratt.asp?q=P'),
-               ('Q', '/dvd/ser/seratt.asp?q=Q'),
-               ('R', '/dvd/ser/seratt.asp?q=R'),
-               ('S', '/dvd/ser/seratt.asp?q=S'),
-               ('T', '/dvd/ser/seratt.asp?q=T'),
-               ('U', '/dvd/ser/seratt.asp?q=U'),
-               ('V', '/dvd/ser/seratt.asp?q=V'),
-               ('W', '/dvd/ser/seratt.asp?q=W'),
-               ('X', '/dvd/ser/seratt.asp?q=X'),
-               ('Y', '/dvd/ser/seratt.asp?q=Y'),
-               ('Z', '/dvd/ser/seratt.asp?q=Z')]
-
-    for scrapedtitle, scrapedurl in matches:
-        url = host + scrapedurl
-        itemlist.append(
-            Item(channel=__channel__,
-                 action="cat_ruolo",
-                 title="[COLOR azure]%s[/COLOR]" % scrapedtitle,
-                 url=url,
-                 folder=True))
-
-    return itemlist
-
-
-def cat_ruolo(item):
-    logger.info("streamondemand.biblioteca cat_registi")
-    itemlist = []
-
-    data = scrapertools.cache_page(item.url)
-    logger.info(data)
-
-    # Narrow search by selecting only the combo
-    patron = r'<td bgColor=#ffffff width="33%"><table width="100%"><tr><td bgcolor="eeeee4">(.*?)</font></td></tr></table></td>'
-    bloques = re.compile(patron, re.DOTALL).findall(data)
-
-    patron = r'<a\s*(?:rel="nofollow")?\s*href="([^"]+)">([^<]+)</a>'
-    for bloque in bloques:
-        # Extrae las entradas (carpetas)
-        matches = re.compile(patron, re.DOTALL).findall(bloque)
-
-        for scrapedurl, scrapedtitle in matches:
-            scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle).strip()
-            url = host + scrapedurl
             itemlist.append(
                 Item(channel=__channel__,
-                     action="cat_filmografia",
-                     title="[COLOR azure]%s[/COLOR]" % scrapedtitle,
-                     url=url,
+                     action="do_search",
+                     extra=urllib.quote_plus(title),
+                     title="[COLOR azure]%s[/COLOR]" % title,
+                     fulltitle=title,
+                     thumbnail=poster,
                      folder=True))
-
-    return itemlist
-
-
-def cat_filmografia(item):
-    logger.info("streamondemand.biblioteca cat_registi")
-    itemlist = []
-
-    data = scrapertools.cache_page(item.url)
-    logger.info(data)
-
-    # Extrae las entradas (carpetas)
-    patron = r'<td width="90" valign="middle" height="120"><a href="[^"]+"><img alt="([^"]+)" border="0" src="([^"]+)"></a></td>'
-    matches = re.compile(patron, re.DOTALL).findall(data)
-
-    for scrapedtitle, scrapedthumbnail in matches:
-        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle).strip()
-        titolo = urllib.quote_plus(scrapedtitle)
-        itemlist.append(
-            Item(channel=__channel__,
-                 action="do_search",
-                 extra=titolo,
-                 title="[COLOR azure]%s[/COLOR]" % scrapedtitle,
-                 fulltitle=scrapedtitle,
-                 thumbnail=scrapedthumbnail,
-                 folder=True))
+        except:
+            pass
 
     return itemlist
 
