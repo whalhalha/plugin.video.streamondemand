@@ -254,6 +254,7 @@ def channels_list():
     #itemlist.append( Item( title="[COLOR azure]Liberostreaming[/COLOR]" , channel="liberostreaming" , language="IT" , category="F,S,A" , type="generic"))
     itemlist.append( Item( title="[COLOR azure]Pianeta Streaming[/COLOR]"   , channel="pianetastreaming"           , language="IT"    , category="F,S,A"   , type="generic"))
     itemlist.append( Item( title="[COLOR azure]Pirate Streaming[/COLOR]"    , channel="piratestreaming"           , language="IT"    , category="F,S,A"   , type="generic"  ))
+    itemlist.append( Item( title="[COLOR azure]Play Cinema[/COLOR]"    , channel="playcinema"           , language="IT"    , category="F"   , type="generic", thumbnail="http://www.playcinema.org/wp-content/uploads/2015/10/playcinemaimmagine.png"  ))
     itemlist.append( Item( title="[COLOR azure]PortaleHD[/COLOR]"   , channel="portalehd"           , language="IT"    , category="F,S,A,B"   , type="generic"))
     itemlist.append( Item( title="[COLOR azure]Serie HD[/COLOR]"     , channel="seriehd"       , language="IT"    , category="S"        , type="generic"))
     itemlist.append( Item( title="[COLOR azure]Serie TV Sub ITA[/COLOR]"    , channel="serietvsubita"         , language="IT" , category="S"        , type="generic" , extra="Series"))
@@ -263,7 +264,7 @@ def channels_list():
     itemlist.append( Item( title="[COLOR azure]Streaming01[/COLOR]"    , channel="streaming01"         , language="IT" , category="B,F"        , type="generic" , extra="Series"))
     itemlist.append( Item( title="[COLOR azure]Streaminfilmit[/COLOR]"    , channel="streamingfilmit"         , language="IT" , category="F"        , type="generic" , extra="Series"))
     itemlist.append( Item( title="[COLOR azure]Tantifilm[/COLOR]"        , channel="tantifilm"       , language="IT"    , category="B,F"       , type="generic"))
-    itemlist.append( Item( title="[COLOR azure]WebShortFilms[/COLOR]"        , channel="webshortfilms"       , language="IT"    , category="F,D"       , type="generic",thumbnail="https://webshortfilms.files.wordpress.com/2012/07/header_1.jpg"))
+    itemlist.append( Item( title="[COLOR azure]WebShortFilms[/COLOR]"        , channel="webshortfilms"       , language="IT"    , category="F,D"       , type="generic" ,thumbnail="https://webshortfilms.files.wordpress.com/2012/07/header_1.jpg"))
     #itemlist.append( Item( title="[COLOR azure]Bibliotrailer[/COLOR]"        , channel="bibliotrailer"       , language="IT"    , category="D"       , type="generic",thumbnail="http://4.bp.blogspot.com/-aB26I0ToivA/VeFvARPXSrI/AAAAAAAAAAk/mp-_D_V8IEA/s1600-r/logo.png"))
     #itemlist.append( Item( title="[COLOR azure]Tuttolooneytunes[/COLOR]"        , channel="tuttolooneytunes"       , language="IT"    , category="A,D"       , type="generic",thumbnail="http://1.bp.blogspot.com/-dLQ0FVvvPys/U6hXvJt2EnI/AAAAAAAAACU/7pFMPwtQx1k/s1600/looney%252520tunes.jpg"))
 
