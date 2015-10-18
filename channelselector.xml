@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <version>
 	<name>channelselector</name>
-	<tag>88</tag>
-	<date>16/10/2015</date>
-	<changes>Added new channel</changes>
+	<tag>89</tag>
+	<date>18/10/2015</date>
+	<changes>Commented some channels</changes>
 </version>
