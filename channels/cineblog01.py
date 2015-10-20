@@ -682,6 +682,7 @@ def findvid(item):
                  title=title,
                  url=scrapedurl,
                  fulltitle=item.fulltitle,
+                 thumbnail=item.thumbnail,
                  show=item.show,
                  folder=False))
 
@@ -697,6 +698,7 @@ def findvid(item):
                  title=title,
                  url=scrapedurl,
                  fulltitle=item.fulltitle,
+                 thumbnail=item.thumbnail,
                  show=item.show,
                  folder=False))
 
@@ -712,6 +714,7 @@ def findvid(item):
                  title=title,
                  url=scrapedurl,
                  fulltitle=item.fulltitle,
+                 thumbnail=item.thumbnail,
                  show=item.show,
                  folder=False))
 
@@ -727,6 +730,7 @@ def findvid(item):
                  title=title,
                  url=scrapedurl,
                  fulltitle=item.fulltitle,
+                 thumbnail=item.thumbnail,
                  show=item.show,
                  folder=False))
 
@@ -743,6 +747,7 @@ def findvid(item):
                  title=title,
                  url=scrapedurl,
                  fulltitle=item.fulltitle,
+                 thumbnail=item.thumbnail,
                  show=item.show,
                  folder=False))
 
