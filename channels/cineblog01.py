@@ -682,6 +682,7 @@ def findvid(item):
                  title=title,
                  url=scrapedurl,
                  fulltitle=item.fulltitle,
+                 thumbnail=item.thumbnail,
                  show=item.show,
                  folder=False))
 
@@ -697,14 +698,15 @@ def findvid(item):
                  title=title,
                  url=scrapedurl,
                  fulltitle=item.fulltitle,
+                 thumbnail=item.thumbnail,
                  show=item.show,
                  folder=False))
 
     streaming_3D = scrapertools.find_single_match(data, '<strong>Streaming 3D[^<]+</strong>(.*?)<table height="30">')
     patron = '<td><a href="([^"]+)" target="_blank">([^<]+)</a></td>'
-    matches = re.compile(patron, re.DOTALL).findall(streaming_hd)
+    matches = re.compile(patron, re.DOTALL).findall(streaming_3D)
     for scrapedurl, scrapedtitle in matches:
-        print "##### findvideos Streaming HD ## %s ## %s ##" % (scrapedurl, scrapedtitle)
+        print "##### findvideos Streaming 3D ## %s ## %s ##" % (scrapedurl, scrapedtitle)
         title = "[COLOR pink]Streaming 3D:[/COLOR] " + item.title + " [COLOR blue][" + scrapedtitle + "][/COLOR]"
         itemlist.append(
             Item(channel=__channel__,
@@ -712,6 +714,7 @@ def findvid(item):
                  title=title,
                  url=scrapedurl,
                  fulltitle=item.fulltitle,
+                 thumbnail=item.thumbnail,
                  show=item.show,
                  folder=False))
 
@@ -727,6 +730,7 @@ def findvid(item):
                  title=title,
                  url=scrapedurl,
                  fulltitle=item.fulltitle,
+                 thumbnail=item.thumbnail,
                  show=item.show,
                  folder=False))
 
@@ -743,6 +747,7 @@ def findvid(item):
                  title=title,
                  url=scrapedurl,
                  fulltitle=item.fulltitle,
+                 thumbnail=item.thumbnail,
                  show=item.show,
                  folder=False))
 

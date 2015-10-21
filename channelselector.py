@@ -265,6 +265,7 @@ def channels_list():
     itemlist.append( Item( title="[COLOR azure]StreamBlog[/COLOR]"    , channel="streamblog"         , language="IT" , category="S,F,A"        , type="generic" , extra="Series"))
     itemlist.append( Item( title="[COLOR azure]Streaming01[/COLOR]"    , channel="streaming01"         , language="IT" , category="B,F"        , type="generic" , extra="Series"))
     itemlist.append( Item( title="[COLOR azure]Streaminfilmit[/COLOR]"    , channel="streamingfilmit"         , language="IT" , category="F"        , type="generic" , extra="Series"))
+    itemlist.append( Item( title="[COLOR azure]StreamingPopcorn[/COLOR]"    , channel="streamingpopcorn"         , language="IT" , category="F"        , type="generic" ,thumbnail="http://streamingpopcorn.com/portal/images/logo2.png"))
     itemlist.append( Item( title="[COLOR azure]Tantifilm[/COLOR]"        , channel="tantifilm"       , language="IT"    , category="B,F"       , type="generic"))
     itemlist.append( Item( title="[COLOR azure]TheWalkingDeadITA Streaming[/COLOR]"      , channel="walkingdeadita"           , language="IT"    , category="F,S,A"   , type="generic",thumbnail="http://walkingdeadstreamingita.altervista.org/images/logo.png"))
     itemlist.append( Item( title="[COLOR azure]WebShortFilms[/COLOR]"        , channel="webshortfilms"       , language="IT"    , category="F,D"       , type="generic" ,thumbnail="https://webshortfilms.files.wordpress.com/2012/07/header_1.jpg"))
