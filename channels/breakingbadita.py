@@ -12,7 +12,7 @@ from core import scrapertools
 from core.item import Item
 
 __channel__ = "breakingbadita"
-__category__ = "F,S,A"
+__category__ = "S"
 __type__ = "generic"
 __title__ = "BreakingBadITA Streaming"
 __language__ = "IT"
