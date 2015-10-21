@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
 # streamondemand.- XBMC Plugin
-# Canal para cineblog01
+# Canal para breakingbaditastreaming.altervista.org
 # http://blog.tvalacarta.info/plugin-xbmc/streamondemand.
 # ------------------------------------------------------------
 import re
@@ -12,7 +12,7 @@ from core import scrapertools
 from core.item import Item
 
 __channel__ = "breakingbadita"
-__category__ = "F,S,A"
+__category__ = "S"
 __type__ = "generic"
 __title__ = "BreakingBadITA Streaming"
 __language__ = "IT"
