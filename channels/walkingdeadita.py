@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
 # streamondemand.- XBMC Plugin
-# Canal para cineblog01
+# Canal para walkingdeadstreamingita.altervista.org
 # http://blog.tvalacarta.info/plugin-xbmc/streamondemand.
 # ------------------------------------------------------------
 import re
@@ -12,7 +12,7 @@ from core import scrapertools
 from core.item import Item
 
 __channel__ = "walkingdeadita"
-__category__ = "F,S,A"
+__category__ = "S"
 __type__ = "generic"
 __title__ = "TheWalkingDeadITA Streaming"
 __language__ = "IT"
