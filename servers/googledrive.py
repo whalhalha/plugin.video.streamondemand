@@ -80,14 +80,4 @@ def find_videos(data):
         else:
             logger.info("  url duplicada=" + url)
 
-    for media_id in matches:
-        titulo = "[googledrive]"
-        url = 'https://docs.google.com/file/d/%s/preview' % media_id
-        if url not in encontrados:
-            logger.info("  url=" + url)
-            devuelve.append([titulo, url, 'googledrive'])
-            encontrados.add(url)
-        else:
-            logger.info("  url duplicada=" + url)
-
     return devuelve
