@@ -25,10 +25,10 @@ def test_video_exists(page_url):
     data = scrapertools.cache_page(page_url)
 
     if "The file is being converted" in data:
-        return False, "El fichero está en proceso"
+        return False, "Il file è in conversione"
 
     if "no longer exists" in data:
-        return False, "El fichero ha sido borrado"
+        return False, "Il file è stato rimosso"
 
     return True, ""
 
