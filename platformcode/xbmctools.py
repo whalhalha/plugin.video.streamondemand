@@ -281,11 +281,11 @@ def play_video(channel="",server="",url="",category="",title="", thumbnail="",pl
         if server!="":
             advertencia = xbmcgui.Dialog()
             if "<br/>" in motivo:
-                resultado = advertencia.ok( "No puedes ver ese vídeo porque...",motivo.split("<br/>")[0],motivo.split("<br/>")[1],url)
+                resultado = advertencia.ok( "Non è possibile guardare il video perché...",motivo.split("<br/>")[0],motivo.split("<br/>")[1],url)
             else:
-                resultado = advertencia.ok( "No puedes ver ese vídeo porque...",motivo,url)
+                resultado = advertencia.ok( "Non è possibile guardare il video perché...",motivo,url)
         else:
-            resultado = advertencia.ok( "No puedes ver ese vídeo porque...","El servidor donde está alojado no está","soportado en streamondemand todavía",url)
+            resultado = advertencia.ok( "Non è possibile guardare il video perché...","Il server che lo ospita non è","ancora supportato da streamondemand",url)
 
         if channel=="favoritos": 
             opciones.append(config.get_localized_string(30154)) # "Quitar de favoritos"
@@ -496,7 +496,7 @@ def play_video(channel="",server="",url="",category="",title="", thumbnail="",pl
     # Si hay un tiempo de espera (como en megaupload), lo impone ahora
     if wait_time>0:
         logger.info("b2")
-        continuar = handle_wait(wait_time,server,"Cargando vídeo...")
+        continuar = handle_wait(wait_time,server,"Caricamento vídeo...")
         if not continuar:
             return
 
@@ -523,7 +523,7 @@ def play_video(channel="",server="",url="",category="",title="", thumbnail="",pl
                 try:
                   os.remove(ficherosubtitulo)
                 except IOError:
-                  logger.info("Error al eliminar el archivo subtitulo.srt "+ficherosubtitulo)
+                  logger.info("Errore nell'eliminazione del file subtitulo.srt "+ficherosubtitulo)
                   raise
         
             from core import scrapertools
@@ -535,7 +535,7 @@ def play_video(channel="",server="",url="",category="",title="", thumbnail="",pl
             #from core import downloadtools
             #downloadtools.downloadfile(subtitle, ficherosubtitulo )
         except:
-            logger.info("Error al descargar el subtítulo")
+            logger.info("Errore nel download del sottotitolo")
 
     # Lanza el reproductor
     if strmfile: #Si es un fichero strm no hace falta el play
@@ -657,7 +657,7 @@ def handle_wait(time_to_wait,title,text):
         secs = secs + 1
         percent = increment*secs
         secs_left = str((time_to_wait - secs))
-        remaining_display = ' Espera '+secs_left+' segundos para que comience el vídeo...'
+        remaining_display = ' Attendi '+secs_left+' secondi per il video...'
         espera.update(percent,' '+text,remaining_display)
         xbmc.sleep(1000)
         if (espera.iscanceled()):
@@ -665,10 +665,10 @@ def handle_wait(time_to_wait,title,text):
              break
 
     if cancelled == True:     
-         logger.info ('Espera cancelada')
+         logger.info ('Attesa eliminata')
          return False
     else:
-         logger.info ('Espera finalizada')
+         logger.info ('Attesa conclusa')
          return True
 
 def getLibraryInfo (mediaurl):
@@ -923,8 +923,8 @@ def alert_no_puedes_ver_video(server,url,motivo):
     if server!="":
         advertencia = xbmcgui.Dialog()
         if "<br/>" in motivo:
-            resultado = advertencia.ok( "No puedes ver ese vídeo porque...",motivo.split("<br/>")[0],motivo.split("<br/>")[1],url)
+            resultado = advertencia.ok( "Non è possibile guardare il video perché...",motivo.split("<br/>")[0],motivo.split("<br/>")[1],url)
         else:
-            resultado = advertencia.ok( "No puedes ver ese vídeo porque...",motivo,url)
+            resultado = advertencia.ok( "Non è possibile guardare il video perché...",motivo,url)
     else:
-        resultado = advertencia.ok( "No puedes ver ese vídeo porque...","El servidor donde está alojado no está","soportado en streamondemand todavía",url)
+        resultado = advertencia.ok( "Non è possibile guardare il video perché...","Il server che lo ospita non è","ancora supportato da streamondemand",url)
