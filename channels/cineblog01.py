@@ -668,14 +668,21 @@ def findvid(item):
     data = anti_cloudflare(item.url)
     data = scrapertools.decodeHtmlentities(data).replace('http://cineblog01.pw', 'http://k4pp4.pw')
 
-    ## Extrae las entradas
+    ## Extract the quality format
+    patronvideos = '>([^<]+)</strong></div>'
+    matches = re.compile(patronvideos, re.DOTALL).finditer(data)
+    QualityStr = "";
+    for match in matches:
+        QualityStr = scrapertools.unescape(match.group(1))[6:]
+        logger.info("QualityStr:" + QualityStr)
 
+    ## Extrae las entradas
     streaming = scrapertools.find_single_match(data, '<strong>Streaming:</strong>(.*?)<table height="30">')
     patron = '<td><a href="([^"]+)" target="_blank">([^<]+)</a></td>'
     matches = re.compile(patron, re.DOTALL).findall(streaming)
     for scrapedurl, scrapedtitle in matches:
         print "##### findvideos Streaming ## %s ## %s ##" % (scrapedurl, scrapedtitle)
-        title = "[COLOR orange]Streaming:[/COLOR] " + item.title + " [COLOR blue][" + scrapedtitle + "][/COLOR]"
+        title = "[COLOR orange]Streaming:[/COLOR] " + item.title + " [COLOR grey]" + QualityStr + "[/COLOR] [COLOR blue][" + scrapedtitle + "][/COLOR]"
         itemlist.append(
             Item(channel=__channel__,
                  action="play",
@@ -691,7 +698,7 @@ def findvid(item):
     matches = re.compile(patron, re.DOTALL).findall(streaming_hd)
     for scrapedurl, scrapedtitle in matches:
         print "##### findvideos Streaming HD ## %s ## %s ##" % (scrapedurl, scrapedtitle)
-        title = "[COLOR yellow]Streaming HD:[/COLOR] " + item.title + " [COLOR blue][" + scrapedtitle + "][/COLOR]"
+        title = "[COLOR yellow]Streaming HD:[/COLOR] " + item.title + " [COLOR grey]" + QualityStr + "[/COLOR] [COLOR blue][" + scrapedtitle + "][/COLOR]"
         itemlist.append(
             Item(channel=__channel__,
                  action="play",
@@ -707,7 +714,7 @@ def findvid(item):
     matches = re.compile(patron, re.DOTALL).findall(streaming_3D)
     for scrapedurl, scrapedtitle in matches:
         print "##### findvideos Streaming 3D ## %s ## %s ##" % (scrapedurl, scrapedtitle)
-        title = "[COLOR pink]Streaming 3D:[/COLOR] " + item.title + " [COLOR blue][" + scrapedtitle + "][/COLOR]"
+        title = "[COLOR pink]Streaming 3D:[/COLOR] " + item.title + " [COLOR grey]" + QualityStr + "[/COLOR] [COLOR blue][" + scrapedtitle + "][/COLOR]"
         itemlist.append(
             Item(channel=__channel__,
                  action="play",
@@ -723,7 +730,7 @@ def findvid(item):
     matches = re.compile(patron, re.DOTALL).findall(download)
     for scrapedurl, scrapedtitle in matches:
         print "##### findvideos Download ## %s ## %s ##" % (scrapedurl, scrapedtitle)
-        title = "[COLOR aqua]Download:[/COLOR] " + item.title + " [COLOR blue][" + scrapedtitle + "][/COLOR]"
+        title = "[COLOR aqua]Download:[/COLOR] " + item.title + " [COLOR grey]" + QualityStr + "[/COLOR] [COLOR blue][" + scrapedtitle + "][/COLOR]"
         itemlist.append(
             Item(channel=__channel__,
                  action="play",
@@ -740,7 +747,7 @@ def findvid(item):
     matches = re.compile(patron, re.DOTALL).findall(download_hd)
     for scrapedurl, scrapedtitle in matches:
         print "##### findvideos Download HD ## %s ## %s ##" % (scrapedurl, scrapedtitle)
-        title = "[COLOR azure]Download HD:[/COLOR] " + item.title + " [COLOR blue][" + scrapedtitle + "][/COLOR]"
+        title = "[COLOR azure]Download HD:[/COLOR] " + item.title + " [COLOR grey]" + QualityStr + "[/COLOR] [COLOR blue][" + scrapedtitle + "][/COLOR]"
         itemlist.append(
             Item(channel=__channel__,
                  action="play",
