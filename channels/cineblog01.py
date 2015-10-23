@@ -671,7 +671,7 @@ def findvid(item):
     ## Extract the quality format
     patronvideos = '>([^<]+)</strong></div>'
     matches = re.compile(patronvideos, re.DOTALL).finditer(data)
-    QualityStr = "";
+    QualityStr = ""
     for match in matches:
         QualityStr = scrapertools.unescape(match.group(1))[6:]
         logger.info("QualityStr:" + QualityStr)
