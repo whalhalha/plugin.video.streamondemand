@@ -105,7 +105,7 @@ def episodios( item ):
     data = scrapertools.cache_page( item.url )
 
     ## Extrae las entradas (carpetas)
-    patron  = '<div class="col-md-3 col-sm-6 col-xs-6 ">.*?<div class="item-head">.*?<h3><a href="(.*?)".*?title="(.*?)">.*?</a>'
+    patron  = '<div class="item-head">\s*<h3><a href="(.*?)".*?>(.*?)</a>'
     matches = re.compile( patron, re.DOTALL ).findall( data )
    
     for scrapedurl,scrapedtitle in matches:
