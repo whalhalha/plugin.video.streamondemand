@@ -6,6 +6,7 @@
 #------------------------------------------------------------
 import urlparse,urllib2,urllib,re
 import os, sys
+import time
 
 from core import logger
 from core import config
@@ -26,6 +27,8 @@ headers = [
 ]
 
 host = "http://www.seriehd.org"
+sito = "http://www.seriehd.org"
+
 
 def isGeneric():
     return True
@@ -61,7 +64,19 @@ def sottomenu( item ):
     logger.info( "[seriehd.py] sottomenu" )
     itemlist = []
 
-    data = scrapertools.cache_page( item.url )
+    data = anti_cloudflare( item.url )
+
+    ## ------------------------------------------------
+    cookies = ""
+    matches = re.compile('(.seriehd.org.*?)\n', re.DOTALL).findall(config.get_cookie_data())
+    for cookie in matches:
+        name = cookie.split('\t')[5]
+        value = cookie.split('\t')[6]
+        cookies += name + "=" + value + ";"
+    headers.append(['Cookie', cookies[:-1]])
+    import urllib
+    _headers = urllib.urlencode(dict(headers))
+    ## ------------------------------------------------
 
     scrapertools.get_match( data, '<ul class="sub-menu">(.*?)</ul>' )
 
@@ -82,7 +97,20 @@ def fichas( item ):
     logger.info( "[seriehd.py] fichas" )
     itemlist = []
 
-    data = scrapertools.cache_page( item.url )
+    data = anti_cloudflare( item.url )
+
+    ## ------------------------------------------------
+    cookies = ""
+    matches = re.compile('(.seriehd.org.*?)\n', re.DOTALL).findall(config.get_cookie_data())
+    for cookie in matches:
+        name = cookie.split('\t')[5]
+        value = cookie.split('\t')[6]
+        cookies += name + "=" + value + ";"
+    headers.append(['Cookie', cookies[:-1]])
+    import urllib
+    _headers = urllib.urlencode(dict(headers))
+    ## ------------------------------------------------
+
 
     patron  = '<h2>(.*?)</h2>\s*'
     patron += '<img src="(.*?)" alt=".*?"/>\s*'
@@ -91,6 +119,8 @@ def fichas( item ):
     matches = re.compile( patron, re.DOTALL ).findall( data )
 
     for scrapedtitle, scrapedthumbnail, scrapedurl in matches:
+
+        scrapedthumbnail += "|" + _headers
 
         itemlist.append( Item( channel=__channel__, action="episodios", title=scrapedtitle, fulltitle=scrapedtitle, url=scrapedurl, show=scrapedtitle, thumbnail=scrapedthumbnail ) )
 
@@ -106,8 +136,20 @@ def episodios(item):
 
     itemlist = []
 
-    data = scrapertools.cache_page( item.url )
+    data = anti_cloudflare( item.url )
 
+    ## ------------------------------------------------
+    cookies = ""
+    matches = re.compile('(.seriehd.org.*?)\n', re.DOTALL).findall(config.get_cookie_data())
+    for cookie in matches:
+        name = cookie.split('\t')[5]
+        value = cookie.split('\t')[6]
+        cookies += name + "=" + value + ";"
+    headers.append(['Cookie', cookies[:-1]])
+    import urllib
+    _headers = urllib.urlencode(dict(headers))
+    ## ------------------------------------------------
+    
     seasons_data = scrapertools.get_match( data, '<select name="stagione" id="selSt">(.*?)</select>' )
     seasons = re.compile( 'data-stagione="(\d+)"', re.DOTALL ).findall( seasons_data )
 
@@ -172,3 +214,22 @@ def play( item ):
         videoitem.channel = __channel__
 
     return itemlist
+
+def anti_cloudflare(url):
+    # global headers
+
+    try:
+        resp_headers = scrapertools.get_headers_from_response(url, headers=headers)
+        resp_headers = dict(resp_headers)
+    except urllib2.HTTPError, e:
+        resp_headers = e.headers
+
+    if 'refresh' in resp_headers:
+        time.sleep(int(resp_headers['refresh'][:1]))
+
+        scrapertools.get_headers_from_response(sito + "/" + resp_headers['refresh'][7:], headers=headers)
+
+    return scrapertools.cache_page(url, headers=headers)
+
+
+
