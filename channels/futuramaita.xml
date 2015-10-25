@@ -6,7 +6,7 @@
     <update_url></update_url>
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
-    <version>3</version>
+    <version>4</version>
     <adult>false</version>
     <date>12/10/2015</date>
     <changes>Anti-Cloudflare for movies</changes>

@@ -17,16 +17,7 @@ __type__ = "generic"
 __title__ = "FuturamaITA Streaming"
 __language__ = "IT"
 
-sito = "http://futuramastreamingita.altervista.org/"
-
-headers = [
-    ['User-Agent', 'Mozilla/5.0 (Windows NT 6.1; rv:38.0) Gecko/20100101 Firefox/38.0'],
-    ['Accept-Encoding', 'gzip, deflate'],
-    ['Referer', 'http://futuramastreamingita.altervista.org/'],
-    ['Connection', 'keep-alive']
-]
-
-sitofilm = "http://thesimpsonstreaming.altervista.org/i-simpson-il-film-streaming/"
+host = "http://futuramastreamingita.altervista.org/"
 
 DEBUG = config.get_setting("debug")
 
@@ -40,7 +31,7 @@ def mainlist(item):
     itemlist = []
 
     # Descarga la página
-    data = scrapertools.cache_page(sito)
+    data = scrapertools.cache_page(host)
     logger.info(data)
 
     itemlist.append(
@@ -52,7 +43,7 @@ def mainlist(item):
     matches = re.compile(patronvideos, re.DOTALL).finditer(data)
     for match in matches:
         scrapedtitle = scrapertools.unescape(match.group(2))
-        scrapedurl = sito + match.group(1)
+        scrapedurl = host + match.group(1)
         if (DEBUG): logger.info(
             "title=[" + scrapedtitle + "], url=[" + scrapedurl + "]")
 
@@ -69,7 +60,7 @@ def mainlist(item):
     matches = re.compile(patronvideos, re.DOTALL).finditer(data)
     for match in matches:
         scrapedtitle = scrapertools.unescape(match.group(2))
-        scrapedurl = sito + match.group(1)
+        scrapedurl = host + match.group(1)
         if (DEBUG): logger.info(
             "title=[" + scrapedtitle + "], url=[" + scrapedurl + "]")
 
@@ -99,7 +90,7 @@ def listepisodes(item):
 
     for match in matches:
         scrapedtitle = scrapertools.unescape(match.group(2)).strip()
-        scrapedurl = sito + match.group(1)
+        scrapedurl = host + match.group(1)
         if (DEBUG): logger.info(
             "title=[" + scrapedtitle + "], url=[" + scrapedurl + "]")
 
@@ -107,8 +98,8 @@ def listepisodes(item):
         itemlist.append(
             Item(channel=__channel__,
                  action="findvideos",
-                 fulltitle=scrapedtitle,
-                 show=scrapedtitle,
+                 fulltitle=item.fulltitle,
+                 show=item.show,
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
                  url=scrapedurl))
 
