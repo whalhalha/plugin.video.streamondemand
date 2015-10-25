@@ -8,6 +8,7 @@ import urllib2
 import re
 import sys
 import time
+import binascii
 
 from core import logger
 from core import config
@@ -173,7 +174,8 @@ def episodios(item):
             itemlist.append(
                 Item(channel=__channel__,
                      action="findvideos",
-                     title=title, url=url,
+                     title=title,
+                     url=url,
                      fulltitle=item.fulltitle,
                      show=item.show,
                      thumbnail=item.thumbnail))
@@ -200,8 +202,6 @@ def episodios(item):
 def findvideos(item):
     logger.info("[seriehd.py] findvideos")
 
-    itemlist = []
-
     url = item.url.split('?')[0]
     post = item.url.split('?')[1]
     referer = item.url.split('?')[2]
@@ -213,30 +213,28 @@ def findvideos(item):
     patron = '<iframe id="iframeVid" width="100%" height="500px" src="([^"]+)" allowfullscreen></iframe>'
     url = scrapertools.find_single_match(data, patron)
 
-    server = url.split('/')[2]
+    if 'hdpass.link' in url:
+        data = scrapertools.cache_page(url, headers=headers)
 
-    title = "[" + server + "] " + item.title
+        patron = '<iframe width="100%" height="100%" src="([^"]+)" frameborder="0" scrolling="no" allowfullscreen />'
+        url_tmp = scrapertools.find_single_match(data, patron)
 
-    itemlist.append(
-        Item(channel=__channel__,
-             action="play",
-             title=title,
-             url=url,
-             fulltitle=item.fulltitle,
-             show=item.show,
-             thumbnail=item.thumbnail,
-             folder=False))
+        if url_tmp == '':
+            data = scrapertools.cache_page(url + '&randid=0', headers=headers)
+            patron = r'; eval\(unescape\("(.*?)",(\[".*?;"\]),(\[".*?\])\)\);'
+            [(par1, par2, par3)] = re.compile(patron, re.DOTALL).findall(data)
+            par2 = eval(par2, {'__builtins__': None}, {})
+            par3 = eval(par3, {'__builtins__': None}, {})
+            url = unescape(par1, par2, par3)
+            url = scrapertools.find_single_match(url, r'tvar Data = \\"([^\\]+)\\";')
+            url = binascii.unhexlify(url).replace(r'\/', '/')
+        else:
+            url = url_tmp
 
-    return itemlist
-
-
-def play(item):
-    logger.info("[seriehd.py] play")
-
-    itemlist = servertools.find_video_items(data=item.url)
+    itemlist = servertools.find_video_items(data=url)
 
     for videoitem in itemlist:
-        videoitem.title = item.show
+        videoitem.title = item.title + videoitem.title
         videoitem.show = item.show
         videoitem.fulltitle = item.fulltitle
         videoitem.thumbnail = item.thumbnail
@@ -260,3 +258,13 @@ def anti_cloudflare(url):
         scrapertools.get_headers_from_response(host + "/" + resp_headers['refresh'][7:], headers=headers)
 
     return scrapertools.cache_page(url, headers=headers)
+
+
+def unescape(par1, par2, par3):
+    var1 = par1
+    for ii in xrange(0, len(par2)):
+        var1 = re.sub(par2[ii], par3[ii], var1)
+
+    var1 = re.sub("%26", "&", var1)
+    var1 = re.sub("%3B", ";", var1)
+    return var1.replace('<!--?--><?', '<!--?-->')
