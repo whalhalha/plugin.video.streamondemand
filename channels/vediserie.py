@@ -121,7 +121,9 @@ def fichas(item):
 
     for scrapedthumbnail, scrapedurl, scrapedtitle in matches:
         scrapedthumbnail += "|" + _headers
-
+        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
+        if scrapedtitle.startswith('<span class="year">'):
+            scrapedtitle = scrapedtitle[19:]
         itemlist.append(
             Item(channel=__channel__,
                  action="episodios",
