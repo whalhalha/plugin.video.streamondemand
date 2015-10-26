@@ -42,7 +42,7 @@ def mainlist(item):
                      title="[COLOR azure]Novita' Al Cinema[/COLOR]",
                      action="peliculas",
                      url="%s/streaming-al-cinema/" % host,
-                     thumbnail="http://dc584.4shared.com/img/XImgcB94/s7/13feaf0b538/saquinho_de_pipoca_01"),
+                     thumbnail="http://orig03.deviantart.net/6889/f/2014/079/7/b/movies_and_popcorn_folder_icon_by_matheusgrilo-d7ay4tw.png"),
                 Item(channel=__channel__,
                      title="[COLOR azure]Popolari[/COLOR]",
                      action="pelis_top100",
