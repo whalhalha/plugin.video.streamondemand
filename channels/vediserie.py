@@ -42,11 +42,11 @@ def mainlist(item):
                      title="[COLOR azure]Serie TV[/COLOR]",
                      url=host,
                      thumbnail="http://i.imgur.com/rO0ggX2.png"),
-                #Item(channel=__channel__,
-                #     action="sottomenu",
-                #     title="[COLOR orange]Sottomenu...[/COLOR]",
-                #     url=host,
-                #     thumbnail="http://i37.photobucket.com/albums/e88/xzener/NewIcons.png"),
+                Item(channel=__channel__,
+                     action="list_a_z",
+                     title="[COLOR orange]Ordine Alfabetico A-Z[/COLOR]",
+                     url="http://www.vediserie.com/lista-completa-serie-tv/",
+                     thumbnail="http://i37.photobucket.com/albums/e88/xzener/NewIcons.png"),
                 Item(channel=__channel__,
                      action="search",
                      title="[COLOR yellow]Cerca...[/COLOR]",
@@ -71,13 +71,13 @@ def search(item, texto):
         return []
 
 
-def sottomenu(item):
-    logger.info("[vediserie.py] sottomenu")
+def list_a_z(item):
+    logger.info("[vediserie.py] ordine alfabetico")
     itemlist = []
 
     data = anti_cloudflare(item.url)
 
-    patron = '<a href="([^"]+)">([^<]+)</a>'
+    patron = '<li><a href="(.*?)" title="(.*?)">.*?</a></li>'
 
     matches = re.compile(patron, re.DOTALL).findall(data)
 
@@ -88,11 +88,7 @@ def sottomenu(item):
                  title=scrapedtitle,
                  url=scrapedurl))
 
-    ## Elimina 'Serie TV' de la lista de 'sottomenu'
-    itemlist.pop(0)
-
     return itemlist
-
 
 def fichas(item):
     logger.info("[vediserie.py] fichas")
