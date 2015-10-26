@@ -131,7 +131,7 @@ def fichas(item):
                  show=scrapedtitle,
                  thumbnail=scrapedthumbnail))
 
-    patron = "<span class='current'>\d+</span><a rel='nofollow' class='page larger' href='([^']+)'>\d+</a>"
+    patron = '<a class="nextpostslink" rel="next" href="(.*?)">»</a>'
     next_page = scrapertools.find_single_match(data, patron)
     if next_page != "":
         itemlist.append(
@@ -141,7 +141,6 @@ def fichas(item):
                  url=next_page))
 
     return itemlist
-
 
 def episodios(item):
     logger.info("[vediserie.py] episodios")
