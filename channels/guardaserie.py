@@ -188,7 +188,7 @@ def episodios(item):
             itemlist.append( Item( channel=__channel__, action="findvideos", title= title, url=url, fulltitle=item.title, show=item.title, thumbnail=item.thumbnail ) )
 
     if config.get_library_support():
-        itemlist.append( Item(channel=__channel__, title= item.title , url=item.url, action="add_serie_to_library", extra="episodios", show=item.show) )
+        itemlist.append( Item(channel=__channel__, title="[COLOR azure]Aggiungi [/COLOR]" + item.title + "[COLOR azure] alla libreria di Kodi[/COLOR]", url=item.url, action="add_serie_to_library", extra="episodios", show=item.show) )
         itemlist.append( Item(channel=__channel__, title="[COLOR azure]Scarica tutti gli episodi della serie[/COLOR]", url=item.url, action="download_all_episodes", extra="episodios", show=item.show) )
 
     return itemlist
