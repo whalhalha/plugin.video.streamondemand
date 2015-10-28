@@ -53,7 +53,7 @@ def mainlist(item):
                       title="[COLOR azure]Saint Seiya - Soul Of Gold[/COLOR]",
                       action="episodisoul",
                       url="http://pastebin.com/XsdtYBhU",
-                      thumbnail="https://www.topanimestream.com/ImageHost/53/33/Saint_Seiya_The_Lost_Canvas__Meiou_Shinwa_2_poster.jpg",
+                      thumbnail="http://i.imgur.com/0rYG1mV.jpg",
                       fanart="http://vignette4.wikia.nocookie.net/saintseiya/images/8/8e/Gold_Saints_%28No_Cloths%29.png/revision/latest?cb=20150413225923"),
                 
                 Item( channel=__channel__,
