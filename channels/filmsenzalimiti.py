@@ -46,14 +46,19 @@ def mainlist(item):
                      url="http://www.filmsenzalimiti.co/genere/subita",
                      thumbnail="http://i.imgur.com/qUENzxl.png"),
                 Item(channel=__channel__,
+                     action="search",
+                     title="[COLOR yellow]Cerca...[/COLOR]",
+                     thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search"),
+                Item(channel=__channel__,
                      title="[COLOR azure]Serie TV[/COLOR]",
                      extra="serie",
                      action="novedades",
                      url="http://www.filmsenzalimiti.co/genere/serie-tv",
                      thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/New%20TV%20Shows.png"),
                 Item(channel=__channel__,
+                     title="[COLOR yellow]Cerca Serie TV...[/COLOR]",
                      action="search",
-                     title="[COLOR yellow]Cerca...[/COLOR]",
+                     extra="serie",
                      thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search")]
     return itemlist
 
@@ -90,13 +95,17 @@ def search(item, texto):
     logger.info("[filmsenzalimiti.py] " + item.url + " search " + texto)
     item.url = "http://www.filmsenzalimiti.co/?s=" + texto
     try:
-        return novedades(item)
+        if item.extra == "serie":
+            return novedades(item)
+        else:
+            return novedades(item)
     # Se captura la excepción, para no interrumpir al buscador global si un canal falla
     except:
         import sys
         for line in sys.exc_info():
             logger.error("%s" % line)
         return []
+
 
 
 def novedades(item):
