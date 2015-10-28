@@ -67,7 +67,7 @@ def mainlist(item):
                       title="[COLOR azure]Saint Seiya - The Lost Canvas[/COLOR]",
                       action="episodicanvas",
                       url="http://archive.forumcommunity.net/?t=53018304",
-                      thumbnail="http://www.thetvking.com/images/tvShows/poster/Saint%20Seiya%20The%20Lost%20Canvas%20%E2%80%93%20Hades%20Mythology.jpg",
+                      thumbnail="https://www.topanimestream.com/ImageHost/53/33/Saint_Seiya_The_Lost_Canvas__Meiou_Shinwa_2_poster.jpg",
                       fanart="http://i.ytimg.com/vi/9QQX6Rtw1IU/maxresdefault.jpg")]
 
 
