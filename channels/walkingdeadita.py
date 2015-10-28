@@ -69,7 +69,8 @@ def mainlist(item):
                  show=scrapedtitle,
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
                  url=scrapedurl,
-                 thumbnail=thumbnail))
+                 thumbnail=thumbnail,
+                 fanart="http://images2.alphacoders.com/240/240942.jpg"))
 
     return itemlist
 
@@ -99,7 +100,8 @@ def listepisodes(item):
                  show=item.show,
                  title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
                  url=scrapedurl,
-                 thumbnail="http://i.imgur.com/irAU6Mr.png?1"))
+                 thumbnail="http://i.imgur.com/irAU6Mr.png?1",
+                 fanart="http://images2.alphacoders.com/240/240942.jpg"))
 
     if config.get_library_support() and len(itemlist) != 0:
         itemlist.append(
