@@ -131,6 +131,7 @@ def peliculasx(item):
         scrapedplot = html[start:end]
         scrapedplot = re.sub(r'<[^>]*>', '', scrapedplot)
         scrapedplot = scrapertools.decodeHtmlentities(scrapedplot)
+        scrapedtitle = scrapedtitle.strip()
         if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
         itemlist.append( Item(channel=__channel__, action="findvideos", fulltitle=scrapedtitle, show=scrapedtitle, title=scrapedtitle, url=scrapedurl , thumbnail=scrapedthumbnail , plot=scrapedplot , folder=True, fanart=scrapedthumbnail) )
 
