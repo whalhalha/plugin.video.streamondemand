@@ -65,7 +65,7 @@ def find_videos(text):
     encontrados = set()
     devuelve = []
 
-    patronvideos = 'http://(?:www.)?exashare.com/(?:embed\-)?([0-9A-Za-z]+)(?:\-[0-9]+x[0-9]+.html)?'
+    patronvideos = 'http://(?:www.)?exashare.com/(?:embed\-)?(?!make)(?!login)(?!contact)(?!player)([0-9A-Za-z]+)(?:\-[0-9]+x[0-9]+.html)?'
     logger.info("[exashare.py] find_videos #" + patronvideos + "#")
 
     matches = re.compile(patronvideos, re.DOTALL).findall(text)
