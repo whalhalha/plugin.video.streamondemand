@@ -53,6 +53,11 @@ def mainlist(item):
                      url="%s/category/serie-tv/" % host,
                      thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/New%20TV%20Shows.png"),
                 Item(channel=__channel__,
+                     title="[COLOR yellow]Cerca Serie TV...[/COLOR]",
+                     action="search",
+                     extra="serie",
+                     thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search"),
+                Item(channel=__channel__,
                      title="[COLOR azure]Categorie[/COLOR]",
                      action="categorias",
                      url="%s/categorie-film/" % host,
@@ -247,7 +252,7 @@ def episodios(item):
 def findvid_serie(item):
     logger.info("[italianstream.py] findvideos")
 
-    ## Descarga la página
+    # Descarga la página
     data = item.extra
 
     itemlist = servertools.find_video_items(data=data)
