@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <version>
 	<name>channelselector</name>
-	<tag>96</tag>
-	<date>28/10/2015</date>
-	<changes>Added new channel</changes>
+	<tag>97</tag>
+	<date>01/11/2015</date>
+	<changes>Moved CV function in Channels Menu</changes>
 </version>
