@@ -63,7 +63,6 @@ def mainlist(item):
         Item(channel=__channel__,
              title="[COLOR orange]Cerca...[/COLOR]",
              action="search",
-             url=host,
              thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search")]
 
     return itemlist
@@ -72,7 +71,7 @@ def mainlist(item):
 def search(item, texto):
     logger.info("[altadefinizioneclick.py] " + item.url + " search " + texto)
 
-    item.url += "/?s=" + texto
+    item.url = host + "/?s=" + texto
 
     try:
         return fichas(item)
