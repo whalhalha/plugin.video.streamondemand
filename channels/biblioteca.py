@@ -5,13 +5,13 @@
 # http://www.mimediacenter.info/foro/viewforum.php?f=36
 # ------------------------------------------------------------
 import base64
+import datetime
 import json
 import re
-import datetime
 import urllib
 
-from core import logger
 from core import config
+from core import logger
 from core import scrapertools
 from core.item import Item
 
@@ -42,67 +42,66 @@ def isGeneric():
 
 def mainlist(item):
     logger.info("streamondemand.biblioteca mainlist")
-    itemlist = [  Item(channel="buscador",
-                       title="[COLOR yellow]Cerca nei Canali...[/COLOR]",
-                       action="mainlist",
-                       thumbnail="http://i.imgur.com/pE5WSZp.png"),
-                  Item(channel=__channel__,
-                       title="[COLOR yellow]Cerca Film TMDB...[/COLOR]",
-                       action="search",
-                       extra="tmdb_mov",
-                       thumbnail="http://i.imgur.com/B1H1G8U.png"),
-                  Item(channel=__channel__,
-                       title="[COLOR yellow]Cerca Attori/Registi TMDB...[/COLOR]",
-                       action="search",
-                       extra="tmdb_att_reg",
-                       thumbnail="http://i.imgur.com/efuEeNu.png"),
-                  Item(channel=__channel__,
-                       title="[COLOR yellow]Cerca Film simili TMDB...[/COLOR]",
-                       action="search",
-                       extra="tmdb_film_sim",
-                       thumbnail="http://i.imgur.com/JmcvZDL.png"),
-                  Item(channel=__channel__,
-                       title="[COLOR yellow]Cerca Serie TV TMDB...[/COLOR]",
-                       action="search",
-                       extra="tmdb_tv",
-                       thumbnail="https://i.imgur.com/2ZWjLn5.jpg?1"),
-                  Item(channel=__channel__,
-                       title="[COLOR yellow]Al Cinema[/COLOR]",
-                       action="tmdb_list",
-                       url='http://api.themoviedb.org/3/movie/now_playing?api_key=%s&language=it&page=1' % tmdb_key,
-                       thumbnail="http://i.imgur.com/B16HnVh.png"),
-                  Item(channel=__channel__,
-                       title="[COLOR yellow]Più richiesti[/COLOR]",
-                       action="tmdb_list",
-                       url='http://api.themoviedb.org/3/movie/popular?api_key=%s&language=it&page=1' % tmdb_key,
-                       thumbnail="http://i.imgur.com/8IBjyzw.png"),
-                  Item(channel=__channel__,
-                       title="[COLOR yellow]Più visti[/COLOR]",
-                       action="tmdb_list",
-                       url='http://api.themoviedb.org/3/movie/top_rated?api_key=%s&language=it&page=1' % tmdb_key,
-                       thumbnail="http://www.clipartbest.com/cliparts/RiG/6qn/RiG6qn79T.png"),
-                  Item(channel=__channel__,
-                       title="[COLOR yellow]Più votati[/COLOR]",
-                       action="tmdb_list",
-                       url='http://api.themoviedb.org/3/discover/movie?api_key=%s&certification_country=US&language=it&page=1&sort_by=vote_count.desc' % tmdb_key,
-                       thumbnail="http://i.imgur.com/5ShnO8w.png"),
-                  #Item(channel=__channel__,
-                  #     title="[COLOR yellow]Premi Oscar[/COLOR]",
-                  #     action="tmdb_oscar",
-                  #     url='http://api.themoviedb.org/3/list/509ec17b19c2950a0600050d?api_key=%s&language=it' % tmdb_key,
-                  #     thumbnail="http://i.imgur.com/5ShnO8w.png"),
-                  Item(channel=__channel__,
-                       title="[COLOR yellow]Ultimi 2 mesi[/COLOR]",
-                       action="tmdb_list",
-                       url='http://api.themoviedb.org/3/discover/movie?api_key=%s&primary_release_date.gte=%s&primary_release_date.lte=%s&language=it&page=1' % (
-                           tmdb_key, year_date, month2_date),
-                       thumbnail="http://i.imgur.com/CsizqUI.png"),
-                  Item(channel=__channel__,
-                       title="[COLOR yellow]Genere[/COLOR]",
-                       action="tmdb_genre_list",
-                       url='http://api.themoviedb.org/3/genre/movie/list?api_key=%s&language=it' % tmdb_key,
-                       thumbnail="http://i.imgur.com/uotyBbU.png")
-                  ]
+    itemlist = [Item(channel="buscador",
+                     title="[COLOR yellow]Cerca nei Canali...[/COLOR]",
+                     action="mainlist",
+                     thumbnail="http://i.imgur.com/pE5WSZp.png"),
+                Item(channel=__channel__,
+                     title="[COLOR yellow]Cerca Film TMDB...[/COLOR]",
+                     action="search",
+                     extra="tmdb_mov",
+                     thumbnail="http://i.imgur.com/B1H1G8U.png"),
+                Item(channel=__channel__,
+                     title="[COLOR yellow]Cerca Attori/Registi TMDB...[/COLOR]",
+                     action="search",
+                     extra="tmdb_att_reg",
+                     thumbnail="http://i.imgur.com/efuEeNu.png"),
+                Item(channel=__channel__,
+                     title="[COLOR yellow]Cerca Film simili TMDB...[/COLOR]",
+                     action="search",
+                     extra="tmdb_film_sim",
+                     thumbnail="http://i.imgur.com/JmcvZDL.png"),
+                Item(channel=__channel__,
+                     title="[COLOR yellow]Cerca Serie TV TMDB...[/COLOR]",
+                     action="search",
+                     extra="tmdb_tv",
+                     thumbnail="https://i.imgur.com/2ZWjLn5.jpg?1"),
+                Item(channel=__channel__,
+                     title="[COLOR yellow]Al Cinema[/COLOR]",
+                     action="tmdb_list",
+                     url='http://api.themoviedb.org/3/movie/now_playing?api_key=%s&language=it&page=1' % tmdb_key,
+                     thumbnail="http://i.imgur.com/B16HnVh.png"),
+                Item(channel=__channel__,
+                     title="[COLOR yellow]Più richiesti[/COLOR]",
+                     action="tmdb_list",
+                     url='http://api.themoviedb.org/3/movie/popular?api_key=%s&language=it&page=1' % tmdb_key,
+                     thumbnail="http://i.imgur.com/8IBjyzw.png"),
+                Item(channel=__channel__,
+                     title="[COLOR yellow]Più visti[/COLOR]",
+                     action="tmdb_list",
+                     url='http://api.themoviedb.org/3/movie/top_rated?api_key=%s&language=it&page=1' % tmdb_key,
+                     thumbnail="http://www.clipartbest.com/cliparts/RiG/6qn/RiG6qn79T.png"),
+                Item(channel=__channel__,
+                     title="[COLOR yellow]Più votati[/COLOR]",
+                     action="tmdb_list",
+                     url='http://api.themoviedb.org/3/discover/movie?api_key=%s&certification_country=US&language=it&page=1&sort_by=vote_count.desc' % tmdb_key,
+                     thumbnail="http://i.imgur.com/5ShnO8w.png"),
+                Item(channel=__channel__,
+                     title="[COLOR yellow]Premi Oscar[/COLOR]",
+                     action="tmdb_oscar",
+                     url='http://api.themoviedb.org/3/list/509ec17b19c2950a0600050d?api_key=%s&language=it' % tmdb_key,
+                     thumbnail="http://i.imgur.com/5ShnO8w.png"),
+                Item(channel=__channel__,
+                     title="[COLOR yellow]Ultimi 2 mesi[/COLOR]",
+                     action="tmdb_list",
+                     url='http://api.themoviedb.org/3/discover/movie?api_key=%s&primary_release_date.gte=%s&primary_release_date.lte=%s&language=it&page=1' % (
+                         tmdb_key, year_date, month2_date),
+                     thumbnail="http://i.imgur.com/CsizqUI.png"),
+                Item(channel=__channel__,
+                     title="[COLOR yellow]Genere[/COLOR]",
+                     action="tmdb_genre_list",
+                     url='http://api.themoviedb.org/3/genre/movie/list?api_key=%s&language=it' % tmdb_key,
+                     thumbnail="http://i.imgur.com/uotyBbU.png")]
 
     return itemlist
 
@@ -113,15 +112,15 @@ def search(item, texto):
     try:
         if item.extra == "tmdb_mov":
             item.url = 'http://api.themoviedb.org/3/search/movie?api_key=%s&query=%s&language=it&page=1' % (
-            tmdb_key, texto)
+                tmdb_key, texto)
             return tmdb_list(item)
         if item.extra == "tmdb_tv":
             item.url = 'http://api.themoviedb.org/3/search/tv?api_key=%s&query=%s&language=it&page=1' % (
-            tmdb_key, texto)
+                tmdb_key, texto)
             return tmdb_serie_list(item)
         if item.extra == "tmdb_film_sim":
             item.url = 'http://api.themoviedb.org/3/search/movie?api_key=%s&query=%s&append_to_response=similar_movies,alternative_title&language=it&page=1' % (
-            tmdb_key, texto)
+                tmdb_key, texto)
             return tmdb_list(item)
         if item.extra == "tmdb_att_reg":
             item.url = 'http://api.themoviedb.org/3/search/person?api_key=%s&query=%s&include_adult=false&language=it&page=1' % (
@@ -136,12 +135,11 @@ def search(item, texto):
         return []
 
 
-
 def tmdb_oscar(item):
     try:
         result = scrapertools.cache_page(item.url)
         result = json.loads(result)
-        items = result['results']
+        items = result['items']
     except:
         return
 
@@ -152,12 +150,22 @@ def tmdb_oscar(item):
             title = scrapertools.decodeHtmlentities(title)
             title = title.encode('utf-8')
 
-            poster = item['image_url']
-            if poster == '' or poster == None:
+            poster = item['poster_path']
+            if poster == '' or poster is None:
                 raise Exception()
             else:
                 poster = '%s%s' % (tmdb_poster, poster)
             poster = poster.encode('utf-8')
+
+            fanart = item['backdrop_path']
+            if fanart == '' or fanart is None: fanart = '0'
+            if not fanart == '0': fanart = '%s%s' % (tmdb_image, fanart)
+            fanart = fanart.encode('utf-8')
+
+            plot = item['overview']
+            if plot == '' or plot is None: plot = '0'
+            plot = scrapertools.decodeHtmlentities(plot)
+            plot = plot.encode('utf-8')
 
             itemlist.append(
                 Item(channel=__channel__,
@@ -165,7 +173,9 @@ def tmdb_oscar(item):
                      extra=urllib.quote_plus(title),
                      title="[COLOR azure]%s[/COLOR]" % title,
                      fulltitle=title,
+                     plot=plot,
                      thumbnail=poster,
+                     fanart=fanart,
                      folder=True))
         except:
             pass
@@ -199,7 +209,7 @@ def tmdb_list(item):
             title = title.encode('utf-8')
 
             poster = item['poster_path']
-            if poster == '' or poster == None:
+            if poster == '' or poster is None:
                 raise Exception()
             else:
                 poster = '%s%s' % (tmdb_poster, poster)
@@ -270,7 +280,7 @@ def tmdb_serie_list(item):
             title = title.encode('utf-8')
 
             poster = item['poster_path']
-            if poster == '' or poster == None:
+            if poster == '' or poster is None:
                 raise Exception()
             else:
                 poster = '%s%s' % (tmdb_poster, poster)
@@ -288,7 +298,7 @@ def tmdb_serie_list(item):
                 plot = item['overview']
             except:
                 plot = '0'
-            if plot == '' or plot == None: plot = '0'
+            if plot == '' or plot is None: plot = '0'
             plot = scrapertools.decodeHtmlentities(plot)
             plot = plot.encode('utf-8')
 
