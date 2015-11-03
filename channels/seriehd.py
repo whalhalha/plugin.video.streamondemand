@@ -4,14 +4,14 @@
 # Canal para seriehd - based on guardaserie channel
 # http://blog.tvalacarta.info/plugin-xbmc/streamondemand.
 # ------------------------------------------------------------
-import urllib2
+import binascii
 import re
 import sys
 import time
-import binascii
+import urllib2
 
-from core import logger
 from core import config
+from core import logger
 from core import scrapertools
 from core.item import Item
 from servers import servertools
@@ -216,20 +216,30 @@ def findvideos(item):
     if 'hdpass.link' in url:
         data = scrapertools.cache_page(url, headers=headers)
 
-        patron = '<iframe width="100%" height="100%" src="([^"]+)" frameborder="0" scrolling="no" allowfullscreen />'
-        url_tmp = scrapertools.find_single_match(data, patron)
+        start = data.find('<ul id="mirrors">')
+        end = data.find('</ul>', start)
+        data = data[start:end]
 
-        if url_tmp == '':
-            data = scrapertools.cache_page(url + '&randid=0', headers=headers)
-            patron = r'; eval\(unescape\("(.*?)",(\[".*?;"\]),(\[".*?\])\)\);'
-            [(par1, par2, par3)] = re.compile(patron, re.DOTALL).findall(data)
-            par2 = eval(par2, {'__builtins__': None}, {})
-            par3 = eval(par3, {'__builtins__': None}, {})
-            url = unescape(par1, par2, par3)
-            url = scrapertools.find_single_match(url, r'tvar Data = \\"([^\\]+)\\";')
-            url = binascii.unhexlify(url).replace(r'\/', '/')
-        else:
-            url = url_tmp
+        patron = '<form method="get" action="">\s*'
+        patron += '<input type="hidden" name="([^"]+)" value="([^"]+)"/>\s*'
+        patron += '<input type="hidden" name="([^"]+)" value="([^"]+)"/>\s*'
+        patron += '<input type="submit" class="[^"]*" name="([^"]+)" value="([^"]+)"/>\s*'
+        patron += '</form>'
+
+        html = []
+        for name1, val1, name2, val2, name3, val3 in re.compile(patron).findall(data):
+            get_data = '%s=%s&%s=%s&%s=%s' % (name1, val1, name2, val2, name3, val3)
+            tmp_data = scrapertools.cache_page('http://hdpass.link/film.php?randid=0&' + get_data, headers=headers)
+            if 'Google' in get_data:
+                patron = r'; eval\(unescape\("(.*?)",(\[".*?;"\]),(\[".*?\])\)\);'
+                [(par1, par2, par3)] = re.compile(patron, re.DOTALL).findall(tmp_data)
+                par2 = eval(par2, {'__builtins__': None}, {})
+                par3 = eval(par3, {'__builtins__': None}, {})
+                tmp_data = unescape(par1, par2, par3)
+                tmp_data = scrapertools.find_single_match(tmp_data, r'tvar Data = \\"([^\\]+)\\";')
+                tmp_data = binascii.unhexlify(tmp_data).replace(r'\/', '/')
+            html.append(tmp_data)
+        url = ''.join(html)
 
     itemlist = servertools.find_video_items(data=url)
 
