@@ -4,14 +4,14 @@
 # Canal para altadefinizione01
 # http://www.mimediacenter.info/foro/viewforum.php?f=36
 # ------------------------------------------------------------
-import urlparse
 import re
 import sys
-import urllib2
 import time
+import urllib2
+import urlparse
 
-from core import logger
 from core import config
+from core import logger
 from core import scrapertools
 from core.item import Item
 from servers import servertools
@@ -191,7 +191,7 @@ def findvid(item):
     itemlist = servertools.find_video_items(data=data)
 
     for videoitem in itemlist:
-        videoitem.title = "".join([item.title, '[COLOR green][B]'+videoitem.title+'[/B][/COLOR]'])
+        videoitem.title = "".join([item.title, '[COLOR green][B]' + videoitem.title + '[/B][/COLOR]'])
         videoitem.fulltitle = item.fulltitle
         videoitem.show = item.show
         videoitem.thumbnail = item.thumbnail
@@ -215,4 +215,3 @@ def anti_cloudflare(url):
         scrapertools.get_headers_from_response(sito + resp_headers['refresh'][7:], headers=headers)
 
     return scrapertools.cache_page(url, headers=headers)
-
