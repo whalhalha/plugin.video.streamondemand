@@ -4,14 +4,13 @@
 # Canal para vediserie - based on seriehd channel
 # http://blog.tvalacarta.info/plugin-xbmc/streamondemand.
 # ------------------------------------------------------------
-import urllib2
 import re
 import sys
 import time
-import binascii
+import urllib2
 
-from core import logger
 from core import config
+from core import logger
 from core import scrapertools
 from core.item import Item
 from servers import servertools
@@ -45,7 +44,7 @@ def mainlist(item):
                 Item(channel=__channel__,
                      action="list_a_z",
                      title="[COLOR orange]Ordine Alfabetico A-Z[/COLOR]",
-                     url="http://www.vediserie.com/lista-completa-serie-tv/",
+                     url="%s/lista-completa-serie-tv/" % host,
                      thumbnail="http://i37.photobucket.com/albums/e88/xzener/NewIcons.png"),
                 Item(channel=__channel__,
                      action="search",
@@ -84,11 +83,12 @@ def list_a_z(item):
     for scrapedurl, scrapedtitle in matches:
         itemlist.append(
             Item(channel=__channel__,
-                 action="fichas",
+                 action="episodios",
                  title=scrapedtitle,
                  url=scrapedurl))
 
     return itemlist
+
 
 def fichas(item):
     logger.info("[vediserie.py] fichas")
@@ -108,7 +108,7 @@ def fichas(item):
     _headers = urllib.urlencode(dict(headers))
     ## ------------------------------------------------
 
-    patron  = '<h2>[^>]+>\s*'
+    patron = '<h2>[^>]+>\s*'
     patron += '<img[^=]+=[^=]+=[^=]+="(.*?)"[^>]+>\s*'
     patron += '<A HREF=(.*?)>[^>]+>[^>]+>[^>]+>\s*'
     patron += '[^>]+>[^>]+>(.*?)</[^>]+>[^>]+>'
@@ -125,7 +125,7 @@ def fichas(item):
                  action="episodios",
                  title=scrapedtitle,
                  fulltitle=scrapedtitle,
-                 url=scrapedurl,
+                 url=scrapedurl.replace('"', ''),
                  show=scrapedtitle,
                  thumbnail=scrapedthumbnail))
 
@@ -140,43 +140,35 @@ def fichas(item):
 
     return itemlist
 
+
 def episodios(item):
     logger.info("[vediserie.py] episodios")
 
     itemlist = []
 
+    ## Descarga la página
     data = anti_cloudflare(item.url)
 
-    patron = '<select name="stagione" id="selSt">(.*?)</select>'
-    seasons_data = scrapertools.find_single_match(data, patron)
-    seasons = re.compile('data-stagione="(\d+)"', re.DOTALL).findall(seasons_data)
+    patron = r'<div class="list" data-stagione="([^"]+)">\s*'
+    patron += r'<ul class="listEpis">\s*'
+    patron += r'<li><a href="javascript:void\(0\)" data-link="([^"]+)" data-id="([^"]+)">'
 
-    for scrapedseason in seasons:
+    matches = re.compile(patron, re.DOTALL).findall(data)
 
-        patron = '<div class="list[^"]+" data-stagione="' + scrapedseason + '">(.*?)</div>'
-        episodes_data = scrapertools.find_single_match(data, patron)
-        episodes = re.compile('data-id="(\d+)"', re.DOTALL).findall(episodes_data)
-
-        for scrapedepisode in episodes:
-
-            season = str(int(scrapedseason) + 1)
-            episode = str(int(scrapedepisode) + 1)
-            if len(episode) == 1: episode = "0" + episode
-
-            title = season + "x" + episode
-
-            ## Le pasamos a 'findvideos' la url con dos partes divididas por el caracter "?"
-            ## [host+path]?[argumentos]?[Referer]
-            url = item.url + "?st_num=" + scrapedseason + "&pt_num=" + scrapedepisode + "?" + item.url
-
-            itemlist.append(
-                Item(channel=__channel__,
-                     action="findvideos",
-                     title=title,
-                     url=url,
-                     fulltitle=item.fulltitle,
-                     show=item.show,
-                     thumbnail=item.thumbnail))
+    for season, url, episode in matches:
+        season = str(int(season) + 1)
+        episode = str(int(episode) + 1)
+        if len(episode) == 1: episode = "0" + episode
+        title = season + "x" + episode
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="findvid_serie",
+                 title=title,
+                 url=item.url,
+                 thumbnail=item.thumbnail,
+                 extra=url,
+                 fulltitle=item.fulltitle,
+                 show=item.show))
 
     if config.get_library_support() and len(itemlist) != 0:
         itemlist.append(
@@ -197,45 +189,19 @@ def episodios(item):
     return itemlist
 
 
-def findvideos(item):
+def findvid_serie(item):
     logger.info("[vediserie.py] findvideos")
 
-    url = item.url.split('?')[0]
-    post = item.url.split('?')[1]
-    referer = item.url.split('?')[2]
+    # Descarga la página
+    data = item.extra
 
-    headers.append(['Referer', referer])
-
-    data = scrapertools.cache_page(url, post=post, headers=headers)
-
-    patron = '<iframe id="iframeVid" width="100%" height="500px" src="([^"]+)" allowfullscreen></iframe>'
-    url = scrapertools.find_single_match(data, patron)
-
-    if 'hdpass.link' in url:
-        data = scrapertools.cache_page(url, headers=headers)
-
-        patron = '<iframe width="100%" height="100%" src="([^"]+)" frameborder="0" scrolling="no" allowfullscreen />'
-        url_tmp = scrapertools.find_single_match(data, patron)
-
-        if url_tmp == '':
-            data = scrapertools.cache_page(url + '&randid=0', headers=headers)
-            patron = r'; eval\(unescape\("(.*?)",(\[".*?;"\]),(\[".*?\])\)\);'
-            [(par1, par2, par3)] = re.compile(patron, re.DOTALL).findall(data)
-            par2 = eval(par2, {'__builtins__': None}, {})
-            par3 = eval(par3, {'__builtins__': None}, {})
-            url = unescape(par1, par2, par3)
-            url = scrapertools.find_single_match(url, r'tvar Data = \\"([^\\]+)\\";')
-            url = binascii.unhexlify(url).replace(r'\/', '/')
-        else:
-            url = url_tmp
-
-    itemlist = servertools.find_video_items(data=url)
-
+    itemlist = servertools.find_video_items(data=data)
     for videoitem in itemlist:
         videoitem.title = item.title + videoitem.title
-        videoitem.show = item.show
         videoitem.fulltitle = item.fulltitle
         videoitem.thumbnail = item.thumbnail
+        videoitem.show = item.show
+        videoitem.plot = item.plot
         videoitem.channel = __channel__
 
     return itemlist
@@ -256,13 +222,3 @@ def anti_cloudflare(url):
         scrapertools.get_headers_from_response(host + "/" + resp_headers['refresh'][7:], headers=headers)
 
     return scrapertools.cache_page(url, headers=headers)
-
-
-def unescape(par1, par2, par3):
-    var1 = par1
-    for ii in xrange(0, len(par2)):
-        var1 = re.sub(par2[ii], par3[ii], var1)
-
-    var1 = re.sub("%26", "&", var1)
-    var1 = re.sub("%3B", ";", var1)
-    return var1.replace('<!--?--><?', '<!--?-->')
