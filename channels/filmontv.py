@@ -73,7 +73,8 @@ def tvoggi(item):
     data = scrapertools.cache_page(item.url)
 
     # Extrae las entradas (carpetas)
-    patron = '<img src=\'(.*?)\'[^>]+>\s*</div>\s*<div[^>]+>[^>]+>\s*<div[^>]+>\s*<h3 >(.*?)</h3>\s*<div[^>]+>[^>]+>[^>]+>(.*?)</div>'
+    patron = '<div class="col-xs-5 box-immagine">\s*<img src="(.*?)"[^>]+>\s*</div>\s*[^>]+>[^>]+>\s*[^>]+>\s*[^>]+>(.*?)</div>\s*[^>]+>[^>]+>[^>]+>[^>]+>(.*?)</div>'
+#    patron = '<img src=\'(.*?)\'[^>]+>\s*</div>\s*<div[^>]+>[^>]+>\s*<div[^>]+>\s*<h3 >(.*?)</h3>\s*<div[^>]+>[^>]+>[^>]+>(.*?)</div>'
     matches = re.compile(patron, re.DOTALL).findall(data)
 
     for scrapedthumbnail, scrapedtitle, scrapedtv in matches:
