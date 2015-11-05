@@ -62,6 +62,7 @@ def peliculas(item):
 
     if len(matches)>0:
         scrapedurl = urlparse.urljoin(item.url,matches[0])
+        itemlist.append( Item(channel="channelselector" , action="channeltypes", title="[COLOR yellow]Torna Home[/COLOR]" , folder=True) )
         itemlist.append( Item(channel=__channel__, action="peliculas", title="[COLOR orange]Avanti >>[/COLOR]" , url=scrapedurl , folder=True) )
 
     return itemlist
