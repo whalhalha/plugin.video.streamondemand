@@ -80,7 +80,6 @@ def episodi(item):
     bloque = scrapertools.get_match(data, patron)
     patron = '<br>(.*?)<a href="(.*?)" target="_blank">(.*?)</a>'
     matches = re.compile(patron, re.DOTALL).findall(bloque)
-    scrapertools.printMatches(matches)
 
     for tit1, scrapedurl, tit2 in matches:
         scrapedtitle = tit1 + tit2
@@ -109,7 +108,6 @@ def episodihades(item):
     bloque = scrapertools.get_match(data, patron)
     patron = '<a href="(.*?)" target="_blank">(.*?)</a>'
     matches = re.compile(patron, re.DOTALL).findall(bloque)
-    scrapertools.printMatches(matches)
 
     for scrapedurl, scrapedtitle in matches:
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
@@ -136,7 +134,6 @@ def episodiomega(item):
     bloque = scrapertools.get_match(data, patron)
     patron = '<br>(.*?)<a href="(.*?)" target="_blank">(.*?)</a>'
     matches = re.compile(patron, re.DOTALL).findall(bloque)
-    scrapertools.printMatches(matches)
 
     for tit1, scrapedurl, tit2 in matches:
         scrapedtitle = tit1 + tit2
@@ -165,7 +162,6 @@ def episodicanvas(item):
     bloque = scrapertools.get_match(data, patron)
     patron = '<br>(.*?)<a href="(.*?)" target="_blank">(.*?)</a>'
     matches = re.compile(patron, re.DOTALL).findall(bloque)
-    scrapertools.printMatches(matches)
 
     for tit1, scrapedurl, tit2 in matches:
         scrapedtitle = tit1 + tit2
@@ -191,7 +187,6 @@ def episodisoul(item):
     # Extracts the entries
     patron = '>&lt;br&gt;(.*?)&lt;a href=&quot;(.*?)&quot; target=&quot;_blank&quot;&gt;'
     matches = re.compile(patron, re.DOTALL).findall(data)
-    scrapertools.printMatches(matches)
 
     for scrapedtitle, scrapedurl in matches:
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
