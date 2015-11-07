@@ -12,4 +12,8 @@
 <gui>
     <algorithmdirtyregions>0</algorithmdirtyregions>
 </gui>
+<playlistasfolders1>false</playlistasfolders1>
+<audio>
+    <defaultplayer>dvdplayer</defaultplayer> 
+</audio>
 </advancedsettings>
