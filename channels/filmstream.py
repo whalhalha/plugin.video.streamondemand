@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
 # streamondemand.- XBMC Plugin
-# Canale per http://film-stream.cc
-# http://www.mimediacenter.info/foro/viewforum.php?f=36
+# Canal para piratestreaming
+# http://blog.tvalacarta.info/plugin-xbmc/streamondemand.
 # ------------------------------------------------------------
 import urlparse
 import re
@@ -67,10 +67,10 @@ def categorias(item):
     logger.info(data)
 
     # Narrow search by selecting only the combo
-    bloque = scrapertools.get_match(data, '<ul class="sf-menu">(.*?)</ul>')
+    bloque = scrapertools.get_match(data, '<ul class="mega-sub-menu">(.*?)</ul>')
 
     # The categories are the options for the combo
-    patron = '<a href="([^"]+)" >([^<]+)</a>'
+    patron = '<a class.*?href="(.*?)">(.*?)</a></li>'
     matches = re.compile(patron, re.DOTALL).findall(bloque)
     scrapertools.printMatches(matches)
 
@@ -138,7 +138,7 @@ def peliculas(item):
                  action="episodios" if item.extra == "serie" else "findvideos",
                  fulltitle=scrapedtitle,
                  show=scrapedtitle,
-                 title=scrapedtitle,
+                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
                  plot=scrapedplot,
