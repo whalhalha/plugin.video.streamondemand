@@ -314,6 +314,26 @@ def episodios(item):
 
         i += 1
 
+    if len(itemlist) == 0:
+        patron = '<a href="(#wpwm-tabs-\d+)">([^<]+)</a></li>'
+        seasons_episodes = re.compile(patron, re.DOTALL).findall(data)
+
+        end = None
+        for scrapedtag, scrapedtitle in seasons_episodes:
+            start = data.find(scrapedtag, end)
+            end = data.find('<div class="clearfix"></div>', start)
+            html = data[start:end]
+
+            itemlist.append(
+                Item(channel=__channel__,
+                     action="findvideos",
+                     title=scrapedtitle,
+                     url=item.url,
+                     thumbnail=item.thumbnail,
+                     extra=html,
+                     fulltitle=item.fulltitle,
+                     show=item.show))
+
     if config.get_library_support() and len(itemlist) != 0:
         itemlist.append(
             Item(channel=__channel__,
