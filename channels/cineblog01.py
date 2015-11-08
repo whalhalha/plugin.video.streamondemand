@@ -628,20 +628,23 @@ def listanime(item):
         scrapedurl = match.group(2)
         scrapedtitle = scrapertools.unescape(match.group(3))
         scrapedplot = scrapertools.unescape(match.group(4))
+        scrapedplot = scrapertools.decodeHtmlentities(scrapedplot)        
         if scrapedplot.startswith(""):
-            scrapedplot = scrapedplot[149:]
+            scrapedplot = scrapedplot[64:]
         if DEBUG: logger.info(
             "title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
 
         # Añade al listado de XBMC
         itemlist.append(
             Item(channel=__channel__,
-                 action="findvid_anime",
+                 action="listaaz" if scrapedtitle == "Lista Alfabetica Completa Anime/Cartoon" else "findvid_anime",
                  fulltitle=scrapedtitle,
                  show=scrapedtitle,
                  title=scrapedtitle,
                  url=scrapedurl,
                  thumbnail=scrapedthumbnail,
+                 viewmode="movie_with_plot",
+                 fanart=scrapedthumbnail,
                  plot=scrapedplot))
 
     # Put the next page mark
