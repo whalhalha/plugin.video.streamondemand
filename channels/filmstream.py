@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
 # streamondemand.- XBMC Plugin
-# Canal para piratestreaming
+# Canale per http://film-stream.cc
 # http://blog.tvalacarta.info/plugin-xbmc/streamondemand.
 # ------------------------------------------------------------
 import urlparse
@@ -22,7 +22,7 @@ __language__ = "IT"
 
 DEBUG = config.get_setting("debug")
 
-host = "http://film-stream.org"
+host = "http://film-stream.cc"
 
 
 def isGeneric():
