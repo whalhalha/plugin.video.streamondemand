@@ -16,4 +16,11 @@
 <audio>
     <defaultplayer>dvdplayer</defaultplayer> 
 </audio>
+    <imageres>540</imageres>
+    <fanartres>720</fanartres>
+    <splash>false</splash>
+    <handlemounting>0</handlemounting>
+<samba>
+    <clienttimeout>30</clienttimeout>
+</samba>
 </advancedsettings>
