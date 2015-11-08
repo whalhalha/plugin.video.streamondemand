@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
 # streamondemand.- XBMC Plugin
-# Canal para piratestreaming
-# http://blog.tvalacarta.info/plugin-xbmc/streamondemand.
+# Canale per http://film-stream.cc
+# http://www.mimediacenter.info/foro/viewforum.php?f=36
 # ------------------------------------------------------------
 import urlparse
 import re
