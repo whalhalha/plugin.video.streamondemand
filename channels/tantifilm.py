@@ -4,12 +4,12 @@
 # Canal para piratestreaming
 # http://blog.tvalacarta.info/plugin-xbmc/streamondemand.
 # ------------------------------------------------------------
-import urlparse
 import re
 import sys
+import urlparse
 
-from core import logger
 from core import config
+from core import logger
 from core import scrapertools
 from core.item import Item
 from servers import servertools
@@ -256,6 +256,31 @@ def latest(item):
 
 
 def episodios(item):
+    def load_episodios(html, item, itemlist):
+        for data in html.splitlines():
+            # Extrae las entradas
+            end = data.find('<a ')
+            if end > 0:
+                scrapedtitle = re.sub(r'<[^>]*>', '', data[:end]).strip()
+            else:
+                scrapedtitle = ''
+            if scrapedtitle == '':
+                patron = '<a\s*href="[^"]+"(?:\s*target="_blank")?>([^<]+)</a>'
+                scrapedtitle = scrapertools.find_single_match(data, patron).strip()
+            title = scrapertools.find_single_match(scrapedtitle, '\d+[^\d]+\d+')
+            if title == '':
+                title = scrapedtitle
+            if title != '':
+                itemlist.append(
+                    Item(channel=__channel__,
+                         action="findvideos",
+                         title=title,
+                         url=item.url,
+                         thumbnail=item.thumbnail,
+                         extra=data,
+                         fulltitle=item.fulltitle,
+                         show=item.show))
+
     logger.info("streamondemand.tantifilm episodios")
 
     itemlist = []
@@ -263,40 +288,31 @@ def episodios(item):
     data = scrapertools.cache_page(item.url, headers=headers)
     data = scrapertools.decodeHtmlentities(data)
 
-    patron = '<p>((.*?)<a href="[^"]+" target="_blank">([^<]+)</a>)((?:.*?<a href="[^"]+" target="_blank">[^<]+</a>)*)'
-    for data1, titolo1, titolo2, data2 in re.compile(patron).findall(data):
-        scrapedtitle = titolo2 if titolo1 == '' else titolo1
-        scrapedtitle = scrapedtitle.strip()
+    start = data.find('<div class="sp-wrap sp-wrap-blue">')
+    end = data.find('<div id="disqus_thread">', start)
 
-        itemlist.append(
-            Item(channel=__channel__,
-                 action="findvideos",
-                 title=scrapedtitle,
-                 url=item.url,
-                 thumbnail=item.thumbnail,
-                 extra=data1 + data2,
-                 fulltitle=item.fulltitle,
-                 show=item.show))
+    data = data[start:end]
 
-    if len(itemlist) == 0:
-        patron = '<a href="(#wpwm-tabs-\d+)">([^<]+)</a></li>'
-        seasons_episodes = re.compile(patron, re.DOTALL).findall(data)
+    starts = []
+    patron = r".*?STAGIONE|MINISERIE|WEBSERIE|SERIE"
+    matches = re.compile(patron, re.IGNORECASE).finditer(data)
+    for match in matches:
+        season_title = match.group()
+        if season_title != '':
+            starts.append(match.end())
 
-        end = None
-        for scrapedtag, scrapedtitle in seasons_episodes:
-            start = data.find(scrapedtag, end)
-            end = data.find('<div class="clearfix"></div>', start)
-            html = data[start:end]
+    i = 1
+    len_starts = len(starts)
 
-            itemlist.append(
-                Item(channel=__channel__,
-                     action="findvideos",
-                     title=scrapedtitle,
-                     url=item.url,
-                     thumbnail=item.thumbnail,
-                     extra=html,
-                     fulltitle=item.fulltitle,
-                     show=item.show))
+    while i <= len_starts:
+        inizio = starts[i - 1]
+        fine = starts[i] if i < len_starts else -1
+
+        html = data[inizio:fine]
+
+        load_episodios(html, item, itemlist)
+
+        i += 1
 
     if config.get_library_support() and len(itemlist) != 0:
         itemlist.append(
