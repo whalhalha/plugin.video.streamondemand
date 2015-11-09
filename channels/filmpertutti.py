@@ -40,6 +40,10 @@ def mainlist(item):
                      url="http://www.filmpertutti.co/category/film/",
                      thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/All%20Movies%20by%20Genre.png"),
                 Item(channel=__channel__,
+                     title="[COLOR yellow]Cerca...[/COLOR]",
+                     action="search",
+                     thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search"),
+                Item(channel=__channel__,
                      title="[COLOR azure]Serie TV[/COLOR]",
                      extra="serie",
                      action="peliculas",
@@ -51,14 +55,16 @@ def mainlist(item):
                      extra="serie",
                      thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search"),
                 Item(channel=__channel__,
-                     title="[COLOR azure]Anime Cartoon Italiani[/COLOR]",
+                     title="[COLOR azure]Anime & Cartoon in Italiano[/COLOR]",
                      action="peliculas",
                      url="http://www.filmpertutti.co/category/anime-cartoon-italiani/",
                      thumbnail="http://orig09.deviantart.net/df5a/f/2014/169/2/a/fist_of_the_north_star_folder_icon_by_minacsky_saya-d7mq8c8.png"),
                 Item(channel=__channel__,
-                     title="[COLOR yellow]Cerca...[/COLOR]",
-                     action="search",
-                     thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search")]
+                     title="[COLOR azure]Anime Sub-Ita[/COLOR]",
+                     action="anime",
+                     url="http://www.filmpertutti.co/category/anime-cartoon-sub-ita/",
+                     thumbnail="http://orig09.deviantart.net/df5a/f/2014/169/2/a/fist_of_the_north_star_folder_icon_by_minacsky_saya-d7mq8c8.png")]
+    
     return itemlist
 
 
@@ -116,6 +122,82 @@ def peliculas(item):
 
     return itemlist
 
+def anime(item):
+    logger.info("streamondemand.filmpertutti anime")
+    itemlist = []
+
+    # Descarga la pagina
+    data = scrapertools.cache_page(item.url)
+
+    # Extrae las entradas (carpetas)
+    patron = '<div class="general-box container-single-image">\s*'
+    patron += '<a href="([^>"]+)"?.*?title="?([^>"]+)"?.*?<img.*?src="([^>"]+)"'
+    matches = re.compile(patron, re.DOTALL).findall(data)
+    scrapertools.printMatches(matches)
+
+    for scrapedurl, scrapedtitle, scrapedthumbnail in matches:
+        html = scrapertools.cache_page(scrapedurl)
+        start = html.find("<div class=\"entry-content\">")
+        end = html.find("</a></p>", start)
+        scrapedplot = html[start:end]
+        scrapedplot = re.sub(r'<[^>]*>', '', scrapedplot)
+        scrapedplot = scrapertools.decodeHtmlentities(scrapedplot)
+        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle.replace("Streaming", ""))
+        if scrapedtitle.startswith("Link to "):
+            scrapedtitle = scrapedtitle[8:]
+        if (DEBUG): logger.info(
+            "title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="episodianime",
+                 fulltitle=scrapedtitle,
+                 show=scrapedtitle,
+                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
+                 url=scrapedurl,
+                 thumbnail=scrapedthumbnail,
+                 plot=scrapedplot,
+                 folder=True))
+
+    # Extrae el paginador
+    patronvideos = '<a href="([^"]+)" >Avanti</a>'
+    matches = re.compile(patronvideos, re.DOTALL).findall(data)
+    scrapertools.printMatches(matches)
+
+    if len(matches) > 0:
+        scrapedurl = urlparse.urljoin(item.url, matches[0])
+        itemlist.append(
+            Item(channel=__channel__,
+                 extra=item.extra,
+                 action="anime",
+                 title="[COLOR orange]Successivo >>[/COLOR]",
+                 url=scrapedurl,
+                 thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png",
+                 folder=True))
+
+    return itemlist
+
+def episodianime(item):
+    logger.info("anime sub ita - episodianime")
+
+    itemlist = []
+
+    # Downloads page
+    data = scrapertools.cache_page(item.url)
+    # Extracts the entries
+    patron = '<a href=.*?class="postlink".*?target="_blank" rel="nofollow">(.*?)</a>.*?<a href="(.*?)".*?="postlink".*?target="_blank" rel="nofollow">'
+    matches = re.compile(patron, re.DOTALL).findall(data)
+
+    for scrapedtitle,scrapedurl in matches:
+        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="findvid_serie",
+                 title=scrapedtitle,
+                 extra=scrapedurl,
+                 thumbnail=item.thumbnail,
+                 viewmode="movie_with_plot"))
+
+    return itemlist
 
 def categorias(item):
     logger.info("streamondemand.filmpertutti categorias")
@@ -164,7 +246,6 @@ def search(item, texto):
         for line in sys.exc_info():
             logger.error("%s" % line)
         return []
-
 
 def episodios(item):
     def load_episodios(html, item, itemlist, lang_title):
@@ -233,7 +314,6 @@ def episodios(item):
                  show=item.show))
 
     return itemlist
-
 
 def findvid_serie(item):
     logger.info("streamondemand.filmpertutti findvideos")
