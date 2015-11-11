@@ -62,7 +62,12 @@ def peliculas(item):
     for scrapedurl,scrapedthumbnail,scrapedtitle in matches:
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle.replace("]...","]"))
-        scrapedplot = ""
+        html = scrapertools.cache_page(scrapedurl)
+        start = html.find("Trama del film")
+        end = html.find("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=ISO-8859-1\" />", start)
+        scrapedplot = html[start:end]
+        scrapedplot = re.sub(r'<[^>]*>', '', scrapedplot)
+#        scrapedplot = ""
         if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
         itemlist.append( Item(channel=__channel__, action="findvideos", fulltitle=scrapedtitle, show=scrapedtitle, title="[COLOR azure]"+scrapedtitle+"[/COLOR]" , url=scrapedurl , thumbnail=scrapedthumbnail , plot=scrapedplot , folder=True) )
 
