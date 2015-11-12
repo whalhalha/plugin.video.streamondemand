@@ -4,13 +4,13 @@
 # Canal para altadefinizioneclick
 # http://blog.tvalacarta.info/plugin-xbmc/streamondemand.
 # ------------------------------------------------------------
-import urllib2
+import binascii
 import re
 import time
-import binascii
+import urllib2
 
-from core import logger
 from core import config
+from core import logger
 from core import scrapertools
 from core.item import Item
 from servers import servertools
@@ -226,8 +226,7 @@ def findvideos(item):
     ## Descarga la página
     data = anti_cloudflare(item.url)
 
-    patron = '<div class="playerTemp">\s*'
-    patron += '<p><iframe width="100%" height="500px" src="([^"]+)" allowfullscreen></iframe></p>'
+    patron = r'<iframe id="iframeVid" width="100%" height="500px" src="([^"]+)" allowfullscreen>'
 
     url = scrapertools.find_single_match(data, patron)
 
@@ -241,12 +240,16 @@ def findvideos(item):
         patron = '<form method="get" action="">\s*'
         patron += '<input type="hidden" name="([^"]+)" value="([^"]+)"/>\s*'
         patron += '<input type="hidden" name="([^"]+)" value="([^"]+)"/>\s*'
+        patron += '(?:<input type="hidden" name="([^"]+)" value="([^"]+)"/>\s*)?'
         patron += '<input type="submit" class="[^"]*" name="([^"]+)" value="([^"]+)"/>\s*'
         patron += '</form>'
 
         html = []
-        for name1, val1, name2, val2, name3, val3 in re.compile(patron).findall(data):
-            get_data = '%s=%s&%s=%s&%s=%s' % (name1, val1, name2, val2, name3, val3)
+        for name1, val1, name2, val2, name3, val3, name4, val4 in re.compile(patron).findall(data):
+            if name3 == '' and val3 == '':
+                get_data = '%s=%s&%s=%s&%s=%s' % (name1, val1, name2, val2, name4, val4)
+            else:
+                get_data = '%s=%s&%s=%s&%s=%s&%s=%s' % (name1, val1, name2, val2, name3, val3, name4, val4)
             tmp_data = scrapertools.cache_page('http://hdpass.link/film.php?randid=0&' + get_data, headers=headers)
             if 'Google' in get_data or 'Vecchio Player' in get_data:
                 patron = r'; eval\(unescape\("(.*?)",(\[".*?;"\]),(\[".*?\])\)\);'
