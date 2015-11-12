@@ -291,11 +291,11 @@ def episodios(item):
     start = data.find('<div class="sp-wrap sp-wrap-blue">')
     end = data.find('<div id="disqus_thread">', start)
 
-    data = data[start:end]
+    data_sub = data[start:end]
 
     starts = []
     patron = r".*?STAGIONE|MINISERIE|WEBSERIE|SERIE"
-    matches = re.compile(patron, re.IGNORECASE).finditer(data)
+    matches = re.compile(patron, re.IGNORECASE).finditer(data_sub)
     for match in matches:
         season_title = match.group()
         if season_title != '':
@@ -308,7 +308,7 @@ def episodios(item):
         inizio = starts[i - 1]
         fine = starts[i] if i < len_starts else -1
 
-        html = data[inizio:fine]
+        html = data_sub[inizio:fine]
 
         load_episodios(html, item, itemlist)
 
