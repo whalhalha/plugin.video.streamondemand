@@ -7,7 +7,7 @@
     <active>true</active>
     <include_in_global_search>true</include_in_global_search>
     <version>4</version>
-    <adult>false</version>
+    <adult>false</adult>
     <date>26/10/2015</date>
     <changes>Added correct icon</changes>
     <categories>
