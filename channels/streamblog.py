@@ -4,12 +4,12 @@
 # Canal para piratestreaming
 # http://blog.tvalacarta.info/plugin-xbmc/streamondemand.
 # ------------------------------------------------------------
-import urlparse
 import re
 import sys
+import urlparse
 
-from core import logger
 from core import config
+from core import logger
 from core import scrapertools
 from core.item import Item
 from servers import servertools
@@ -217,31 +217,58 @@ def peliculas(item):
 
 
 def episodios(item):
-    logger.info("streamondemand.streamblog episodios")
-
-    itemlist = []
-
-    # Descarga la página
-    data = scrapertools.cache_page(item.url, headers=headers)
-    data = scrapertools.decodeHtmlentities(data)
-
-    patron = '<!--/colorend--><br />(.+ StreamNowMovies HD </a>)'
-    matches = re.compile(patron, re.DOTALL).findall(data)
-    for match in matches:
-        for data in match.split('<br />'):
+    def load_episodios(html, item, itemlist, lang_title):
+        for data in scrapertools.decodeHtmlentities(html).split('<br />'):
             # Extrae las entradas
-            scrapedtitle = data.split('<a ')[0]
-            scrapedtitle = re.sub(r'<[^>]*>', '', scrapedtitle).strip()
-            if scrapedtitle != '':
+            end = data.find('<a ')
+            if end > 0:
+                scrapedtitle = re.sub(r'<[^>]*>', '', data[:end]).strip()
+            else:
+                scrapedtitle = ''
+            title = scrapertools.find_single_match(scrapedtitle, '\d+[^\d]+\d+')
+            if title == '':
+                title = scrapedtitle
+            if title != '':
                 itemlist.append(
                     Item(channel=__channel__,
                          action="findvid_serie",
-                         title=scrapedtitle,
+                         title=title + " (" + lang_title + ")",
                          url=item.url,
                          thumbnail=item.thumbnail,
                          extra=data,
                          fulltitle=item.fulltitle,
                          show=item.show))
+
+    logger.info("streamondemand.streamblog episodios")
+
+    itemlist = []
+
+    # Descarga la página
+    data = scrapertools.cache_page(item.url)
+
+    lang_titles = []
+    starts = []
+    patron = r"STAGIONE.*?ITA"
+    matches = re.compile(patron, re.IGNORECASE).finditer(data)
+    for match in matches:
+        season_title = match.group()
+        if season_title != '':
+            lang_titles.append('SUB ITA' if 'SUB' in season_title.upper() else 'ITA')
+            starts.append(match.end())
+
+    i = 1
+    len_lang_titles = len(lang_titles)
+
+    while i <= len_lang_titles:
+        inizio = starts[i - 1]
+        fine = starts[i] if i < len_lang_titles else -1
+
+        html = data[inizio:fine]
+        lang_title = lang_titles[i - 1]
+
+        load_episodios(html, item, itemlist, lang_title)
+
+        i += 1
 
     if config.get_library_support() and len(itemlist) != 0:
         itemlist.append(
