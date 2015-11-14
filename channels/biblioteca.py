@@ -304,6 +304,7 @@ def tmdb_serie_list(item):
 
             itemlist.append(
                 Item(channel=__channel__,
+                     category="serie",
                      action="do_search",
                      extra=urllib.quote_plus(title),
                      title="[COLOR azure]%s[/COLOR]" % title,
@@ -461,10 +462,10 @@ def do_search(item):
             # http://docs.python.org/library/imp.html?highlight=imp#module-imp
             obj = imp.load_source(basename_without_extension, infile)
             logger.info("streamondemand.channels.buscador cargado " + basename_without_extension + " de " + infile)
-            channel_result_itemlist.extend(obj.search(Item(), tecleado))
-            for item in channel_result_itemlist:
-                item.title = " [COLOR azure] " + item.title + " [/COLOR] [COLOR orange]su[/COLOR] [COLOR green]" + basename_without_extension + "[/COLOR]"
-                item.viewmode = "list"
+            channel_result_itemlist.extend(obj.search(Item(extra=item.category), tecleado))
+            for local_item in channel_result_itemlist:
+                local_item.title = " [COLOR azure] " + local_item.title + " [/COLOR] [COLOR orange]su[/COLOR] [COLOR green]" + basename_without_extension + "[/COLOR]"
+                local_item.viewmode = "list"
         except:
             import traceback
             logger.error(traceback.format_exc())
