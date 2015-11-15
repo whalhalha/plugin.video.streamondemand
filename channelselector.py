@@ -256,8 +256,8 @@ def channels_list():
     #itemlist.append( Item( title="[COLOR azure]ItaStreaming[/COLOR]"      , channel="itastreaming" , language="IT" , category="F,S,A" , type="generic"))
     itemlist.append( Item( title="[COLOR azure]LiberoITA[/COLOR]"       , channel="liberoita"           , language="IT"    , category="F,S,A"   , type="generic"))
     itemlist.append(
-        Item(title="[COLOR azure]MondoLunatico[/COLOR]", channel="mondolunatico", language="IT", category="F",
-             type="generic"))
+        Item(title="[COLOR azure]MondoLunatico[/COLOR]", channel="mondolunatico", language="IT", category="B,F",
+             type="generic" ,thumbnail="http://mondolunatico.altervista.org/blog/wp-content/uploads/2013/05/images-11.jpg"))
     #itemlist.append( Item( title="[COLOR azure]Multiplayer[/COLOR]"        , channel="multiplayer"       , language="IT"    , category="D"       , type="generic",thumbnail="https://pbs.twimg.com/profile_images/3707600249/5d27b86daf631ccfead935fd409e29ed_400x400.png"))
     #itemlist.append( Item( title="[COLOR azure]Liberostreaming[/COLOR]" , channel="liberostreaming" , language="IT" , category="F,S,A" , type="generic"))
     #itemlist.append( Item( title="[COLOR azure]Pastebin[/COLOR]"   , channel="pastebin"           , language="IT"    , category="F,S,A,VOS"   , type="generic", thumbnail="https://www.drupal.org/files/project-images/pastebin.png"))
@@ -278,7 +278,7 @@ def channels_list():
     itemlist.append( Item( title="[COLOR azure]Tantifilm[/COLOR]"        , channel="tantifilm"       , language="IT"    , category="B,F"       , type="generic"))
     itemlist.append( Item( title="[COLOR azure]Tenente Colombo Streaming[/COLOR]"        , channel="tenentecolombo"       , language="IT"    , category="S"       , type="generic" ,thumbnail="http://biografieonline.it/img/bio/p/Peter_Falk.jpg"))
     #itemlist.append( Item( title="[COLOR azure]TheWalkingDeadITA Streaming[/COLOR]"      , channel="walkingdeadita"           , language="IT"    , category="S"   , type="generic",thumbnail="http://walkingdeadstreamingita.altervista.org/images/logo.png"))
-    itemlist.append( Item( title="[COLOR azure]VediSerie[/COLOR]"        , channel="vediserie"       , language="IT"    , category="S"       , type="generic" ,thumbnail="http://www.vediserie.com/wp-content/uploads/2015/09/logo-vediseriea.png"))
+    itemlist.append( Item( title="[COLOR azure]VediSerie[/COLOR]"        , channel="vediserie"       , language="IT"    , category="B,S"       , type="generic" ,thumbnail="http://www.vediserie.com/wp-content/uploads/2015/09/logo-vediseriea.png"))
     itemlist.append( Item( title="[COLOR azure]WebShortFilms[/COLOR]"        , channel="webshortfilms"       , language="IT"    , category="F,D"       , type="generic" ,thumbnail="https://webshortfilms.files.wordpress.com/2012/07/header_1.jpg"))
     #itemlist.append( Item( title="[COLOR azure]Bibliotrailer[/COLOR]"        , channel="bibliotrailer"       , language="IT"    , category="D"       , type="generic",thumbnail="http://4.bp.blogspot.com/-aB26I0ToivA/VeFvARPXSrI/AAAAAAAAAAk/mp-_D_V8IEA/s1600-r/logo.png"))
     #itemlist.append( Item( title="[COLOR azure]Tuttolooneytunes[/COLOR]"        , channel="tuttolooneytunes"       , language="IT"    , category="A,D"       , type="generic",thumbnail="http://1.bp.blogspot.com/-dLQ0FVvvPys/U6hXvJt2EnI/AAAAAAAAACU/7pFMPwtQx1k/s1600/looney%252520tunes.jpg"))
