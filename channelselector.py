@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-import urlparse,urllib2,urllib,re
-import os
 import sys
+import urlparse
+
 from core import config
 from core import logger
 from core.item import Item
@@ -255,6 +255,9 @@ def channels_list():
     itemlist.append( Item( title="[COLOR azure]Italia Serie[/COLOR]"        , channel="italiaserie"           , language="IT"    , category="F,S,A"   , type="generic"))
     #itemlist.append( Item( title="[COLOR azure]ItaStreaming[/COLOR]"      , channel="itastreaming" , language="IT" , category="F,S,A" , type="generic"))
     itemlist.append( Item( title="[COLOR azure]LiberoITA[/COLOR]"       , channel="liberoita"           , language="IT"    , category="F,S,A"   , type="generic"))
+    itemlist.append(
+        Item(title="[COLOR azure]MondoLunatico[/COLOR]", channel="mondolunatico", language="IT", category="F",
+             type="generic"))
     #itemlist.append( Item( title="[COLOR azure]Multiplayer[/COLOR]"        , channel="multiplayer"       , language="IT"    , category="D"       , type="generic",thumbnail="https://pbs.twimg.com/profile_images/3707600249/5d27b86daf631ccfead935fd409e29ed_400x400.png"))
     #itemlist.append( Item( title="[COLOR azure]Liberostreaming[/COLOR]" , channel="liberostreaming" , language="IT" , category="F,S,A" , type="generic"))
     #itemlist.append( Item( title="[COLOR azure]Pastebin[/COLOR]"   , channel="pastebin"           , language="IT"    , category="F,S,A,VOS"   , type="generic", thumbnail="https://www.drupal.org/files/project-images/pastebin.png"))
@@ -288,8 +291,7 @@ def addfolder(nombre,channelname,accion,category="",thumbnailname="",thumbnail="
             category = unicode( nombre, "utf-8" ).encode("iso-8859-1")
         except:
             pass
-   
-    import xbmc
+
     import xbmcgui
     import xbmcplugin
     listitem = xbmcgui.ListItem( nombre , iconImage="DefaultFolder.png", thumbnailImage=thumbnail)
