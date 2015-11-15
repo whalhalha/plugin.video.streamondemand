@@ -10,18 +10,18 @@ import re
 from core import logger
 from core import scrapertools
 
-
-def test_video_exists(page_url):
-    logger.info("streamondemand.videomega test_video_exists(page_url='%s')" % page_url)
-
-    return True, ""
+headers = [
+    ['User-Agent', 'Mozilla/5.0 (Windows NT 6.1; rv:38.0) Gecko/20100101 Firefox/38.0'],
+    ['Accept-Encoding', 'gzip, deflate'],
+    ['Accept', "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"]
+]
 
 
 def get_video_url(page_url, premium=False, user="", password="", video_password=""):
     logger.info("streamondemand.videomega get_video_url(page_url='%s')" % page_url)
 
-    # data = scrapertools.cache_page(page_url)
-    data = scrapertools.downloadpage(page_url, follow_redirects=False)
+    headers.append(['Referer', page_url.replace('view.php', '')])
+    data = scrapertools.downloadpage(page_url, follow_redirects=False, headers=headers)
     video_urls = []
 
     location = scrapertools.find_single_match(data, '<source src="([^"]+)"')
