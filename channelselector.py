@@ -110,7 +110,7 @@ def getchanneltypes(preferred_thumb=""):
     #itemlist.append( Item( title=config.get_localized_string(30127) , channel="channelselector" , action="listchannels" , category="G"   , thumbnail=urlparse.urljoin(get_thumbnail_path(preferred_thumb),"thumb_canales_servidores.png")))
     #itemlist.append( Item( title=config.get_localized_string(30134) , channel="channelselector" , action="listchannels" , category="NEW" , thumbnail=urlparse.urljoin(get_thumbnail_path(preferred_thumb),"novedades.png")))
     return itemlist
-   
+
 def channeltypes(params,url,category):
     logger.info("channelselector.mainlist channeltypes")
 
@@ -182,7 +182,7 @@ def filterchannels(category,preferred_thumb=""):
             idiomav=""
 
         channelslist = channels_list()
-   
+
         for channel in channelslist:
             # Pasa si no ha elegido "todos" y no está en la categoría elegida
             if category<>"*" and category not in channel.category:
@@ -217,7 +217,7 @@ def channels_list():
         itemlist.append( Item( title=config.get_setting("personalchannelname4") , channel="personal4" , language="" , category="" , type="generic"  ))
     if config.get_setting("personalchannel5")=="true":
         itemlist.append( Item( title=config.get_setting("personalchannelname5") , channel="personal5" , language="" , category="" , type="generic"  ))
-    #itemlist.append( Item( title="[COLOR red]SkyStreaming[/COLOR]"        , channel="skystreaming"       , language="IT"    , category="B,F"       , type="generic"))    
+    #itemlist.append( Item( title="[COLOR red]SkyStreaming[/COLOR]"        , channel="skystreaming"       , language="IT"    , category="B,F"       , type="generic"))
     itemlist.append( Item( title="[COLOR azure]AltaDefinizione01[/COLOR]"      , channel="altadefinizione01"           , language="IT"    , category="B,F,A"   , type="generic"))
     itemlist.append( Item( title="[COLOR azure]Altadefinizione.click[/COLOR]" , channel="altadefinizioneclick" , language="IT" , category="F,S,A" , type="generic"))
     itemlist.append( Item( title="[COLOR azure]Anime Sub Ita[/COLOR]"   , channel="animesubita"           , language="IT"    , category="A"   , type="generic"))
@@ -255,9 +255,7 @@ def channels_list():
     itemlist.append( Item( title="[COLOR azure]Italia Serie[/COLOR]"        , channel="italiaserie"           , language="IT"    , category="F,S,A"   , type="generic"))
     #itemlist.append( Item( title="[COLOR azure]ItaStreaming[/COLOR]"      , channel="itastreaming" , language="IT" , category="F,S,A" , type="generic"))
     itemlist.append( Item( title="[COLOR azure]LiberoITA[/COLOR]"       , channel="liberoita"           , language="IT"    , category="F,S,A"   , type="generic"))
-    itemlist.append(
-        Item(title="[COLOR azure]MondoLunatico[/COLOR]", channel="mondolunatico", language="IT", category="B,F",
-             type="generic" ,thumbnail="http://mondolunatico.altervista.org/blog/wp-content/uploads/2013/05/images-11.jpg"))
+    itemlist.append( Item(title="[COLOR azure]MondoLunatico[/COLOR]"    , channel="mondolunatico"       , language="IT"    , category="B,F"     , type="generic" ,thumbnail="http://mondolunatico.altervista.org/blog/wp-content/uploads/2013/05/images-11.jpg"))
     #itemlist.append( Item( title="[COLOR azure]Multiplayer[/COLOR]"        , channel="multiplayer"       , language="IT"    , category="D"       , type="generic",thumbnail="https://pbs.twimg.com/profile_images/3707600249/5d27b86daf631ccfead935fd409e29ed_400x400.png"))
     #itemlist.append( Item( title="[COLOR azure]Liberostreaming[/COLOR]" , channel="liberostreaming" , language="IT" , category="F,S,A" , type="generic"))
     #itemlist.append( Item( title="[COLOR azure]Pastebin[/COLOR]"   , channel="pastebin"           , language="IT"    , category="F,S,A,VOS"   , type="generic", thumbnail="https://www.drupal.org/files/project-images/pastebin.png"))
@@ -301,12 +299,12 @@ def addfolder(nombre,channelname,accion,category="",thumbnailname="",thumbnail="
 def get_thumbnail_path(preferred_thumb=""):
 
     WEB_PATH = ""
-   
+
     if preferred_thumb=="":
         thumbnail_type = config.get_setting("thumbnail_type")
         if thumbnail_type=="":
             thumbnail_type="2"
-       
+
         if thumbnail_type=="0":
             WEB_PATH = "https://raw.githubusercontent.com/Zanzibar82/images/master/posters/"
         elif thumbnail_type=="1":
