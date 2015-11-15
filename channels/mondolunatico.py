@@ -81,6 +81,12 @@ def peliculas(item):
 
     for scrapedurl, scrapedthumbnail, scrapedtitle, in matches:
         scrapedplot = ""
+        #html = scrapertools.cache_page(scrapedurl)
+        #start = html.find("Trama del ")
+        #end = html.find("<div id=\"wrpbody\" class=\"wrphidden\"></div>", start)
+        #scrapedplot = html[start:end]
+        #scrapedplot = re.sub(r'<[^>]*>', '', scrapedplot)
+        #scrapedplot = scrapertools.decodeHtmlentities(scrapedplot)
         title = scrapertools.decodeHtmlentities(scrapedtitle)
 
         itemlist.append(
