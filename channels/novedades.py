@@ -27,7 +27,7 @@ def mainlist(item,preferred_thumbnail="squares"):
     logger.info("streamondemand.channels.novedades mainlist")
 
     itemlist = []
-    #itemlist.append( Item(channel=__channel__, action="peliculas"            , title="Film 3D - (Scegliere 2° server)", thumbnail="http://media.tvalacarta.info/streamondemand."+preferred_thumbnail+"/thumb_canales_peliculas.png",viewmode="movie"))
+    itemlist.append( Item(channel=__channel__, action="peliculas"            , title="Film 3D - (Scegliere 2° server)", thumbnail="http://media.tvalacarta.info/streamondemand."+preferred_thumbnail+"/thumb_canales_peliculas.png",viewmode="movie"))
     itemlist.append( Item(channel=__channel__, action="peliculas_infantiles" , title="Per Bambini", thumbnail="http://media.tvalacarta.info/streamondemand."+preferred_thumbnail+"/thumb_canales_infantiles.png",viewmode="movie"))
     itemlist.append( Item(channel=__channel__, action="series"               , title="Episodi di Serie TV", thumbnail="http://media.tvalacarta.info/streamondemand."+preferred_thumbnail+"/thumb_canales_series.png",viewmode="movie"))
     itemlist.append( Item(channel=__channel__, action="anime"                , title="Episodi di Anime", thumbnail="http://media.tvalacarta.info/streamondemand."+preferred_thumbnail+"/thumb_canales_anime.png",viewmode="movie"))
