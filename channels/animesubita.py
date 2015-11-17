@@ -198,11 +198,11 @@ def findvideos(item):
     patron = 'return\s*gnarty_player\((\d+)\);'
     matches = re.compile(patron, re.DOTALL).findall(data)
     url = host + 'wp-admin/admin-ajax.php'
-    li = []
+    html = []
     for vid in matches:
-        li.append(scrapertools.cache_page(url, post='action=loadPlayer&id=' + vid, headers=headers))
+        html.append(scrapertools.cache_page(url, post='action=loadPlayer&id=' + vid, headers=headers))
 
-    html = ''.join(li)
+    html = ''.join(html)
 
     itemlist = servertools.find_video_items(data=html)
 
