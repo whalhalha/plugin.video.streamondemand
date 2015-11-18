@@ -6,6 +6,7 @@
 #------------------------------------------------------------
 import urlparse,urllib2,urllib,re
 import os, sys
+import base64
 
 from core import logger
 from core import config
@@ -23,7 +24,8 @@ DEBUG = config.get_setting("debug")
 
 site = "http://www.hd-streaming.it/"
 param = "&format=JSON&js=false&_apikey="
-key = "e5b5098ba1e543e4ab0cc58b5f3b19588317bd767329bdcb894d89b560e552c068f1f9b9579f746482e6c124eb743baecc2fede22499c064cb26ca45d9f3f581d2dcec8b7f6f4fb9bba182fd8776742b"
+key = base64.urlsafe_b64decode('ZTViNTA5OGJhMWU1NDNlNGFiMGNjNThiNWYzYjE5NTg4MzE3YmQ3NjczMjliZGNiODk0ZDg5YjU2MGU1NTJjMDY4ZjFmOWI5NTc5Zjc0NjQ4MmU2YzEyNGViNzQzYmFlY2MyZmVkZTIyNDk5YzA2NGNiMjZjYTQ1ZDlmM2Y1ODFkMmRjZWM4YjdmNmY0ZmI5YmJhMTgyZmQ4Nzc2NzQyYg==')
+
 
 headers = [
     ['User-Agent', 'Mozilla/5.0 (Windows NT 6.1; rv:38.0) Gecko/20100101 Firefox/38.0'],
