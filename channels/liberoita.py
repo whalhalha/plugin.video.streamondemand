@@ -113,14 +113,13 @@ def peliculas(item):
     data = scrapertools.cache_page(item.url)
 
     # Extrae las entradas (carpetas)
-    patron = '<div class="galleryitem" id=.*?>\s*'
-    patron += '<a href="([^"]+)".*?><img src="([^"]+)" alt="([^"]+)".*?/a>'
+    patron = '<div class="img"><img[^=]+=[^=]+=[^=]+="(.*?)"[^>]+>[^>]+>\s*[^>]+>[^>]+>\s*[^>]+>\s*<a href="(.*?)">(.*?)</a>'
     matches = re.compile(patron, re.DOTALL).findall(data)
 
-    for scrapedurl, scrapedthumbnail, scrapedtitle in matches:
+    for scrapedthumbnail, scrapedurl, scrapedtitle in matches:
         html = scrapertools.cache_page(scrapedurl)
-        start = html.find("</strong><br />")
-        end = html.find("<table border=\"1\" width=\"615\">", start)
+        start = html.find("<div class=\"post_img\">")
+        end = html.find("</p>", start)
         scrapedplot = html[start:end]
         scrapedplot = re.sub(r'<[^>]*>', '', scrapedplot)
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
@@ -133,7 +132,7 @@ def peliculas(item):
                  show=scrapedtitle,
                  title=scrapedtitle,
                  url=scrapedurl,
-                 thumbnail=scrapedthumbnail + "&w=300&h=400&zc=1&ft=jpg",
+                 thumbnail=scrapedthumbnail,
                  plot=scrapedplot,
                  folder=True))
 
