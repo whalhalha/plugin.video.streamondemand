@@ -68,10 +68,10 @@ def categorias(item):
     data = scrapertools.cache_page(item.url)
 
     # Narrow search by selecting only the combo
-    bloque = scrapertools.get_match(data, '<ul>(.*?)</ul>')
+    bloque = scrapertools.get_match(data, '<nav>(.*?)</nav>')
 
     # The categories are the options for the combo
-    patron = '<li class=[^>]+><a href="([^"]+)"[^>]+>(.*?)</a>\s*</li>'
+    patron = '<a href="(.*?)" class="color-code" title="(.*?)">'
     matches = re.compile(patron, re.DOTALL).findall(bloque)
 
     for url, titulo in matches:
