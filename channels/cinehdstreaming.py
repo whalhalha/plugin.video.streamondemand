@@ -55,7 +55,7 @@ def categorias(item):
     bloque = scrapertools.get_match(data,'<ul class="sub-menu">(.*?)</ul>')
     
     # The categories are the options for the combo
-    patron = '<li id=[^=]+="menu-item menu-item-type-taxonomy[^>]+><a href="(.*?)">(.*?)</a></li>'
+    patron = '<a href="(.*?)">(.*?)</a></li>'
     matches = re.compile(patron,re.DOTALL).findall(bloque)
     scrapertools.printMatches(matches)
 
@@ -92,15 +92,13 @@ def peliculas(item):
     patron  = '<h2 class="entry-title">\s*<a href="(.*?)"[^>]+>(.*?)</a>.*?<p><a href.*?<img.*?src="(.*?)"'
     matches = re.compile(patron,re.DOTALL).findall(data)
     scrapertools.printMatches(matches)
-	
-	
 
-    for scrapedurl,scrapedtitle,scrapedthumbnail in matches:
+    for scrapedurl, scrapedtitle, scrapedthumbnail in matches:
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         response = urllib2.urlopen(scrapedurl)
         html = response.read()
-        start = html.find("<h2 class=")
-        end = html.find("</div>", start)
+        start = html.find("<p><em><strong>")
+        end = html.find("</a></em></p>", start)
         scrapedplot = html[start:end]
         scrapedplot = re.sub(r'<.*?>', '', scrapedplot)
         scrapedplot = scrapertools.decodeHtmlentities(scrapedplot)
