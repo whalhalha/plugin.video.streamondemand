@@ -37,9 +37,9 @@ def isGeneric():
 def mainlist(item):
     logger.info("streamondemand.cinehdstreaming mainlist")
     itemlist = []
-    itemlist.append( Item(channel=__channel__, title="[COLOR red]Ultimi Film Inseriti[/COLOR]", action="peliculas", url="https://cinehdstreaming.wordpress.com/", thumbnail="https://cinehdstreaming.files.wordpress.com/2015/11/ultimi-inseriti.png"))
-    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Categorie[/COLOR]", action="categorias", url="https://cinehdstreaming.wordpress.com/", thumbnail="https://cinehdstreaming.files.wordpress.com/2015/11/stream.jpg"))
-    itemlist.append( Item(channel=__channel__, title="[COLOR green]Cerca[/COLOR]", action="search", thumbnail="https://cinehdstreaming.files.wordpress.com/2015/11/cerca-un-film.jpg"))
+    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Ultimi Film Inseriti[/COLOR]", action="peliculas", url="https://cinehdstreaming.wordpress.com/", thumbnail="http://orig03.deviantart.net/6889/f/2014/079/7/b/movies_and_popcorn_folder_icon_by_matheusgrilo-d7ay4tw.png"))
+    itemlist.append( Item(channel=__channel__, title="[COLOR azure]Categorie[/COLOR]", action="categorias", url="https://cinehdstreaming.wordpress.com/", thumbnail="http://xbmc-repo-ackbarr.googlecode.com/svn/trunk/dev/skin.cirrus%20extended%20v2/extras/moviegenres/All%20Movies%20by%20Genre.png"))
+    itemlist.append( Item(channel=__channel__, title="[COLOR yellow]Cerca[/COLOR]", action="search", thumbnail="http://dc467.4shared.com/img/fEbJqOum/s7/13feaf0c8c0/Search"))
     
     return itemlist
 
@@ -55,7 +55,7 @@ def categorias(item):
     bloque = scrapertools.get_match(data,'<ul class="sub-menu">(.*?)</ul>')
     
     # The categories are the options for the combo
-    patron = '<a href="(.*?)">(.*?)</a></li>'
+    patron = '<li id=[^=]+="menu-item menu-item-type-taxonomy[^>]+><a href="(.*?)">(.*?)</a></li>'
     matches = re.compile(patron,re.DOTALL).findall(bloque)
     scrapertools.printMatches(matches)
 
