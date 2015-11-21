@@ -55,7 +55,7 @@ def categorias(item):
     bloque = scrapertools.get_match(data,'<ul class="sub-menu">(.*?)</ul>')
     
     # The categories are the options for the combo
-    patron = '<a href="(.*?)">(.*?)</a></li>'
+    patron = '<li id=[^=]+="menu-item menu-item-type-taxonomy[^>]+><a href="(.*?)">(.*?)</a></li>'
     matches = re.compile(patron,re.DOTALL).findall(bloque)
     scrapertools.printMatches(matches)
 
