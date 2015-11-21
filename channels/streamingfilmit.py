@@ -47,19 +47,6 @@ def mainlist(item):
 
     return itemlist
 
-def search(item, texto):
-    logger.info("[streamingfilmit.py] " + item.url + " search " + texto)
-    item.url = host + "/index.php/component/search/?searchword=" + texto + "&searchphrase=all&Itemid=101"
-    try:
-        return peliculas(item)
-    # Se captura la excepción, para no interrumpir al buscador global si un canal falla
-    except:
-        import sys
-        for line in sys.exc_info():
-            logger.error("%s" % line)
-        return []
-
-
 def peliculas(item):
     logger.info("streamondemand.streamingfilmit peliculas")
     itemlist = []
@@ -140,6 +127,62 @@ def elenco(item):
 
     # Extrae las entradas (carpetas)
     patron = '<td>\s*<a href="(.*?)">(.*?)</a>'
+    matches = re.compile(patron, re.DOTALL).findall(data)
+
+    for scrapedurl, scrapedtitle in matches:
+        scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
+        scrapedplot = ""
+        scrapedthumbnail = ""
+        if DEBUG: logger.info(
+            "title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="findvideos",
+                 fulltitle=scrapedtitle,
+                 show=scrapedtitle,
+                 title="[COLOR azure]" + scrapedtitle + "[/COLOR]",
+                 url=host+scrapedurl,
+                 thumbnail=scrapedthumbnail,
+                 plot=scrapedplot,
+                 folder=True))
+
+    # Extrae el paginador
+    patronvideos = '<a class="next" href="(.*?)"[^>]+>.*?</a>'
+    matches = re.compile(patronvideos, re.DOTALL).findall(data)
+
+    if len(matches) > 0:
+        scrapedurl = urlparse.urljoin(item.url, matches[0])
+        itemlist.append(
+            Item(channel=__channel__,
+                 action="elenco",
+                 title="[COLOR orange]Successivo>>[/COLOR]",
+                 url=scrapedurl,
+                 thumbnail="http://2.bp.blogspot.com/-fE9tzwmjaeQ/UcM2apxDtjI/AAAAAAAAeeg/WKSGM2TADLM/s1600/pager+old.png",
+                 folder=True))
+
+    return itemlist
+
+def search(item, texto):
+    logger.info("[streamingfilmit.py] " + item.url + " search " + texto)
+    item.url = host + "/index.php/component/search/?searchword=" + texto + "&searchphrase=all&Itemid=101"
+    try:
+        return src(item)
+    # Se captura la excepción, para no interrumpir al buscador global si un canal falla
+    except:
+        import sys
+        for line in sys.exc_info():
+            logger.error("%s" % line)
+        return []
+
+def src(item):
+    logger.info("streamondemand.streamingfilmit peliculas")
+    itemlist = []
+
+    # Descarga la pagina
+    data = scrapertools.cache_page(item.url)
+
+    # Extrae las entradas (carpetas)
+    patron = '<h1 class="title"><a href="(.*?)" >(.*?)</a></h1>'
     matches = re.compile(patron, re.DOTALL).findall(data)
 
     for scrapedurl, scrapedtitle in matches:
