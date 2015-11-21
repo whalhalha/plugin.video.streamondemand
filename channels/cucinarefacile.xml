@@ -8,8 +8,8 @@
     <include_in_global_search>false</include_in_global_search>
     <version>3</version>
     <adult>false</version>
-    <date>05/11/2015</date>
-    <changes>Added back Home</changes>
+    <date>21/11/2015</date>
+    <changes>Added BackHome function</changes>
     <categories>
         <category>Documentaries</category>
     </categories>
