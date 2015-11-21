@@ -185,7 +185,7 @@ def search(item, texto):
     item.url = "http://www.documoo.tv/?s="+texto
     try:
         return peliculas(item)
-    # Se captura la excepción, para no interrumpir al buscador global si un canal falla
+    # Se captura la excepciÃ³n, para no interrumpir al buscador global si un canal falla
     except:
         import sys
         for line in sys.exc_info():
