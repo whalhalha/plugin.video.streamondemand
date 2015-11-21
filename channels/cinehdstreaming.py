@@ -89,11 +89,12 @@ def peliculas(item):
     data = scrapertools.cache_page(item.url)
 
     # Extrae las entradas (carpetas)
-    patron  = '<h2 class="entry-title">\s*<a href="(.*?)"[^>]+>(.*?)</a>.*?<p><a href.*?<img.*?src="(.*?)"'
+    # patron  = '<h2 class="entry-title">\s*<a href="(.*?)"[^>]+>(.*?)</a>.*?<p><a href.*?<img.*?src="(.*?)"'
+    patron  = '<p><a href="(.*?)"><.*?alt="(.*?)".*?</a></p>\s*<.*?</p>\s*<.*?<a href="(.*?)"[^>]*>'
     matches = re.compile(patron,re.DOTALL).findall(data)
     scrapertools.printMatches(matches)
 
-    for scrapedurl, scrapedtitle, scrapedthumbnail in matches:
+    for scrapedthumbnail, scrapedtitle, scrapedurl  in matches:
         scrapedtitle = scrapertools.decodeHtmlentities(scrapedtitle)
         response = urllib2.urlopen(scrapedurl)
         html = response.read()
